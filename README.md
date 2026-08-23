@@ -1,10 +1,15 @@
-# Afritech-Sports-Technology
-Afritech Sports Technology and Innovation Group Limited
+# Afritech Sports Technology and Innovation Group Limited
+
 Sports intelligence and technology advisory for African football and beyond.
 
 ## 🎙️ Deep Dive Into Soccer-Football-Futbol
 
-Afritech's podcast, breaking down the game across markets and languages. Available on all major podcast platforms, in four languages.
+Afritech's podcast, breaking down the game across markets and languages. Available in four languages on all major podcast platforms:
+
+- [Spotify](https://open.spotify.com/show/5ixoUtlCGjPJsQLjZaRYPs)
+- [Apple Podcasts](https://podcasts.apple.com/ae/podcast/deep-dive-into-soccer-football-futbol/id1803875534)
+- [iHeartRadio](https://www.iheart.com/podcast/269-deep-dive-into-soccer-foot-286910618/)
+- [Amazon Music / Audible](https://www.amazon.com/Deep-Dive-Into-Soccer-Football/dp/B0F42RJQK2)
 
 ## What We Do
 
@@ -26,4 +31,4 @@ Our match intelligence work has covered major tournaments including the FIFA Wor
 For advisory services, technology partnerships, match intelligence, or podcast inquiries, reach out to Afritech Sports Technology and Innovation Group Limited directly.
 
 ---
-*Afritech Sports Technology and Innovation Group Limited
+*Afritech Sports Technology and Innovation Group Limited*
