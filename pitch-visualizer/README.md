@@ -11,6 +11,8 @@ It replays tagged match sequences as ball-path arcs over an expected-threat surf
 ## Standalone file
 
 `standalone/index.html` is the whole dashboard in one 60 KB file: open it in a browser or send it to someone.
+
+Public link: https://afritech-advisory.github.io/Afritech-Sports-Technology/ . The `Publish pitch visualizer` workflow puts `standalone/index.html` there each time it changes on `main` (GitHub Pages must be set to deploy from GitHub Actions).
 It loads Three.js, OrbitControls and Tailwind CSS from CDN, so it needs an internet connection.
 The tracking dataset is embedded as JSON in a `<script id="tracking-data">` block and can be edited in place.
 The match clip is not embedded: at 25 MB it would add about 34 MB as base64. The Match clip tab has a
