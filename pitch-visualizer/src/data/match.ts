@@ -1,6 +1,21 @@
 import { xG, xT } from './models';
 
-export type Team = 'KEN' | 'CIV';
+/** A team code from the dataset's `teams` list, for example 'KEN'. */
+export type Team = string;
+export type Side = 'left' | 'right';
+
+export interface TeamInfo {
+  code: Team;
+  name: string;
+  /** Shirt colour: the player mark and the dot beside the team name. */
+  kit: string;
+  /** Rim of the player mark on the pitch. */
+  trim: string;
+  /** Ball paths, carries and value tags. */
+  lane: string;
+  /** Underline, timeline ticks and the ring round the dot. Defaults to the kit colour. */
+  accent?: string;
+}
 export type EventType =
   | 'throw_in' | 'pass' | 'cross' | 'carry' | 'take_on' | 'shot'
   | 'clearance' | 'recovery' | 'tackle' | 'claim' | 'gk_kick';
@@ -33,6 +48,8 @@ export interface Sequence {
   videoOffset: number;
   /** Coaching notes drawn from the tagged events. */
   notes: string[];
+  /** Goal each team attacks in this sequence, where it differs from the dataset's `attack`. */
+  attack?: Record<Team, Side>;
   events: MatchEvent[];
 }
 
@@ -40,7 +57,15 @@ interface Dataset {
   match: {
     title: string; competition: string; home: string; away: string; result: string; window: string;
     footage: { grade: string; kind: string; rights: string; method: string };
+    /** Goals scored before the first tagged sequence, home then away. */
+    startScore?: [number, number];
   };
+  /** Home team first. Absent in the first dataset (Kenya U23 v Ivory Coast U23), which uses the defaults below. */
+  teams?: [TeamInfo, TeamInfo];
+  /** Goal each team attacks: 'left' is x = 0, 'right' is x = 105. A sequence can override it. */
+  attack?: Record<Team, Side>;
+  /** Id of the sequence shown when the page opens. Defaults to the last one with a goal. */
+  open?: string;
   /** src: clip file next to the published page, loaded over http(s); the device picker is the fallback. */
   clip: { fps: number; frames: number; src?: string };
   sequences: Sequence[];
@@ -55,6 +80,37 @@ const DATA: Dataset = JSON.parse(document.getElementById('tracking-data')!.textC
 export const MATCH = DATA.match;
 export const CLIP = DATA.clip;
 export const SEQUENCES = DATA.sequences;
+
+/** Colours of the reference build, used when the dataset has no `teams` list. */
+const DEFAULT_TEAMS: [TeamInfo, TeamInfo] = [
+  { code: 'KEN', name: 'Kenya', kit: '#e5343f', trim: '#111318', lane: '#9cc2ff' },
+  { code: 'CIV', name: 'Ivory Coast', kit: '#f6f3ec', trim: '#ff8a2a', lane: '#ffe9c4', accent: '#ff8a2a' },
+];
+export const TEAMS: [TeamInfo, TeamInfo] = DATA.teams ?? DEFAULT_TEAMS;
+const codes = TEAMS.map((t) => t.code);
+if (codes[0] === codes[1]) throw new Error('The two teams need different codes.');
+for (const s of SEQUENCES) for (const e of s.events) {
+  if (!codes.includes(e.team)) throw new Error(`Sequence '${s.id}' uses team '${e.team}', which is not in the teams list.`);
+}
+
+/** 0 for the home team, 1 for the away team. */
+export const teamIndex = (code: Team): 0 | 1 => (code === TEAMS[1].code ? 1 : 0);
+export const teamInfo = (code: Team): TeamInfo => TEAMS[teamIndex(code)];
+export const hex = (css: string): number => parseInt(css.replace('#', ''), 16);
+
+/** Home team attacks the left goal unless the dataset says otherwise. */
+const DEFAULT_ATTACK: Record<Team, Side> = DATA.attack ?? { [TEAMS[0].code]: 'left', [TEAMS[1].code]: 'right' };
+export const attackOf = (seq: Sequence): Record<Team, Side> => seq.attack ?? DEFAULT_ATTACK;
+for (const s of SEQUENCES) {
+  const a = attackOf(s);
+  if (!a[codes[0]] || !a[codes[1]] || a[codes[0]] === a[codes[1]]) {
+    throw new Error(`Sequence '${s.id}': the two teams must attack opposite goals.`);
+  }
+}
+const hasGoal = SEQUENCES.map((s) => s.events.some((e) => e.outcome === 'goal'));
+export const OPEN_INDEX = Math.max(0, DATA.open
+  ? SEQUENCES.findIndex((s) => s.id === DATA.open)
+  : hasGoal.lastIndexOf(true));
 
 /** Opta-compatible naming for the event log. Carries are derived, as in Opta feeds. */
 export const EVENT_META: Record<EventType, { label: string; opta: string; aerial: number }> = {

@@ -53,7 +53,19 @@ tagged on 11 of the 28 events; defenders are not tracked.
 The timeline scrubs in source-clip frames (30 fps). Space plays or pauses, arrow keys step one
 frame, Shift with an arrow steps ten.
 
-To load another match, replace the JSON in the `tracking-data` block of `index.html`.
+## Another match
+
+`index.html` holds the reference match and is published at the site root. A further match is one
+file, `matches/<slug>.json`, in the same format plus a `teams` list (codes, names, colours) and
+`attack` (which goal each team attacks). Team names and colours are read from the dataset; none are
+hard-coded in `src/`.
+
+    MATCH=<slug> npm run build:single   # writes standalone/<slug>/index.html
+
+Put its clip at `standalone/<slug>/clip.mp4`. The Pages workflow publishes all of `standalone/`, so
+the match appears at `/<slug>/` beside the reference page. The committed `standalone/index.html`
+was built before this change and has been left as published.
+
 Coordinates are metres: x from the left goal line, y from the near touchline.
 
 ## Tracking JSON

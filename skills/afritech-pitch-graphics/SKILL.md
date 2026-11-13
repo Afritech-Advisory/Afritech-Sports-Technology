@@ -55,11 +55,18 @@ Rules that keep the data honest:
 
 ## 4. Build
 
-Replace the JSON in the `tracking-data` block of `pitch-visualizer/index.html`, update the title and
-team names, then:
+Leave `pitch-visualizer/index.html` alone: it is the reference match and the site root. Write the
+new match as `pitch-visualizer/matches/<slug>.json` (format in `references/data-format.md`, including
+the `teams` list with codes, names and colours, and `attack` for which goal each team attacks), then:
 
     npm install
-    npm run build:single     # type-checks, builds, writes standalone/index.html
+    MATCH=<slug> npm run build:single   # type-checks, builds, writes standalone/<slug>/index.html
+    npm run build:single                # the reference match only: writes standalone/index.html
+
+Put the re-encoded clip at `standalone/<slug>/clip.mp4` and add a `!standalone/<slug>/clip.mp4` line
+to `.gitignore`. The Pages workflow publishes the whole `standalone/` folder, so the new match appears
+at `<site>/<slug>/` and the reference page stays at the site root. Do not rebuild or re-commit
+`standalone/index.html` unless asked to change that page.
 
 What the page contains, in the order it was built:
 1. Scene: `SceneManager` (antialiased renderer, perspective camera, ambient and directional light,

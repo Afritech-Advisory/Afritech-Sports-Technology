@@ -2,9 +2,14 @@
 // published as a self-contained page fragment.
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 const html = readFileSync('dist-single/index.html', 'utf8');
-// The downloadable copy, committed so it can be shared without a build
-mkdirSync('standalone', { recursive: true });
-copyFileSync('dist-single/index.html', 'standalone/index.html');
+// The downloadable copy, committed so it can be shared without a build.
+// The reference match is the site root; MATCH=<slug> goes to its own folder beside it.
+const slug = process.env.MATCH;
+// STANDALONE_DIR redirects the copy, for trial builds that must not touch the published pages.
+const dir = process.env.STANDALONE_DIR ?? (slug ? `standalone/${slug}` : 'standalone');
+mkdirSync(dir, { recursive: true });
+copyFileSync('dist-single/index.html', `${dir}/index.html`);
+console.log(`${dir}/index.html`);
 const out = html
   .replace(/<!doctype html>/i, '')
   .replace(/<\/?(html|head|body)[^>]*>/gi, '')

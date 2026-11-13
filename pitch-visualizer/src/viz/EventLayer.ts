@@ -5,12 +5,11 @@ import {
 } from 'three';
 import { buildPassingLanes, type Lane, type PassingLanes, type TrackingClip } from './PassingLanes';
 import {
-  EVENT_META, deltaXT, eventDuration, pressureLevel, shotXG, type MatchEvent, type Sequence, type Team,
+  EVENT_META, TEAMS, deltaXT, eventDuration, hex, pressureLevel, shotXG, teamInfo, type MatchEvent, type Sequence, type Team,
 } from '../data/match';
 import { toWorld } from '../pitch/dimensions';
 
-export const TEAM_COLOR: Record<Team, number> = { KEN: 0x9cc2ff, CIV: 0xffe9c4 };
-const KIT: Record<Team, number> = { KEN: 0xe5343f, CIV: 0xf6f3ec };
+export const TEAM_COLOR: Record<Team, number> = Object.fromEntries(TEAMS.map((t) => [t.code, hex(t.lane)]));
 const SEGMENTS = 56;
 const POCKET: Record<string, number> = { high: 0xff3d7f, medium: 0xffc04a, low: 0x5fdccb, none: 0xece8dc };
 const HIT_MATERIAL = new MeshBasicMaterial({ visible: false });
@@ -196,10 +195,10 @@ export class EventLayer {
 
   private playerMarker(event: MatchEvent, at: Vector3): Group {
     const g = new Group();
-    const disc = new Mesh(new CircleGeometry(0.95, 24), new MeshBasicMaterial({ color: KIT[event.team] }));
+    const disc = new Mesh(new CircleGeometry(0.95, 24), new MeshBasicMaterial({ color: hex(teamInfo(event.team).kit) }));
     const rim = new Mesh(
       new RingGeometry(0.95, 1.2, 24),
-      new MeshBasicMaterial({ color: event.team === 'CIV' ? 0xff8a2a : 0x111318 }),
+      new MeshBasicMaterial({ color: hex(teamInfo(event.team).trim) }),
     );
     for (const m of [disc, rim]) m.rotation.x = -Math.PI / 2;
     g.add(disc, rim);

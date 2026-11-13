@@ -5,7 +5,13 @@ Embedded in `index.html` as `<script type="application/json" id="tracking-data">
     {
       "match": { "title", "competition", "home", "away", "result", "window",
                  "footage": { "grade", "kind", "rights", "method" } },
-      "clip": { "fps": 30, "frames": 11846 },
+      "teams": [
+        { "code": "RSA", "name": "South Africa", "kit": "#ffcb05", "trim": "#007a4d", "lane": "#ffe14d", "accent": "#00a35c" },
+        { "code": "KEN", "name": "Kenya", "kit": "#e5343f", "trim": "#111318", "lane": "#ff8f97" }
+      ],
+      "attack": { "RSA": "right", "KEN": "left" },
+      "open": "g1",
+      "clip": { "fps": 30, "frames": 11846, "src": "clip.mp4" },
       "units": "metres",
       "sequences": [
         { "id": "g1", "label": "64'", "title": "Kenya 1–0", "score": "1–0",
@@ -20,8 +26,19 @@ Embedded in `index.html` as `<script type="application/json" id="tracking-data">
     }
 
 - `t`, `end`: match clock in seconds. `videoOffset`: add to the clock to get seconds into the clip.
-- `team`: the two codes used in `TEAM_NAME` and `TEAM_COLOR` (change both for a new match), and the
-  attack direction in `goalX()` in `src/data/models.ts`.
+- `teams`: home team first. `code` is what events use in `team`; `name` appears in the threat toggle,
+  legend, cards and goal labels (the header uses `match.home` and `match.away`). `kit` is the player
+  mark and dot, `trim` the rim of the mark, `lane` the ball paths and value tags, `accent` (optional,
+  defaults to `kit`) the header underline, timeline ticks and the ring round the dot. Nothing about
+  the teams is hard-coded in `src/`. A dataset with no `teams` list gets the Kenya U23 v Ivory Coast
+  U23 colours, which is how the reference page still builds unchanged.
+- `attack`: the goal each team attacks, `left` (x = 0) or `right` (x = 105). Take it from the footage.
+  Teams change ends at half time, so a sequence from the other half carries its own `"attack"`.
+  Without it the home team attacks left.
+- `open`: id of the sequence shown first. Defaults to the last sequence with a goal.
+- `match.startScore`: `[home, away]` goals scored before the first tagged sequence, if any. The
+  header score counts tagged goals on top of it, so tag every goal the clip shows.
+- The page throws on load if an event uses a team code that is not in `teams`.
 - `outcome`: `complete`, `incomplete`, `goal`, `won`, `lost`.
 
 | type | Shown as | Opta name | Drawn as |
