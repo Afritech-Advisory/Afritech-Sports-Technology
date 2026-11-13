@@ -44,6 +44,7 @@
       </div>
       <p class="hint"><i data-lucide="mouse-pointer-click"></i>Click a player or ball path to inspect · drag to orbit</p>
       <section class="card" id="card" hidden aria-live="polite"></section>
+      <p class="caption" id="caption" hidden></p>
     </div>
     <div class="timeline" role="group" aria-label="Playback">
       <button class="icon-btn primary" id="play" aria-label="Play"><i data-lucide="play"></i></button>
@@ -59,6 +60,7 @@
       </div>
       <button class="icon-btn" id="restart" aria-label="Restart sequence"><i data-lucide="rotate-ccw"></i></button>
       <button class="chip" id="speed" aria-label="Playback speed">1×</button>
+      <button class="icon-btn" id="voice" aria-pressed="true" aria-label="Voice notes on"><i data-lucide="volume-2"></i></button>
     </div>
   </main>
 
@@ -78,6 +80,7 @@
     <div id="pane-notes" role="tabpanel" aria-labelledby="tab-notes" hidden class="flex flex-col gap-4">
       <div>
         <p class="kicker">From the tagged events</p>
+        <p id="voice-help" class="m-0 mt-1 text-[12px] text-[var(--muted)]">Read aloud when you press Play. Turn the voice off with the speaker button.</p>
         <ul id="notes" class="m-0 mt-2 p-0 list-none flex flex-col gap-2.5 text-[13.5px] leading-snug"></ul>
       </div>
       <div>

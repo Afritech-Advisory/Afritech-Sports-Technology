@@ -17,6 +17,9 @@ The match clip is not embedded: at 25 MB it would add about 34 MB as base64. The
 video slot: load the file from your device and it follows the timeline, or set the `<video id="clip">`
 `src` to a base64 data URI for a shorter or re-encoded clip.
 Coaching notes typed in the sidebar are saved in the browser only.
+The coaching notes for each sequence are read aloud when you press Play, using the speech voice built
+into the viewer's browser (`src/ui/Narrator.ts`), with a subtitle over the pitch. The speaker button in
+the timeline turns the voice off. The voice varies by device.
 
 ## Structure
 

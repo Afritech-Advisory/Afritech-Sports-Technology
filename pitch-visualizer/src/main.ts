@@ -1,10 +1,11 @@
 import { ArrowHelper, Vector3, type Intersection } from 'three';
 import {
   createIcons, Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw,
-  StepBack, StepForward, Tag, Upload, Video, X,
+  StepBack, StepForward, Tag, Upload, Video, Volume2, VolumeX, X,
 } from 'lucide';
 import { SceneManager, type ViewName } from './core/SceneManager';
 import { Picker } from './core/Picker';
+import { Narrator } from './ui/Narrator';
 import { Pitch } from './pitch/Pitch';
 import { PITCH, toWorld } from './pitch/dimensions';
 import { ThreatSurface } from './viz/ThreatSurface';
@@ -17,7 +18,7 @@ import { xT } from './data/models';
 import './style.css';
 
 const ICONS = {
-  Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw, StepBack, StepForward, Tag, Upload, Video, X,
+  Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw, StepBack, StepForward, Tag, Upload, Video, Volume2, VolumeX, X,
 };
 const TEAM_NAME: Record<Team, string> = { KEN: 'Kenya', CIV: 'Ivory Coast' };
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -102,6 +103,7 @@ function loadSequence(i: number, atEnd: boolean): void {
   state.seq = i;
   state.active = -1;
   select(null);
+  narrator.load(`${SEQUENCES[i].label} ${SEQUENCES[i].title}.`, SEQUENCES[i].notes);
   layer.load(seq());
   scrub.max = String(frameCount());
   const span = seq().end - seqStart();
@@ -168,25 +170,36 @@ $('seqs').addEventListener('click', (ev) => {
   if (!b) return;
   loadSequence(Number(b.dataset.i), false);
   setPlaying(true);
+  narrator.play(true);
 });
 $('events').addEventListener('click', (ev) => {
   const b = (ev.target as HTMLElement).closest('button');
   if (!b) return;
   const i = Number(b.dataset.i);
   setPlaying(false);
+  narrator.stop();
   state.t = Math.min(seq().end, seq().events[i].t + eventDuration(seq(), i));
 });
 $('play').addEventListener('click', () => {
-  if (!state.playing && state.t >= seq().end - 0.01) state.t = seqStart();
-  setPlaying(!state.playing);
+  if (state.playing) {
+    setPlaying(false);
+    narrator.stop();
+    return;
+  }
+  if (state.t >= seq().end - 0.01) state.t = seqStart();
+  const fromTop = state.t <= seqStart() + 0.5;
+  setPlaying(true);
+  narrator.play(fromTop);
 });
-$('restart').addEventListener('click', () => { state.t = seqStart(); setPlaying(true); });
+$('restart').addEventListener('click', () => { state.t = seqStart(); setPlaying(true); narrator.stop(); narrator.play(true); });
 scrub.addEventListener('input', () => {
   setPlaying(false);
+  narrator.stop();
   state.t = seqStart() + Number(scrub.value) / CLIP.fps;
 });
 function step(frames: number): void {
   setPlaying(false);
+  narrator.stop();
   state.t = Math.max(seqStart(), Math.min(seq().end, state.t + frames / CLIP.fps));
 }
 $('step-back').addEventListener('click', () => step(-1));
@@ -209,6 +222,34 @@ for (const name of TABS) {
       $(`pane-${other}`).hidden = other !== name;
     }
   });
+}
+
+// ---- Coaching notes read aloud on Play ---------------------------------------
+const caption = $('caption');
+const narrator = new Narrator((index, text) => {
+  caption.hidden = !text;
+  caption.textContent = text;
+  document.querySelectorAll<HTMLElement>('#notes li').forEach((li, j) =>
+    li.classList.toggle('speaking', j === index));
+});
+const voiceBtn = $('voice');
+function setVoice(on: boolean): void {
+  narrator.setEnabled(on);
+  voiceBtn.setAttribute('aria-pressed', String(on));
+  voiceBtn.setAttribute('aria-label', on ? 'Voice notes on' : 'Voice notes off');
+  voiceBtn.innerHTML = `<i data-lucide="${on ? 'volume-2' : 'volume-x'}"></i>`;
+  icons();
+  try { localStorage.setItem('pitch-voice', on ? '1' : '0'); } catch { /* storage unavailable */ }
+  if (on && state.playing) narrator.play(false);
+}
+if (narrator.supported) {
+  let saved = '1';
+  try { saved = localStorage.getItem('pitch-voice') ?? '1'; } catch { /* storage unavailable */ }
+  setVoice(saved !== '0');
+  voiceBtn.addEventListener('click', () => setVoice(!narrator.enabled));
+} else {
+  voiceBtn.hidden = true;
+  $('voice-help').textContent = 'This browser cannot read the notes aloud.';
 }
 
 const coach = $<HTMLTextAreaElement>('coach-notes');

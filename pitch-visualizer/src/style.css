@@ -188,6 +188,15 @@ h1 {
 .pressure.high { border-color: #ff3d7f; } .pressure.high b { color: #ff7aa6; }
 .pressure.medium { border-color: #ffc04a; } .pressure.medium b { color: #ffc04a; }
 .pressure.low { border-color: #5fdccb; } .pressure.low b { color: #5fdccb; }
+/* Spoken note, shown as a subtitle over the pitch */
+.caption {
+  position: absolute; left: 50%; bottom: 60px; transform: translateX(-50%);
+  width: min(620px, calc(100% - 32px)); margin: 0; padding: 8px 12px;
+  background: rgba(13, 15, 19, 0.86); border-left: 3px solid var(--arc);
+  font-size: 14px; line-height: 1.4; text-align: left; pointer-events: none; z-index: 2;
+}
+#voice[aria-pressed='true'] { color: var(--arc); border-color: var(--arc); }
+#notes li.speaking { border-left-color: var(--amber); color: var(--chalk); background: var(--ink-3); }
 .events button.picked { box-shadow: inset 2px 0 0 var(--amber); background: var(--ink-3); }
 
 .totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--rule); }
@@ -215,7 +224,7 @@ h1 {
 #clip-empty { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px; text-align: center; color: var(--muted); font-size: 13px; }
 #clip-file { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 #clip-file:focus-visible + p, label[for='clip-file']:focus-within { outline: 2px solid var(--arc); }
-#notes-status, #clip-status { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
+#notes-status, #clip-status, #voice-help { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
 .kicker { margin: 0; font: 500 10px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .events { list-style: none; margin: 0; padding: 0; }
 .events button {
@@ -255,6 +264,7 @@ h1 {
   .timeline { gap: 6px; }
   .card { width: min(250px, calc(100% - 16px)); padding: 9px 10px; }
   .card dl div { padding: 2px 0; }
+  .caption { bottom: 54px; font-size: 12.5px; padding: 6px 9px; }
   .now { width: min(220px, 60%); padding: 7px 9px; top: 8px; }
   .now-what { font-size: 14px; }
   .now-note, .now-opta { display: none; }
