@@ -1,7 +1,7 @@
 import { ArrowHelper, Vector3, type Intersection } from 'three';
 import {
   createIcons, Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw,
-  StepBack, StepForward, Tag, Video, X,
+  StepBack, StepForward, Tag, Upload, Video, X,
 } from 'lucide';
 import { SceneManager, type ViewName } from './core/SceneManager';
 import { Picker } from './core/Picker';
@@ -17,7 +17,7 @@ import { xT } from './data/models';
 import './style.css';
 
 const ICONS = {
-  Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw, StepBack, StepForward, Tag, Video, X,
+  Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw, StepBack, StepForward, Tag, Upload, Video, X,
 };
 const TEAM_NAME: Record<Team, string> = { KEN: 'Kenya', CIV: 'Ivory Coast' };
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -121,6 +121,8 @@ function loadSequence(i: number, atEnd: boolean): void {
     <div><dt>Shot quality</dt><dd>${xg > 0 ? xg.toFixed(2) + ' xG' : 'No shot'}</dd></div>
     <div><dt>Tagged events</dt><dd>${seq().events.length}</dd></div>`;
 
+  renderNotes();
+
   $('events').innerHTML = seq().events.map((e, j) => {
     const dxt = deltaXT(e), g = shotXG(e);
     const val = g !== null ? `xG ${g.toFixed(2)}` : dxt !== null ? signed(dxt) : '';
@@ -197,6 +199,69 @@ window.addEventListener('keydown', (ev) => {
   if (ev.key === 'ArrowRight') step(ev.shiftKey ? 10 : 1);
   if (ev.key === 'Escape') select(null);
 });
+
+// ---- Sidebar tabs, coaching notes, clip slot ------------------------------------
+const TABS = ['events', 'notes', 'clip'];
+for (const name of TABS) {
+  $(`tab-${name}`).addEventListener('click', () => {
+    for (const other of TABS) {
+      $(`tab-${other}`).setAttribute('aria-selected', String(other === name));
+      $(`pane-${other}`).hidden = other !== name;
+    }
+  });
+}
+
+const coach = $<HTMLTextAreaElement>('coach-notes');
+const noteKey = () => `pitch-notes:${seq().id}`;
+function renderNotes(): void {
+  $('notes').innerHTML = seq().notes.map((n) =>
+    `<li class="border-l-2 border-[var(--arc)] pl-3">${n}</li>`).join('');
+  let saved = '';
+  try { saved = localStorage.getItem(noteKey()) ?? ''; } catch { /* storage unavailable */ }
+  coach.value = saved;
+}
+coach.addEventListener('input', () => {
+  let ok = true;
+  try { localStorage.setItem(noteKey(), coach.value); } catch { ok = false; }
+  $('notes-status').textContent = ok
+    ? 'Saved in this browser only. Not shared with other viewers.'
+    : 'This browser is not allowing saved notes. Copy your text before closing.';
+});
+
+const video = $<HTMLVideoElement>('clip');
+let clipLoaded = false;
+$<HTMLInputElement>('clip-file').addEventListener('change', (ev) => {
+  const file = (ev.target as HTMLInputElement).files?.[0];
+  if (!file) return;
+  video.src = URL.createObjectURL(file);
+  video.addEventListener('loadedmetadata', () => {
+    clipLoaded = true;
+    $('clip-empty').hidden = true;
+    const expected = CLIP.frames / CLIP.fps;
+    $('clip-status').textContent = Math.abs(video.duration - expected) < 2
+      ? `${file.name} loaded. It follows the timeline.`
+      : `${file.name} loaded, but it runs ${Math.round(video.duration)} s and the tags were made on a ${Math.round(expected)} s clip, so it will not line up.`;
+  }, { once: true });
+  video.addEventListener('error', () => {
+    clipLoaded = false;
+    $('clip-status').textContent = 'That file could not be played here. Try an MP4 (H.264).';
+  }, { once: true });
+});
+if (video.getAttribute('src')) { clipLoaded = true; $('clip-empty').hidden = true; }
+
+/** Keep the clip on the same frame as the timeline. */
+function syncClip(): void {
+  if (!clipLoaded) return;
+  const target = Math.max(0, state.t + seq().videoOffset);
+  if (state.playing) {
+    video.playbackRate = state.speed;
+    if (video.paused) { video.currentTime = target; void video.play().catch(() => {}); }
+    else if (Math.abs(video.currentTime - target) > 0.35) video.currentTime = target;
+  } else {
+    if (!video.paused) video.pause();
+    if (Math.abs(video.currentTime - target) > 1 / CLIP.fps) video.currentTime = target;
+  }
+}
 
 // ---- Click to inspect -----------------------------------------------------------
 const card = $('card');
@@ -278,6 +343,7 @@ document.querySelectorAll<HTMLElement>('[data-view]').forEach((b) =>
 sm.controls.addEventListener('start', () => document.querySelector('.hint')?.classList.add('gone'));
 
 $('source').innerHTML = `
+  <div><dt>Match</dt><dd>${MATCH.competition}. ${MATCH.home} ${MATCH.result} ${MATCH.away}.</dd></div>
   <div><dt>Footage</dt><dd>${MATCH.footage.kind}. ${MATCH.window}.</dd></div>
   <div><dt>Rights</dt><dd>${MATCH.footage.rights}</dd></div>
   <div><dt>Positions</dt><dd>${MATCH.footage.method} Players are listed by shirt number only and need reconciling with the match sheet.</dd></div>
@@ -333,6 +399,7 @@ sm.onFrame((dt, elapsed) => {
   if ($('frame').textContent !== frame) $('frame').textContent = frame;
   if (state.selected && state.t < seq().events[state.selected.index].t) select(null);
   placeCard();
+  syncClip();
 
   for (const n of notes) place(n.el, n.at, true);
   layer.labels.forEach((l: EventLabel, i) => {

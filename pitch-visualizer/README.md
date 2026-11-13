@@ -1,4 +1,4 @@
-# Pitch visualizer
+# Kenya U23 vs Ivory Coast U23 AFCON U23 Qualifiers 3D Soccer Pitch Graphics Analysis
 
 Interactive 3D pitch map built with Vite, TypeScript, Three.js and Lucide icons.
 It replays tagged match sequences as ball-path arcs over an expected-threat surface.
@@ -6,7 +6,16 @@ It replays tagged match sequences as ball-path arcs over an expected-threat surf
     npm install
     npm run dev            # local dev server
     npm run build          # type-check and build to dist/
-    npm run build:single   # one self-contained HTML file in dist-single/
+    npm run build:single   # one standalone file, copied to standalone/index.html
+
+## Standalone file
+
+`standalone/index.html` is the whole dashboard in one 60 KB file: open it in a browser or send it to someone.
+It loads Three.js, OrbitControls and Tailwind CSS from CDN, so it needs an internet connection.
+The tracking dataset is embedded as JSON in a `<script id="tracking-data">` block and can be edited in place.
+The match clip is not embedded (rights not cleared). The Match clip tab has a video slot: load the file
+from your device and it follows the timeline, or set the `<video id="clip">` `src` to a base64 data URI.
+Coaching notes typed in the sidebar are saved in the browser only.
 
 ## Structure
 
@@ -17,7 +26,8 @@ It replays tagged match sequences as ball-path arcs over an expected-threat surf
 - `src/viz/PassingLanes.ts` `buildPassingLanes(json, options)`: tracking JSON in, volumetric lanes out (`CatmullRomCurve3` and `TubeGeometry`, glowing waypoint sprites, translucent direction arrows that rescale with camera distance)
 - `src/data/coordinates.ts` maps tracker coordinates (metres, normalised, or image pixels with a homography) to pitch metres
 - `src/viz/EventLayer.ts` carries, duels, the ball and playback
-- `src/data/match.ts` the tagged event log; `src/data/models.ts` the xT and xG estimates
+- `index.html` page markup, CDN links and the embedded JSON dataset
+- `src/data/match.ts` types and helpers for the dataset; `src/data/models.ts` the xT and xG estimates
 - `src/main.ts` interface wiring and playback
 
 ## Data in this build
@@ -35,7 +45,7 @@ tagged on 11 of the 28 events; defenders are not tracked.
 The timeline scrubs in source-clip frames (30 fps). Space plays or pauses, arrow keys step one
 frame, Shift with an arrow steps ten.
 
-To load another match, replace `SEQUENCES` in `src/data/match.ts`.
+To load another match, replace the JSON in the `tracking-data` block of `index.html`.
 Coordinates are metres: x from the left goal line, y from the near touchline.
 
 ## Tracking JSON

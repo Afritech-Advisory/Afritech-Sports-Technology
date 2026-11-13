@@ -1,7 +1,10 @@
 // Strips the document wrapper from the single-file build so it can be
 // published as a self-contained page fragment.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 const html = readFileSync('dist-single/index.html', 'utf8');
+// The downloadable copy, committed so it can be shared without a build
+mkdirSync('standalone', { recursive: true });
+copyFileSync('dist-single/index.html', 'standalone/index.html');
 const out = html
   .replace(/<!doctype html>/i, '')
   .replace(/<\/?(html|head|body)[^>]*>/gi, '')
