@@ -11,6 +11,7 @@ export function goalX(team: Team): number {
  * This is a smooth generic approximation of a published-style xT surface
  * (about 0.005 in the defensive third rising to about 0.3 in the goal mouth).
  * It has not been fitted to this match or competition.
+ * The same formula is evaluated per pixel in viz/ThreatSurface.ts; change both together.
  */
 export function xT(x: number, y: number, team: Team): number {
   const dx = Math.abs(goalX(team) - x);

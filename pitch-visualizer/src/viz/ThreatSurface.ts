@@ -1,84 +1,136 @@
-import { CanvasTexture, LinearFilter, Mesh, MeshBasicMaterial, PlaneGeometry, SRGBColorSpace } from 'three';
-import { xT } from '../data/models';
+import { Mesh, PlaneGeometry, ShaderMaterial } from 'three';
+import { goalX } from '../data/models';
 import type { Team } from '../data/match';
 import { PITCH } from '../pitch/dimensions';
 
-const RES = 4; // pixels per metre
-const STOPS: [number, [number, number, number]][] = [
-  [0.0, [72, 205, 190]],
-  [0.3, [110, 222, 206]],
-  [0.55, [238, 96, 160]],
-  [0.8, [255, 150, 110]],
-  [1.0, [255, 208, 96]],
-];
+export const MAX_POINTS = 32;
 
-function ramp(t: number): [number, number, number] {
-  for (let i = 1; i < STOPS.length; i++) {
-    if (t <= STOPS[i][0]) {
-      const [t0, a] = STOPS[i - 1], [t1, b] = STOPS[i];
-      const k = (t - t0) / (t1 - t0);
-      return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
-    }
+const vertexShader = /* glsl */ `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
-  return STOPS[STOPS.length - 1][1];
-}
+`;
 
-// Value noise gives the wash its uneven, hand-painted edge.
-function hash(x: number, y: number): number {
-  const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
-  return s - Math.floor(s);
-}
-function noise(x: number, y: number): number {
-  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
-  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
-  const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
-  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
-}
-const fbm = (x: number, y: number) => noise(x, y) * 0.6 + noise(x * 2.3, y * 2.3) * 0.28 + noise(x * 5.1, y * 5.1) * 0.12;
+/**
+ * Contextual expected threat.
+ * Base layer: the positional xT surface (kept in step with xT() in data/models.ts).
+ * Context layer: up to MAX_POINTS intensity points, each a Gaussian in pitch metres,
+ * so threat built during the current sequence lifts the surface where it happened.
+ */
+const fragmentShader = /* glsl */ `
+  precision highp float;
 
-/** Expected-threat wash painted onto the pitch for one attacking team. */
+  uniform vec3 uPoints[MAX_POINTS]; // x (m), y (m), intensity 0-1
+  uniform int uCount;
+  uniform float uGoalX;
+  uniform float uSigma;
+  uniform float uTime;
+  uniform float uOpacity;
+  uniform vec2 uPitch;
+  varying vec2 vUv;
+
+  float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float noise(vec2 p) {
+    vec2 i = floor(p), f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1, 0)), u.x),
+               mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), u.x), u.y);
+  }
+  float fbm(vec2 p) {
+    return noise(p) * 0.68 + noise(p * 2.3 + 11.0) * 0.32;
+  }
+
+  float baseThreat(vec2 p) {
+    float dx = abs(uGoalX - p.x);
+    float dy = p.y - uPitch.y * 0.5;
+    float d = length(vec2(dx, dy));
+    float central = d < 0.01 ? 1.0 : dx / d;
+    return 0.005 + 0.3 * exp(-d / 14.0) * (0.4 + 0.6 * pow(central, 1.5));
+  }
+
+  // Cool cyan in the defensive third, through magenta, to amber in the attacking box.
+  vec3 ramp(float t) {
+    vec3 cyan = vec3(0.16, 0.80, 0.90);
+    vec3 teal = vec3(0.36, 0.86, 0.78);
+    vec3 magenta = vec3(0.94, 0.24, 0.62);
+    vec3 amber = vec3(1.00, 0.78, 0.30);
+    vec3 c = mix(cyan, teal, smoothstep(0.0, 0.30, t));
+    c = mix(c, magenta, smoothstep(0.30, 0.62, t));
+    return mix(c, amber, smoothstep(0.66, 0.96, t));
+  }
+
+  void main() {
+    vec2 p = vUv * uPitch; // pitch metres; v = 1 is the far touchline
+
+    float heat = sqrt(baseThreat(p) / 0.3);
+
+    float context = 0.0;
+    float inv = 1.0 / (2.0 * uSigma * uSigma);
+    for (int i = 0; i < MAX_POINTS; i++) {
+      if (i >= uCount) break;
+      vec2 d = p - uPoints[i].xy;
+      context += uPoints[i].z * exp(-dot(d, d) * inv);
+    }
+    heat += context * 0.5;
+
+    // Slow drifting wash so the edges read as paint, not as a hard contour
+    float wash = fbm(p / 9.0 + vec2(uTime * 0.02, -uTime * 0.013)) - 0.5;
+    heat = clamp(heat + wash * 0.14, 0.0, 1.0);
+
+    float grain = 0.86 + 0.28 * noise(p / 2.5);
+    float alpha = mix(0.2, 0.9, smoothstep(0.12, 0.8, heat)) * grain;
+
+    // Feather the last metre so the wash does not cut hard at the touchlines
+    vec2 edge = min(p, uPitch - p);
+    alpha *= smoothstep(0.0, 1.2, min(edge.x, edge.y));
+
+    gl_FragColor = vec4(pow(ramp(heat), vec3(2.2)), alpha * uOpacity);
+    #include <colorspace_fragment>
+  }
+`;
+
+/** GPU expected-threat surface. One draw call, one quad, no textures. */
 export class ThreatSurface {
   readonly mesh: Mesh;
-  private readonly canvas = document.createElement('canvas');
-  private readonly texture: CanvasTexture;
+  private readonly points = new Float32Array(MAX_POINTS * 3);
+  private readonly material: ShaderMaterial;
 
   constructor() {
-    this.canvas.width = PITCH.length * RES;
-    this.canvas.height = PITCH.width * RES;
-    this.texture = new CanvasTexture(this.canvas);
-    this.texture.colorSpace = SRGBColorSpace;
-    this.texture.minFilter = LinearFilter;
-    this.mesh = new Mesh(
-      new PlaneGeometry(PITCH.length, PITCH.width),
-      new MeshBasicMaterial({ map: this.texture, transparent: true, depthWrite: false, opacity: 0.9 }),
-    );
+    this.material = new ShaderMaterial({
+      defines: { MAX_POINTS },
+      uniforms: {
+        uPoints: { value: this.points },
+        uCount: { value: 0 },
+        uGoalX: { value: 0 },
+        uSigma: { value: 7 },
+        uTime: { value: 0 },
+        uOpacity: { value: 0.95 },
+        uPitch: { value: [PITCH.length, PITCH.width] },
+      },
+      vertexShader,
+      fragmentShader,
+      transparent: true,
+      depthWrite: false,
+    });
+    this.mesh = new Mesh(new PlaneGeometry(PITCH.length, PITCH.width), this.material);
     this.mesh.rotation.x = -Math.PI / 2;
     this.mesh.position.y = 0.012;
   }
 
-  paint(team: Team): void {
-    const w = this.canvas.width, h = this.canvas.height;
-    const ctx = this.canvas.getContext('2d')!;
-    const img = ctx.createImageData(w, h);
-    for (let py = 0; py < h; py++) {
-      for (let px = 0; px < w; px++) {
-        const x = (px + 0.5) / RES;
-        const y = PITCH.width - (py + 0.5) / RES; // canvas top is the far touchline
-        const n = fbm(x / 9, y / 9) - 0.5;
-        let t = Math.sqrt(xT(x, y, team) / 0.3) + n * 0.2;
-        t = Math.max(0, Math.min(1, (t - 0.2) / 0.72));
-        // Soft banding, like layered washes drying at different rates
-        const bands = 6;
-        const f = t * bands, fl = Math.floor(f), fr = f - fl;
-        const tb = (fl + Math.min(1, fr * fr * 3)) / bands;
-        const [r, g, b] = ramp(Math.min(1, tb));
-        const alpha = Math.min(1, t * 5) * (0.5 + 0.42 * tb) * (0.82 + 0.36 * noise(x / 2.5, y / 2.5));
-        const i = (py * w + px) * 4;
-        img.data[i] = r; img.data[i + 1] = g; img.data[i + 2] = b;
-        img.data[i + 3] = Math.max(0, Math.min(255, alpha * 255));
-      }
-    }
-    ctx.putImageData(img, 0, 0);
-    this.texture.needsUpdate = true;
+  setTeam(team: Team): void {
+    this.material.uniforms.uGoalX.value = goalX(team);
+  }
+
+  /** Flat [x, y, intensity, ...] in pitch metres. Extra points beyond MAX_POINTS are dropped. */
+  setPoints(flat: ArrayLike<number>): void {
+    const n = Math.min(MAX_POINTS, Math.floor(flat.length / 3));
+    for (let i = 0; i < n * 3; i++) this.points[i] = flat[i];
+    this.material.uniforms.uCount.value = n;
+  }
+
+  setTime(seconds: number): void {
+    this.material.uniforms.uTime.value = seconds;
   }
 }

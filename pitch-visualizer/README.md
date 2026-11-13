@@ -12,7 +12,8 @@ It replays tagged match sequences as ball-path arcs over an expected-threat surf
 
 - `src/core/SceneManager.ts` renderer (antialiased), perspective camera, ambient and directional light, resize handling, damped OrbitControls, render loop
 - `src/pitch/` FIFA dimensions (105 x 68 m, 1 unit = 1 m) and the pitch slab with markings, goals and the 12 x 8 zone grid
-- `src/viz/` threat surface texture and the event layer (arcs, carries, duels, ball)
+- `src/viz/ThreatSurface.ts` custom `ShaderMaterial`: positional xT plus a dynamic `vec3[32]` uniform of intensity points (x m, y m, weight), blended cyan to magenta to amber in the fragment shader
+- `src/viz/EventLayer.ts` arcs, carries, duels and the ball
 - `src/data/match.ts` the tagged event log; `src/data/models.ts` the xT and xG estimates
 - `src/main.ts` interface wiring and playback
 

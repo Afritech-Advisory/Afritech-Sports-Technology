@@ -71,7 +71,7 @@ const attackingTeam = (): Team => seq().events.find((e) => e.type === 'shot')?.t
 function setThreat(mode: ThreatMode): void {
   state.threat = mode;
   threat.mesh.visible = mode !== 'off';
-  if (mode !== 'off') threat.paint(mode);
+  if (mode !== 'off') threat.setTeam(mode);
   $('threat-label').textContent = mode === 'off' ? 'Threat: off' : `Threat: ${TEAM_NAME[mode]}`;
 }
 
@@ -193,9 +193,32 @@ $('source').innerHTML = `
   <div><dt>Footage</dt><dd>${MATCH.footage.kind}. ${MATCH.window}.</dd></div>
   <div><dt>Rights</dt><dd>${MATCH.footage.rights}</dd></div>
   <div><dt>Positions</dt><dd>${MATCH.footage.method} Players are listed by shirt number only and need reconciling with the match sheet.</dd></div>
-  <div><dt>Models</dt><dd>The threat surface is a generic approximation, not fitted to this competition. xG uses shot distance and goal angle only.</dd></div>`;
+  <div><dt>Models</dt><dd>The threat surface is a generic positional approximation, not fitted to this competition, lifted where the selected team gained threat in the sequence on screen. xG uses shot distance and goal angle only.</dd></div>`;
 
 // ---- Frame loop -----------------------------------------------------------------
+/**
+ * Intensity points for the shader: where the selected team moved or struck the ball
+ * in this sequence, weighted by the threat gained, fading in as playback reaches them.
+ */
+const context: number[] = [];
+function contextPoints(): number[] {
+  context.length = 0;
+  if (state.threat === 'off') return context;
+  seq().events.forEach((e, i) => {
+    if (e.team !== state.threat) return;
+    const k = Math.max(0, Math.min(1, (state.t - e.t) / eventDuration(seq(), i)));
+    if (k <= 0) return;
+    const g = shotXG(e), d = deltaXT(e);
+    const weight = g !== null ? 0.35 + g
+      : d !== null ? 0.12 + Math.max(0, d) * 4
+      : e.outcome === 'won' ? 0.15 : 0.05;
+    const at = e.to && e.outcome !== 'incomplete' && e.outcome !== 'lost' && g === null ? e.to : e.from;
+    context.push(at[0], at[1], Math.min(1, weight) * k);
+  });
+  return context;
+}
+const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 const p = { x: 0, y: 0, visible: false };
 function place(el: HTMLElement, at: Vector3, show: boolean): void {
   sm.project(at, p);
@@ -210,6 +233,8 @@ sm.onFrame((dt, elapsed) => {
     if (state.t >= seq().end) { state.t = seq().end; setPlaying(false); }
   }
   const active = layer.update(state.t, elapsed);
+  threat.setPoints(contextPoints());
+  if (!still) threat.setTime(elapsed);
   if (active !== state.active) showActive(active);
   updateScore();
 
