@@ -27,6 +27,12 @@ Standalone build
 - For the Artifact, strip `<!doctype>`, `<html>`, `<head>`, `<body>` from the built file
   (`scripts/make-artifact.mjs`) and keep `<title>` first.
 
+Speech
+- `speechSynthesis.getVoices()` can be empty at first; listen for `voiceschanged` and re-describe.
+- Android reports voice languages as `en_KE`, browsers as `en-KE`; match both.
+- To test without audio, replace `window.speechSynthesis` with `Object.defineProperty` in an init
+  script (plain assignment does not override it) and record what `speak` receives.
+
 Environment
 - Headless Chromium here has no GPU: launch with `--use-gl=swiftshader --enable-unsafe-swiftshader`.
   Frame rates measured this way say nothing about a real device.

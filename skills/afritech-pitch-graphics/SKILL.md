@@ -77,6 +77,14 @@ What the page contains, in the order it was built:
 Visual direction: dark ink-wash slab, chalk lines, watercolour threat wash, glowing ice-blue arcs,
 handwritten dimension notes. Single dark theme by choice.
 
+Coaching notes are read aloud on Play (`src/ui/Narrator.ts`, browser speech, subtitle over the pitch).
+Voice accent rule (Andrew, 13 Nov 2026): always an African English voice, Kenyan first. The order is
+en-KE, en-TZ, en-UG, en-NG, en-GH, en-ZA, and only then any other English voice. Never pick a Swahili
+(sw-) voice for English text. Browser voices depend on the viewer's device: Microsoft Edge on a
+computer has Kenyan English voices; iPhones have South African English; many devices have none. The
+page states which voice it is using. A Kenyan voice for every viewer needs recorded or pre-generated
+audio files (for example a Kenyan neural voice from a cloud speech service, with the user's key).
+
 ## 5. Verify before reporting
 
 - `npm run build:single` passes the type check.

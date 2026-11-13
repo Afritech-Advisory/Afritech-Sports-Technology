@@ -2,6 +2,13 @@
  * Reads coaching notes aloud with the browser's built-in speech engine.
  * No audio files: the voice comes from the viewer's device, so it varies by device.
  */
+/** English voice regions in order of preference: Kenya, then the rest of East Africa, then West and South. */
+export const AFRICAN_ENGLISH = ['KE', 'TZ', 'UG', 'NG', 'GH', 'ZA'];
+const COUNTRY: Record<string, string> = {
+  KE: 'Kenyan', TZ: 'Tanzanian', UG: 'Ugandan', NG: 'Nigerian', GH: 'Ghanaian', ZA: 'South African',
+  GB: 'British', US: 'American', AU: 'Australian', IN: 'Indian', IE: 'Irish', CA: 'Canadian',
+};
+
 export class Narrator {
   readonly supported = typeof window !== 'undefined' && 'speechSynthesis' in window;
   enabled = true;
@@ -39,10 +46,34 @@ export class Narrator {
     if (!on) this.stop();
   }
 
-  private voice(): SpeechSynthesisVoice | undefined {
+  /** Kenyan English first, then other African English voices, then any English voice. */
+  voice(): SpeechSynthesisVoice | undefined {
     const voices = speechSynthesis.getVoices();
-    return voices.find((v) => /^en[-_](KE|NG|ZA|GB)/i.test(v.lang))
-      ?? voices.find((v) => /^en/i.test(v.lang));
+    const region = (v: SpeechSynthesisVoice) => {
+      const m = /^en[-_]([a-z]{2})/i.exec(v.lang);
+      return m ? m[1].toUpperCase() : '';
+    };
+    // Natural or online voices sound better than the older built-in ones
+    const quality = (v: SpeechSynthesisVoice) => (/natural|online|neural/i.test(v.name) ? 0 : 1);
+    for (const code of AFRICAN_ENGLISH) {
+      const match = voices.filter((v) => region(v) === code).sort((a, b) => quality(a) - quality(b));
+      if (match.length) return match[0];
+    }
+    return voices.find((v) => /^en/i.test(v.lang));
+  }
+
+  /** Plain description of the voice in use, for the page. */
+  describeVoice(): { label: string; african: boolean } | null {
+    if (!this.supported) return null;
+    const v = this.voice();
+    if (!v) return null;
+    const m = /^en[-_]([a-z]{2})/i.exec(v.lang);
+    const code = m ? m[1].toUpperCase() : '';
+    const name = v.name.replace(/^(Microsoft|Google|Apple)\s+/i, '').replace(/\s*\(.*\)\s*$/, '').replace(/\s+Online.*$/i, '');
+    return {
+      label: `${COUNTRY[code] ? `${COUNTRY[code]} English` : 'English'}${/english/i.test(name) ? '' : ` (${name})`}`,
+      african: AFRICAN_ENGLISH.includes(code),
+    };
   }
 
   private next(token: number): void {
@@ -53,7 +84,7 @@ export class Narrator {
     const i = this.index;
     const u = new SpeechSynthesisUtterance(this.lines[i]);
     const v = this.voice();
-    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-GB';
+    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-KE';
     u.rate = 0.98;
     const done = () => {
       if (token !== this.token) return;

@@ -242,7 +242,17 @@ function setVoice(on: boolean): void {
   try { localStorage.setItem('pitch-voice', on ? '1' : '0'); } catch { /* storage unavailable */ }
   if (on && state.playing) narrator.play(false);
 }
+/** Tell the viewer which voice their device is using; voices can load after the page. */
+function describeVoice(): void {
+  const d = narrator.describeVoice();
+  if (!d) return;
+  $('voice-help').textContent = d.african
+    ? `Read aloud in a ${d.label} voice when you press Play.`
+    : `Read aloud when you press Play. This device has no Kenyan or other African English voice, so it is using ${d.label}. Microsoft Edge on a computer includes Kenyan English voices.`;
+}
 if (narrator.supported) {
+  describeVoice();
+  speechSynthesis.addEventListener?.('voiceschanged', describeVoice);
   let saved = '1';
   try { saved = localStorage.getItem('pitch-voice') ?? '1'; } catch { /* storage unavailable */ }
   setVoice(saved !== '0');
