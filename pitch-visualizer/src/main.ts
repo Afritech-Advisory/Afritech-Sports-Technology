@@ -281,24 +281,43 @@ coach.addEventListener('input', () => {
 
 const video = $<HTMLVideoElement>('clip');
 let clipLoaded = false;
-$<HTMLInputElement>('clip-file').addEventListener('change', (ev) => {
-  const file = (ev.target as HTMLInputElement).files?.[0];
-  if (!file) return;
-  video.src = URL.createObjectURL(file);
-  video.addEventListener('loadedmetadata', () => {
+const clipStatus = (text: string) => { $('clip-status').textContent = text; };
+
+/** Attach a clip source; report whether it plays and whether its length matches the tags. */
+function useClip(src: string, name: string, onFail: () => void): void {
+  clipLoaded = false;
+  const ok = () => {
+    video.removeEventListener('error', bad);
     clipLoaded = true;
     $('clip-empty').hidden = true;
     const expected = CLIP.frames / CLIP.fps;
-    $('clip-status').textContent = Math.abs(video.duration - expected) < 2
-      ? `${file.name} loaded. It follows the timeline.`
-      : `${file.name} loaded, but it runs ${Math.round(video.duration)} s and the tags were made on a ${Math.round(expected)} s clip, so it will not line up.`;
-  }, { once: true });
-  video.addEventListener('error', () => {
-    clipLoaded = false;
-    $('clip-status').textContent = 'That file could not be played here. Try an MP4 (H.264).';
-  }, { once: true });
+    clipStatus(Math.abs(video.duration - expected) < 2
+      ? `${name} loaded. It follows the timeline.`
+      : `${name} loaded, but it runs ${Math.round(video.duration)} s and the tags were made on a ${Math.round(expected)} s clip, so it will not line up.`);
+    syncClip();
+  };
+  const bad = () => { video.removeEventListener('loadedmetadata', ok); onFail(); };
+  video.addEventListener('loadedmetadata', ok, { once: true });
+  video.addEventListener('error', bad, { once: true });
+  video.src = src;
+}
+
+$<HTMLInputElement>('clip-file').addEventListener('change', (ev) => {
+  const file = (ev.target as HTMLInputElement).files?.[0];
+  if (!file) return;
+  useClip(URL.createObjectURL(file), file.name,
+    () => clipStatus('That file could not be played here. Try an MP4 (H.264).'));
 });
-if (video.getAttribute('src')) { clipLoaded = true; $('clip-empty').hidden = true; }
+
+// Published with the page (GitHub Pages): fetch the clip from its own URL next to index.html.
+// Anywhere it is missing (a downloaded copy, an embed), the device picker stays as the fallback.
+if (CLIP.src && location.protocol.startsWith('http')) {
+  clipStatus('Loading the match clip…');
+  useClip(new URL(CLIP.src, location.href).href, 'Match clip', () => {
+    video.removeAttribute('src'); video.load();
+    clipStatus('The match clip is not online with this copy of the page. Load it from your device and it plays in step with the timeline, frame for frame.');
+  });
+}
 
 /** Keep the clip on the same frame as the timeline. */
 function syncClip(): void {

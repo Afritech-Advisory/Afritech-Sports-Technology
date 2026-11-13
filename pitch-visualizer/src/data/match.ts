@@ -41,7 +41,8 @@ interface Dataset {
     title: string; competition: string; home: string; away: string; result: string; window: string;
     footage: { grade: string; kind: string; rights: string; method: string };
   };
-  clip: { fps: number; frames: number };
+  /** src: clip file next to the published page, loaded over http(s); the device picker is the fallback. */
+  clip: { fps: number; frames: number; src?: string };
   sequences: Sequence[];
 }
 

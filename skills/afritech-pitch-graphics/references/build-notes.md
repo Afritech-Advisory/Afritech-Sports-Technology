@@ -39,3 +39,15 @@ Environment
 - If a CDN is blocked in the sandbox, serve the same package from `node_modules` with `page.route`
   for testing and report that the CDN itself was not exercised.
 - Never run a recursive delete with a relative glob after `cd`; write to a fresh directory instead.
+
+## Clip delivery
+
+Never base64 the clip into the HTML. Re-encode at the source's native size (upscaling to 720p only
+grows the file: the Kenya clip went 25 MB to 57 MB at 720p, 24 MB at native 360p):
+
+    ffmpeg -i in.mp4 -c:v libx264 -preset slow -crf 28 -pix_fmt yuv420p -c:a aac -b:a 64k -movflags +faststart clip.mp4
+
+Put it beside the page (`standalone/clip.mp4`, with a `!standalone/clip.mp4` gitignore exception),
+set `"clip": {..., "src": "clip.mp4"}` in the dataset, and publish the folder on GitHub Pages. The
+page loads it over http(s); on failure it falls back to the device picker. Test with a server that
+answers range requests (Python's http.server does not, so seeking fails there).
