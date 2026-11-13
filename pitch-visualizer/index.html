@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Kenya U23 v Ivory Coast U23 Pitch Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500&display=swap">
+</head>
+<body>
+<div id="app">
+  <header class="bar">
+    <div class="match">
+      <p class="eyebrow">Afritech match data · 3D pitch map</p>
+      <h1><span class="t-ken">Kenya U23</span> <span class="score" id="score">0–0</span> <span class="t-civ">Ivory Coast U23</span></h1>
+    </div>
+    <div class="views" role="group" aria-label="Camera view">
+      <button class="chip" data-view="broadcast" aria-pressed="true"><i data-lucide="video"></i><span>Broadcast</span></button>
+      <button class="chip" data-view="tactical" aria-pressed="false"><i data-lucide="layout-grid"></i><span>Tactical</span></button>
+      <button class="chip" data-view="goal" aria-pressed="false"><i data-lucide="goal"></i><span>Behind goal</span></button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div id="scene" aria-label="3D pitch. Drag to orbit, pinch or scroll to zoom."></div>
+    <div id="labels" aria-hidden="true"></div>
+    <div class="now" id="now" aria-live="polite"></div>
+    <div class="layers" role="group" aria-label="Layers">
+      <button class="chip" id="threat" aria-label="Threat surface"><i data-lucide="flame"></i><span id="threat-label">Threat: Kenya</span></button>
+      <button class="chip" id="toggle-labels" aria-pressed="true"><i data-lucide="tag"></i><span>Values</span></button>
+      <button class="chip" id="toggle-grid" aria-pressed="true"><i data-lucide="grid-3x3"></i><span>Zones</span></button>
+    </div>
+    <p class="hint"><i data-lucide="move-3d"></i>Drag to orbit · pinch or scroll to zoom</p>
+  </main>
+
+  <aside class="panel">
+    <nav class="seqs" id="seqs" aria-label="Sequences"></nav>
+    <div class="transport">
+      <button class="icon-btn primary" id="play" aria-label="Play"><i data-lucide="play"></i></button>
+      <button class="icon-btn" id="restart" aria-label="Restart sequence"><i data-lucide="rotate-ccw"></i></button>
+      <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Sequence position">
+      <output id="clock" for="scrub">64:17</output>
+      <button class="chip" id="speed" aria-label="Playback speed">1×</button>
+    </div>
+    <div class="totals" id="totals"></div>
+    <ol class="events" id="events"></ol>
+    <div class="legend">
+      <span><i class="sw arc ken"></i>Kenya ball path</span>
+      <span><i class="sw arc civ"></i>Ivory Coast ball path</span>
+      <span><i class="sw dash"></i>Carry</span>
+      <span><i class="sw ring"></i>Duel or regain</span>
+      <span><i class="sw wash"></i>Threat, low to high</span>
+    </div>
+    <details class="source">
+      <summary><i data-lucide="info"></i>Source and limits</summary>
+      <dl id="source"></dl>
+    </details>
+  </aside>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

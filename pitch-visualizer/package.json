@@ -1,0 +1,22 @@
+{
+  "name": "afritech-pitch-visualizer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "build:single": "tsc --noEmit && vite build --mode single && node scripts/make-artifact.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide": "^1.72.0",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.187.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vite-plugin-singlefile": "^2.3.4"
+  }
+}
