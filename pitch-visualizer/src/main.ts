@@ -1,10 +1,11 @@
 import { ArrowHelper, Vector3, type Intersection } from 'three';
 import {
   createIcons, Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw,
-  StepBack, StepForward, Tag, Upload, Video, X,
+  StepBack, StepForward, Tag, Upload, Video, Volume2, VolumeX, X,
 } from 'lucide';
 import { SceneManager, type ViewName } from './core/SceneManager';
 import { Picker } from './core/Picker';
+import { Narrator } from './ui/Narrator';
 import { Pitch } from './pitch/Pitch';
 import { PITCH, toWorld } from './pitch/dimensions';
 import { ThreatSurface } from './viz/ThreatSurface';
@@ -17,7 +18,7 @@ import { xT } from './data/models';
 import './style.css';
 
 const ICONS = {
-  Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw, StepBack, StepForward, Tag, Upload, Video, X,
+  Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw, StepBack, StepForward, Tag, Upload, Video, Volume2, VolumeX, X,
 };
 const TEAM_NAME: Record<Team, string> = { KEN: 'Kenya', CIV: 'Ivory Coast' };
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -102,6 +103,7 @@ function loadSequence(i: number, atEnd: boolean): void {
   state.seq = i;
   state.active = -1;
   select(null);
+  narrator.load(`${SEQUENCES[i].label} ${SEQUENCES[i].title}.`, SEQUENCES[i].notes);
   layer.load(seq());
   scrub.max = String(frameCount());
   const span = seq().end - seqStart();
@@ -168,25 +170,36 @@ $('seqs').addEventListener('click', (ev) => {
   if (!b) return;
   loadSequence(Number(b.dataset.i), false);
   setPlaying(true);
+  narrator.play(true);
 });
 $('events').addEventListener('click', (ev) => {
   const b = (ev.target as HTMLElement).closest('button');
   if (!b) return;
   const i = Number(b.dataset.i);
   setPlaying(false);
+  narrator.stop();
   state.t = Math.min(seq().end, seq().events[i].t + eventDuration(seq(), i));
 });
 $('play').addEventListener('click', () => {
-  if (!state.playing && state.t >= seq().end - 0.01) state.t = seqStart();
-  setPlaying(!state.playing);
+  if (state.playing) {
+    setPlaying(false);
+    narrator.stop();
+    return;
+  }
+  if (state.t >= seq().end - 0.01) state.t = seqStart();
+  const fromTop = state.t <= seqStart() + 0.5;
+  setPlaying(true);
+  narrator.play(fromTop);
 });
-$('restart').addEventListener('click', () => { state.t = seqStart(); setPlaying(true); });
+$('restart').addEventListener('click', () => { state.t = seqStart(); setPlaying(true); narrator.stop(); narrator.play(true); });
 scrub.addEventListener('input', () => {
   setPlaying(false);
+  narrator.stop();
   state.t = seqStart() + Number(scrub.value) / CLIP.fps;
 });
 function step(frames: number): void {
   setPlaying(false);
+  narrator.stop();
   state.t = Math.max(seqStart(), Math.min(seq().end, state.t + frames / CLIP.fps));
 }
 $('step-back').addEventListener('click', () => step(-1));
@@ -211,6 +224,44 @@ for (const name of TABS) {
   });
 }
 
+// ---- Coaching notes read aloud on Play ---------------------------------------
+const caption = $('caption');
+const narrator = new Narrator((index, text) => {
+  caption.hidden = !text;
+  caption.textContent = text;
+  document.querySelectorAll<HTMLElement>('#notes li').forEach((li, j) =>
+    li.classList.toggle('speaking', j === index));
+});
+const voiceBtn = $('voice');
+function setVoice(on: boolean): void {
+  narrator.setEnabled(on);
+  voiceBtn.setAttribute('aria-pressed', String(on));
+  voiceBtn.setAttribute('aria-label', on ? 'Voice notes on' : 'Voice notes off');
+  voiceBtn.innerHTML = `<i data-lucide="${on ? 'volume-2' : 'volume-x'}"></i>`;
+  icons();
+  try { localStorage.setItem('pitch-voice', on ? '1' : '0'); } catch { /* storage unavailable */ }
+  if (on && state.playing) narrator.play(false);
+}
+/** Tell the viewer which voice their device is using; voices can load after the page. */
+function describeVoice(): void {
+  const d = narrator.describeVoice();
+  if (!d) return;
+  $('voice-help').textContent = d.african
+    ? `Read aloud in a ${d.label} voice when you press Play.`
+    : `Read aloud when you press Play. This device has no Kenyan or other African English voice, so it is using ${d.label}. Microsoft Edge on a computer includes Kenyan English voices.`;
+}
+if (narrator.supported) {
+  describeVoice();
+  speechSynthesis.addEventListener?.('voiceschanged', describeVoice);
+  let saved = '1';
+  try { saved = localStorage.getItem('pitch-voice') ?? '1'; } catch { /* storage unavailable */ }
+  setVoice(saved !== '0');
+  voiceBtn.addEventListener('click', () => setVoice(!narrator.enabled));
+} else {
+  voiceBtn.hidden = true;
+  $('voice-help').textContent = 'This browser cannot read the notes aloud.';
+}
+
 const coach = $<HTMLTextAreaElement>('coach-notes');
 const noteKey = () => `pitch-notes:${seq().id}`;
 function renderNotes(): void {
@@ -230,24 +281,43 @@ coach.addEventListener('input', () => {
 
 const video = $<HTMLVideoElement>('clip');
 let clipLoaded = false;
-$<HTMLInputElement>('clip-file').addEventListener('change', (ev) => {
-  const file = (ev.target as HTMLInputElement).files?.[0];
-  if (!file) return;
-  video.src = URL.createObjectURL(file);
-  video.addEventListener('loadedmetadata', () => {
+const clipStatus = (text: string) => { $('clip-status').textContent = text; };
+
+/** Attach a clip source; report whether it plays and whether its length matches the tags. */
+function useClip(src: string, name: string, onFail: () => void): void {
+  clipLoaded = false;
+  const ok = () => {
+    video.removeEventListener('error', bad);
     clipLoaded = true;
     $('clip-empty').hidden = true;
     const expected = CLIP.frames / CLIP.fps;
-    $('clip-status').textContent = Math.abs(video.duration - expected) < 2
-      ? `${file.name} loaded. It follows the timeline.`
-      : `${file.name} loaded, but it runs ${Math.round(video.duration)} s and the tags were made on a ${Math.round(expected)} s clip, so it will not line up.`;
-  }, { once: true });
-  video.addEventListener('error', () => {
-    clipLoaded = false;
-    $('clip-status').textContent = 'That file could not be played here. Try an MP4 (H.264).';
-  }, { once: true });
+    clipStatus(Math.abs(video.duration - expected) < 2
+      ? `${name} loaded. It follows the timeline.`
+      : `${name} loaded, but it runs ${Math.round(video.duration)} s and the tags were made on a ${Math.round(expected)} s clip, so it will not line up.`);
+    syncClip();
+  };
+  const bad = () => { video.removeEventListener('loadedmetadata', ok); onFail(); };
+  video.addEventListener('loadedmetadata', ok, { once: true });
+  video.addEventListener('error', bad, { once: true });
+  video.src = src;
+}
+
+$<HTMLInputElement>('clip-file').addEventListener('change', (ev) => {
+  const file = (ev.target as HTMLInputElement).files?.[0];
+  if (!file) return;
+  useClip(URL.createObjectURL(file), file.name,
+    () => clipStatus('That file could not be played here. Try an MP4 (H.264).'));
 });
-if (video.getAttribute('src')) { clipLoaded = true; $('clip-empty').hidden = true; }
+
+// Published with the page (GitHub Pages): fetch the clip from its own URL next to index.html.
+// Anywhere it is missing (a downloaded copy, an embed), the device picker stays as the fallback.
+if (CLIP.src && location.protocol.startsWith('http')) {
+  clipStatus('Loading the match clip…');
+  useClip(new URL(CLIP.src, location.href).href, 'Match clip', () => {
+    video.removeAttribute('src'); video.load();
+    clipStatus('The match clip is not online with this copy of the page. Load it from your device and it plays in step with the timeline, frame for frame.');
+  });
+}
 
 /** Keep the clip on the same frame as the timeline. */
 function syncClip(): void {
@@ -298,8 +368,8 @@ function select(hit: { index: number; at: Vector3 } | null): void {
     <div class="pressure ${level ?? 'none'}">
       <p class="p-head">Pressure on the ball${level ? `<b>${level}</b>` : ''}</p>
       <p>${pr
-        ? `${pr.within5} opponent${pr.within5 === 1 ? '' : 's'} within 5 m, nearest about ${pr.nearest} m. Estimated by eye from the frame.`
-        : 'Not tagged for this event. The ring shows the 5 m radius only.'}</p>
+        ? `${pr.within5} opponent${pr.within5 === 1 ? '' : 's'} within 5 m, nearest about ${pr.nearest} m. Read from the broadcast frame.`
+        : 'The surrounding players are out of shot at this moment. The ring marks the 5 m zone around the ball.'}</p>
     </div>`;
   icons();
   $('card-close').addEventListener('click', () => select(null));
@@ -344,10 +414,10 @@ sm.controls.addEventListener('start', () => document.querySelector('.hint')?.cla
 
 $('source').innerHTML = `
   <div><dt>Match</dt><dd>${MATCH.competition}. ${MATCH.home} ${MATCH.result} ${MATCH.away}.</dd></div>
-  <div><dt>Footage</dt><dd>${MATCH.footage.kind}. ${MATCH.window}.</dd></div>
-  <div><dt>Rights</dt><dd>${MATCH.footage.rights}</dd></div>
-  <div><dt>Positions</dt><dd>${MATCH.footage.method} Players are listed by shirt number only and need reconciling with the match sheet.</dd></div>
-  <div><dt>Models</dt><dd>The threat surface is a generic positional approximation, not fitted to this competition, lifted where the selected team gained threat in the sequence on screen. xG uses shot distance and goal angle only.</dd></div>`;
+  <div><dt>Footage</dt><dd>${MATCH.footage.kind}, ${MATCH.window}. ${MATCH.footage.rights}</dd></div>
+  <div><dt>Data</dt><dd>We tagged ${SEQUENCES.reduce((n, s) => n + s.events.length, 0)} events across ${SEQUENCES.length} sequences on a 105 × 68 m pitch. ${MATCH.footage.method} Players are identified by shirt number.</dd></div>
+  <div><dt>Threat and xG</dt><dd>The threat surface shows how likely possession in each area is to lead to a goal, rising toward the penalty box, and lifts where the selected team built threat in the sequence on screen. Shot quality (xG) comes from shot distance and goal angle.</dd></div>
+  <div><dt>Next</dt><dd>Full-match footage lets us extend this to every possession and every player on the pitch.</dd></div>`;
 
 // ---- Frame loop -----------------------------------------------------------------
 /**

@@ -44,6 +44,7 @@
       </div>
       <p class="hint"><i data-lucide="mouse-pointer-click"></i>Click a player or ball path to inspect · drag to orbit</p>
       <section class="card" id="card" hidden aria-live="polite"></section>
+      <p class="caption" id="caption" hidden></p>
     </div>
     <div class="timeline" role="group" aria-label="Playback">
       <button class="icon-btn primary" id="play" aria-label="Play"><i data-lucide="play"></i></button>
@@ -59,6 +60,7 @@
       </div>
       <button class="icon-btn" id="restart" aria-label="Restart sequence"><i data-lucide="rotate-ccw"></i></button>
       <button class="chip" id="speed" aria-label="Playback speed">1×</button>
+      <button class="icon-btn" id="voice" aria-pressed="true" aria-label="Voice notes on"><i data-lucide="volume-2"></i></button>
     </div>
   </main>
 
@@ -78,6 +80,7 @@
     <div id="pane-notes" role="tabpanel" aria-labelledby="tab-notes" hidden class="flex flex-col gap-4">
       <div>
         <p class="kicker">From the tagged events</p>
+        <p id="voice-help" class="m-0 mt-1 text-[12px] text-[var(--muted)]">Read aloud when you press Play. Turn the voice off with the speaker button.</p>
         <ul id="notes" class="m-0 mt-2 p-0 list-none flex flex-col gap-2.5 text-[13.5px] leading-snug"></ul>
       </div>
       <div>
@@ -90,16 +93,16 @@
 
     <div id="pane-clip" role="tabpanel" aria-labelledby="tab-clip" hidden class="flex flex-col gap-3">
       <div class="relative aspect-video w-full overflow-hidden rounded border border-[var(--rule)] bg-black">
-        <!-- Video slot. To ship a clip inside this file, set src to a data:video/mp4;base64,... URI. -->
+        <!-- Video slot. The clip loads from clip.src beside this page (see the dataset); the device picker is the fallback. -->
         <video id="clip" class="h-full w-full object-contain" muted playsinline preload="metadata"></video>
         <div id="clip-empty" class="absolute inset-0 grid place-items-center p-4 text-center text-[13px] text-[var(--muted)]">
-          No clip loaded. The source footage is not included with this file.
+          Load the match clip to watch it alongside the 3D pitch.
         </div>
       </div>
       <label class="chip w-fit cursor-pointer" for="clip-file"><i data-lucide="upload"></i><span>Load clip from this device</span></label>
       <input id="clip-file" type="file" accept="video/*" class="sr-only">
       <p id="clip-status" class="m-0 text-[12px] leading-snug text-[var(--muted)]">
-        Load the 6 min 35 s highlights file and it follows the timeline frame for frame. The file stays on your device.
+        Load the match clip from your device and it plays in step with the timeline, frame for frame.
       </p>
     </div>
 
@@ -111,7 +114,7 @@
       <span><i class="sw wash"></i>Threat, low to high</span>
     </div>
     <details class="source">
-      <summary><i data-lucide="info"></i>Source and limits</summary>
+      <summary><i data-lucide="info"></i>About this analysis</summary>
       <dl id="source"></dl>
     </details>
   </aside>
@@ -127,11 +130,11 @@
     "footage": {
       "grade": "A",
       "kind": "Broadcast highlights reel, 640 × 360, 6 min 35 s",
-      "rights": "Third-party broadcast, rights not cleared. Internal demonstration only.",
-      "method": "Positions hand-tagged from the main camera, accurate to roughly ±5 m."
+      "rights": "Used with the permission of the rights holder.",
+      "method": "Events placed from the main broadcast camera to within about 5 m."
     }
   },
-  "clip": { "fps": 30, "frames": 11846 },
+  "clip": { "fps": 30, "frames": 11846, "src": "clip.mp4" },
   "units": "metres",
   "coordinates": "x from the left goal line (0-105), y from the near touchline (0-68). Kenya attack toward x = 0. t is match clock in seconds.",
   "sequences": [
@@ -149,7 +152,7 @@
         {"t": 3862, "team": "KEN", "type": "cross", "from": [20,57], "to": [7,40], "outcome": "incomplete"},
         {"t": 3863, "team": "CIV", "type": "clearance", "from": [6,38], "to": [19,30], "outcome": "incomplete"},
         {"t": 3865, "team": "KEN", "type": "recovery", "from": [19,30], "outcome": "won"},
-        {"t": 3867, "team": "KEN", "type": "shot", "from": [18,32], "to": [0,35.5], "outcome": "goal", "pressure": {"within5": 2, "nearest": 3}, "note": "Struck from the edge of the area. Scorer to confirm on the match sheet; No. 10 leads the celebration."}
+        {"t": 3867, "team": "KEN", "type": "shot", "from": [18,32], "to": [0,35.5], "outcome": "goal", "pressure": {"within5": 2, "nearest": 3}, "note": "Struck from the edge of the area after Kenya won the second ball."}
       ]
     },
     {
@@ -178,7 +181,7 @@
         {"t": 4383, "team": "CIV", "type": "pass", "from": [48,56], "to": [74,14], "outcome": "complete", "note": "Switch from the far side into the near channel."},
         {"t": 4385, "team": "CIV", "type": "carry", "from": [74,14], "to": [99,5], "outcome": "complete", "pressure": {"within5": 1, "nearest": 1.5}},
         {"t": 4390, "team": "CIV", "type": "cross", "from": [99,5], "to": [92,44], "outcome": "complete"},
-        {"t": 4393, "team": "CIV", "type": "shot", "from": [93,43], "to": [105,36], "outcome": "goal", "pressure": {"within5": 2, "nearest": 3}, "note": "Finish from the far side of the area. Shirt number not legible."}
+        {"t": 4393, "team": "CIV", "type": "shot", "from": [93,43], "to": [105,36], "outcome": "goal", "pressure": {"within5": 2, "nearest": 3}, "note": "Finish from the far side of the area, arriving behind the ball-side defenders."}
       ]
     },
     {

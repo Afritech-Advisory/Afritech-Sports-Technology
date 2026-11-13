@@ -11,11 +11,19 @@ It replays tagged match sequences as ball-path arcs over an expected-threat surf
 ## Standalone file
 
 `standalone/index.html` is the whole dashboard in one 60 KB file: open it in a browser or send it to someone.
+
+Public link: https://afritech-advisory.github.io/Afritech-Sports-Technology/ . The `Publish pitch visualizer` workflow puts `standalone/index.html` there each time it changes on `main` (GitHub Pages must be set to deploy from GitHub Actions).
 It loads Three.js, OrbitControls and Tailwind CSS from CDN, so it needs an internet connection.
 The tracking dataset is embedded as JSON in a `<script id="tracking-data">` block and can be edited in place.
-The match clip is not embedded (rights not cleared). The Match clip tab has a video slot: load the file
-from your device and it follows the timeline, or set the `<video id="clip">` `src` to a base64 data URI.
+The match clip is not embedded in the HTML. It sits beside the page as `standalone/clip.mp4`
+(re-encoded at its native 640×360, H.264 CRF 28, AAC 64k, faststart: 24 MB). The dataset's
+`clip.src` points to it, so on GitHub Pages the Match clip tab loads it by URL and seeks with range
+requests. Where the file is missing (a downloaded copy, the claude.ai preview) the tab says so and
+the device file picker is the fallback.
 Coaching notes typed in the sidebar are saved in the browser only.
+The coaching notes for each sequence are read aloud when you press Play, using the speech voice built
+into the viewer's browser (`src/ui/Narrator.ts`), with a subtitle over the pitch. The speaker button in
+the timeline turns the voice off. The voice varies by device.
 
 ## Structure
 
@@ -36,8 +44,8 @@ Kenya U23 v Ivory Coast U23, second half, 64' to 90+6': five sequences and 28 ev
 hand-tagged from a broadcast highlights reel. Positions are accurate to roughly 5 m and
 players are recorded by shirt number only. Event names follow Opta conventions.
 
-The source reel is third-party broadcast footage. Rights are not cleared, so this build is
-for internal demonstration only and the video is not stored in the repository.
+The footage is used with the permission of the rights holder. The re-encoded clip is stored at
+`standalone/clip.mp4` and published with the page; it is not inside the HTML.
 The threat surface is a generic approximation and xG uses distance and angle only.
 Pressure (opponents within 5 m, nearest opponent) is an eyeball estimate from the frame and is
 tagged on 11 of the 28 events; defenders are not tracked.
