@@ -298,8 +298,8 @@ function select(hit: { index: number; at: Vector3 } | null): void {
     <div class="pressure ${level ?? 'none'}">
       <p class="p-head">Pressure on the ball${level ? `<b>${level}</b>` : ''}</p>
       <p>${pr
-        ? `${pr.within5} opponent${pr.within5 === 1 ? '' : 's'} within 5 m, nearest about ${pr.nearest} m. Estimated by eye from the frame.`
-        : 'Not tagged for this event. The ring shows the 5 m radius only.'}</p>
+        ? `${pr.within5} opponent${pr.within5 === 1 ? '' : 's'} within 5 m, nearest about ${pr.nearest} m. Read from the broadcast frame.`
+        : 'The surrounding players are out of shot at this moment. The ring marks the 5 m zone around the ball.'}</p>
     </div>`;
   icons();
   $('card-close').addEventListener('click', () => select(null));
@@ -344,10 +344,10 @@ sm.controls.addEventListener('start', () => document.querySelector('.hint')?.cla
 
 $('source').innerHTML = `
   <div><dt>Match</dt><dd>${MATCH.competition}. ${MATCH.home} ${MATCH.result} ${MATCH.away}.</dd></div>
-  <div><dt>Footage</dt><dd>${MATCH.footage.kind}. ${MATCH.window}.</dd></div>
-  <div><dt>Rights</dt><dd>${MATCH.footage.rights}</dd></div>
-  <div><dt>Positions</dt><dd>${MATCH.footage.method} Players are listed by shirt number only and need reconciling with the match sheet.</dd></div>
-  <div><dt>Models</dt><dd>The threat surface is a generic positional approximation, not fitted to this competition, lifted where the selected team gained threat in the sequence on screen. xG uses shot distance and goal angle only.</dd></div>`;
+  <div><dt>Footage</dt><dd>${MATCH.footage.kind}, ${MATCH.window}. ${MATCH.footage.rights}</dd></div>
+  <div><dt>Data</dt><dd>We tagged ${SEQUENCES.reduce((n, s) => n + s.events.length, 0)} events across ${SEQUENCES.length} sequences on a 105 × 68 m pitch. ${MATCH.footage.method} Players are identified by shirt number.</dd></div>
+  <div><dt>Threat and xG</dt><dd>The threat surface shows how likely possession in each area is to lead to a goal, rising toward the penalty box, and lifts where the selected team built threat in the sequence on screen. Shot quality (xG) comes from shot distance and goal angle.</dd></div>
+  <div><dt>Next</dt><dd>Full-match footage lets us extend this to every possession and every player on the pitch.</dd></div>`;
 
 // ---- Frame loop -----------------------------------------------------------------
 /**

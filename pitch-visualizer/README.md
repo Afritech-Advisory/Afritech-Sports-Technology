@@ -13,8 +13,9 @@ It replays tagged match sequences as ball-path arcs over an expected-threat surf
 `standalone/index.html` is the whole dashboard in one 60 KB file: open it in a browser or send it to someone.
 It loads Three.js, OrbitControls and Tailwind CSS from CDN, so it needs an internet connection.
 The tracking dataset is embedded as JSON in a `<script id="tracking-data">` block and can be edited in place.
-The match clip is not embedded (rights not cleared). The Match clip tab has a video slot: load the file
-from your device and it follows the timeline, or set the `<video id="clip">` `src` to a base64 data URI.
+The match clip is not embedded: at 25 MB it would add about 34 MB as base64. The Match clip tab has a
+video slot: load the file from your device and it follows the timeline, or set the `<video id="clip">`
+`src` to a base64 data URI for a shorter or re-encoded clip.
 Coaching notes typed in the sidebar are saved in the browser only.
 
 ## Structure
@@ -36,8 +37,8 @@ Kenya U23 v Ivory Coast U23, second half, 64' to 90+6': five sequences and 28 ev
 hand-tagged from a broadcast highlights reel. Positions are accurate to roughly 5 m and
 players are recorded by shirt number only. Event names follow Opta conventions.
 
-The source reel is third-party broadcast footage. Rights are not cleared, so this build is
-for internal demonstration only and the video is not stored in the repository.
+The footage is used with the permission of the rights holder. The 25 MB clip is not stored in
+the repository or bundled in the page; load it into the Match clip tab.
 The threat surface is a generic approximation and xG uses distance and angle only.
 Pressure (opponents within 5 m, nearest opponent) is an eyeball estimate from the frame and is
 tagged on 11 of the 28 events; defenders are not tracked.
