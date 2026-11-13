@@ -1,18 +1,24 @@
-import { ArrowHelper, Vector3 } from 'three';
+import { ArrowHelper, Vector3, type Intersection } from 'three';
 import {
-  createIcons, Flame, Goal, Grid3x3, Info, LayoutGrid, Move3d, Pause, Play, RotateCcw, Tag, Video,
+  createIcons, Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw,
+  StepBack, StepForward, Tag, Video, X,
 } from 'lucide';
 import { SceneManager, type ViewName } from './core/SceneManager';
+import { Picker } from './core/Picker';
 import { Pitch } from './pitch/Pitch';
 import { PITCH, toWorld } from './pitch/dimensions';
 import { ThreatSurface } from './viz/ThreatSurface';
 import { EventLayer, type EventLabel } from './viz/EventLayer';
 import {
-  EVENT_META, MATCH, SEQUENCES, clock, deltaXT, eventDuration, shotXG, type Team,
+  CLIP, EVENT_META, MATCH, SEQUENCES, clock, deltaXT, eventDuration, pressureLevel, shotXG, zoneName,
+  type Team,
 } from './data/match';
+import { xT } from './data/models';
 import './style.css';
 
-const ICONS = { Flame, Goal, Grid3x3, Info, LayoutGrid, Move3d, Pause, Play, RotateCcw, Tag, Video };
+const ICONS = {
+  Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw, StepBack, StepForward, Tag, Video, X,
+};
 const TEAM_NAME: Record<Team, string> = { KEN: 'Kenya', CIV: 'Ivory Coast' };
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const signed = (v: number) => `${Math.abs(v) < 0.0005 ? '' : v > 0 ? '+' : '−'}${Math.abs(v).toFixed(3)}`;
@@ -58,14 +64,19 @@ function valueEl(i: number): HTMLElement {
   return valuePool[i];
 }
 
+const scrub = $<HTMLInputElement>('scrub');
+
 // ---- State -----------------------------------------------------------------
 type ThreatMode = Team | 'off';
 const state = {
   seq: 0, t: 0, playing: false, speed: 1, active: -1,
+  selected: null as { index: number; at: Vector3 } | null,
   threat: 'KEN' as ThreatMode, threatAuto: true, labels: true,
 };
 const seq = () => SEQUENCES[state.seq];
 const seqStart = () => seq().events[0].t - 0.4;
+const frameCount = () => Math.round((seq().end - seqStart()) * CLIP.fps);
+const clipFrame = () => Math.round((state.t + seq().videoOffset) * CLIP.fps);
 const attackingTeam = (): Team => seq().events.find((e) => e.type === 'shot')?.team ?? seq().events[0].team;
 
 function setThreat(mode: ThreatMode): void {
@@ -90,7 +101,12 @@ function setPlaying(on: boolean): void {
 function loadSequence(i: number, atEnd: boolean): void {
   state.seq = i;
   state.active = -1;
+  select(null);
   layer.load(seq());
+  scrub.max = String(frameCount());
+  const span = seq().end - seqStart();
+  $('ticks').innerHTML = seq().events.map((e) =>
+    `<i class="${e.team.toLowerCase()}${e.outcome === 'goal' ? ' goal' : ''}" style="left:${(((e.t - seqStart()) / span) * 100).toFixed(2)}%"></i>`).join('');
   state.t = atEnd ? seq().end : seqStart();
   if (state.threatAuto) setThreat(attackingTeam());
 
@@ -140,6 +156,8 @@ function updateScore(): void {
   $('score').textContent = `${ken}–${civ}`;
 }
 
+const p = { x: 0, y: 0, visible: false };
+
 // ---- Controls ----------------------------------------------------------------
 $('seqs').innerHTML = SEQUENCES.map((s, i) =>
   `<button data-i="${i}"><span class="seq-min">${s.label}</span><span class="seq-title">${s.title}</span></button>`).join('');
@@ -161,11 +179,81 @@ $('play').addEventListener('click', () => {
   setPlaying(!state.playing);
 });
 $('restart').addEventListener('click', () => { state.t = seqStart(); setPlaying(true); });
-const scrub = $<HTMLInputElement>('scrub');
 scrub.addEventListener('input', () => {
   setPlaying(false);
-  state.t = seqStart() + (Number(scrub.value) / 1000) * (seq().end - seqStart());
+  state.t = seqStart() + Number(scrub.value) / CLIP.fps;
 });
+function step(frames: number): void {
+  setPlaying(false);
+  state.t = Math.max(seqStart(), Math.min(seq().end, state.t + frames / CLIP.fps));
+}
+$('step-back').addEventListener('click', () => step(-1));
+$('step-fwd').addEventListener('click', () => step(1));
+window.addEventListener('keydown', (ev) => {
+  const el = ev.target as HTMLElement;
+  if (el.closest('input, button, summary')) return;
+  if (ev.key === ' ') { ev.preventDefault(); $('play').click(); }
+  if (ev.key === 'ArrowLeft') step(ev.shiftKey ? -10 : -1);
+  if (ev.key === 'ArrowRight') step(ev.shiftKey ? 10 : 1);
+  if (ev.key === 'Escape') select(null);
+});
+
+// ---- Click to inspect -----------------------------------------------------------
+const card = $('card');
+const m1 = (v: number) => v.toFixed(1);
+function select(hit: { index: number; at: Vector3 } | null): void {
+  state.selected = hit;
+  layer.select(hit ? hit.index : null);
+  card.hidden = !hit;
+  if (!hit) return;
+  const e = seq().events[hit.index];
+  const from = `${m1(e.from[0])}, ${m1(e.from[1])} m · zone ${zoneName(e.from[0], e.from[1])}`;
+  const rows: [string, string][] = [['Start', from]];
+  if (e.to) {
+    rows.push(['End', `${m1(e.to[0])}, ${m1(e.to[1])} m · zone ${zoneName(e.to[0], e.to[1])}`]);
+    rows.push(['Distance', `${m1(Math.hypot(e.to[0] - e.from[0], e.to[1] - e.from[1]))} m`]);
+  }
+  const g = shotXG(e), d = deltaXT(e);
+  if (g !== null) rows.push(['Shot quality', `${g.toFixed(2)} xG`]);
+  else if (e.to) {
+    const a = xT(e.from[0], e.from[1], e.team), b = xT(e.to[0], e.to[1], e.team);
+    rows.push(['Threat', `${a.toFixed(3)} → ${b.toFixed(3)}${d !== null ? ` (${signed(d)})` : ', not credited'}`]);
+  } else rows.push(['Threat here', `${xT(e.from[0], e.from[1], e.team).toFixed(3)} xT`]);
+  const px = hit.at.x + PITCH.length / 2, py = PITCH.width / 2 - hit.at.z;
+  rows.push(['Clicked point', `${m1(px)}, ${m1(py)} m${hit.at.y > 0.9 ? ` · ${m1(hit.at.y)} m up` : ''}`]);
+  rows.push(['Clip frame', `${Math.round((e.t + seq().videoOffset) * CLIP.fps).toLocaleString('en')}`]);
+  const pr = e.pressure;
+  const level = pr ? pressureLevel(pr) : null;
+  card.innerHTML = `
+    <header><span class="ev-clock">${clock(e.t)}</span>
+      <span class="${e.team.toLowerCase()}"><span class="dot"></span>${TEAM_NAME[e.team]}</span>
+      <button class="card-close" id="card-close" aria-label="Close"><i data-lucide="x"></i></button></header>
+    <h2>${EVENT_META[e.type].label}${e.player ? `, No. ${e.player}` : ''}${e.outcome === 'goal' ? ' · Goal' : ''}</h2>
+    <dl>${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+    <div class="pressure ${level ?? 'none'}">
+      <p class="p-head">Pressure on the ball${level ? `<b>${level}</b>` : ''}</p>
+      <p>${pr
+        ? `${pr.within5} opponent${pr.within5 === 1 ? '' : 's'} within 5 m, nearest about ${pr.nearest} m. Estimated by eye from the frame.`
+        : 'Not tagged for this event. The ring shows the 5 m radius only.'}</p>
+    </div>`;
+  icons();
+  $('card-close').addEventListener('click', () => select(null));
+  document.querySelectorAll<HTMLElement>('#events button').forEach((b, j) =>
+    b.classList.toggle('picked', j === hit.index));
+}
+new Picker(sm, () => layer.pickTargets(), (hit: Intersection | null) => {
+  const index = hit?.object.userData.eventIndex as number | undefined;
+  const snap = hit?.object.userData.snap as Vector3 | undefined; // player marks report the player's own position
+  select(hit && index !== undefined ? { index, at: (snap ?? hit.point).clone() } : null);
+});
+const view = $('view');
+function placeCard(): void {
+  if (!state.selected) return;
+  sm.project(state.selected.at, p);
+  const x = Math.max(8, Math.min(view.clientWidth - card.offsetWidth - 8, p.x + 18));
+  const y = Math.max(8, Math.min(view.clientHeight - card.offsetHeight - 8, p.y - card.offsetHeight - 14));
+  card.style.transform = `translate(${x.toFixed(0)}px, ${y.toFixed(0)}px)`;
+}
 $('speed').addEventListener('click', () => {
   state.speed = state.speed === 1 ? 2 : state.speed === 2 ? 0.5 : 1;
   $('speed').textContent = `${state.speed === 0.5 ? '½' : state.speed}×`;
@@ -219,7 +307,6 @@ function contextPoints(): number[] {
 }
 const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const p = { x: 0, y: 0, visible: false };
 function place(el: HTMLElement, at: Vector3, show: boolean): void {
   sm.project(at, p);
   const on = show && p.visible;
@@ -238,8 +325,14 @@ sm.onFrame((dt, elapsed) => {
   if (active !== state.active) showActive(active);
   updateScore();
 
-  scrub.value = String(Math.round(((state.t - seqStart()) / (seq().end - seqStart())) * 1000));
-  $('clock').textContent = clock(Math.floor(Math.max(state.t, seq().events[0].t)));
+  const f = String(Math.round((state.t - seqStart()) * CLIP.fps));
+  if (scrub.value !== f) scrub.value = f;
+  const label = clock(Math.floor(Math.max(state.t, seq().events[0].t)));
+  if ($('clock').textContent !== label) $('clock').textContent = label;
+  const frame = `frame ${clipFrame().toLocaleString('en')}`;
+  if ($('frame').textContent !== frame) $('frame').textContent = frame;
+  if (state.selected && state.t < seq().events[state.selected.index].t) select(null);
+  placeCard();
 
   for (const n of notes) place(n.el, n.at, true);
   layer.labels.forEach((l: EventLabel, i) => {

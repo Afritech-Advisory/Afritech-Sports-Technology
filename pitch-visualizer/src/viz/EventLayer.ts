@@ -1,16 +1,19 @@
 import {
   BufferGeometry, CatmullRomCurve3, CircleGeometry, Curve, DoubleSide, Group, Line,
-  LineDashedMaterial, Mesh, MeshBasicMaterial, RingGeometry, SphereGeometry, Vector3, type Camera,
+  LineDashedMaterial, Mesh, MeshBasicMaterial, RingGeometry, SphereGeometry, Vector3,
+  type Camera, type Object3D,
 } from 'three';
 import { buildPassingLanes, type Lane, type PassingLanes, type TrackingClip } from './PassingLanes';
 import {
-  EVENT_META, deltaXT, eventDuration, shotXG, type MatchEvent, type Sequence, type Team,
+  EVENT_META, deltaXT, eventDuration, pressureLevel, shotXG, type MatchEvent, type Sequence, type Team,
 } from '../data/match';
 import { toWorld } from '../pitch/dimensions';
 
 export const TEAM_COLOR: Record<Team, number> = { KEN: 0x9cc2ff, CIV: 0xffe9c4 };
 const KIT: Record<Team, number> = { KEN: 0xe5343f, CIV: 0xf6f3ec };
 const SEGMENTS = 56;
+const POCKET: Record<string, number> = { high: 0xff3d7f, medium: 0xffc04a, low: 0x5fdccb, none: 0xece8dc };
+const HIT_MATERIAL = new MeshBasicMaterial({ visible: false });
 
 export interface EventLabel {
   anchor: Vector3;
@@ -30,6 +33,8 @@ interface Item {
   marker: Group;
   ring: Mesh | null;
   label: EventLabel | null;
+  hit: Mesh;
+  started: boolean;
 }
 
 const passId = (seq: Sequence, i: number) => `${seq.id}-${i}`;
@@ -69,6 +74,9 @@ export class EventLayer {
   private items: Item[] = [];
   private goalFlash: Mesh;
   private lanes: PassingLanes | null = null;
+  private pocket = new Group();
+  private pocketFill: Mesh;
+  private pocketRim: Mesh;
 
   constructor() {
     this.ball = new Mesh(new SphereGeometry(0.75, 20, 14), new MeshBasicMaterial({ color: 0xffffff }));
@@ -76,13 +84,46 @@ export class EventLayer {
       new RingGeometry(1.2, 1.9, 40),
       new MeshBasicMaterial({ color: 0xffd060, transparent: true, opacity: 0, side: DoubleSide, depthWrite: false }),
     );
+    this.pocketFill = new Mesh(
+      new CircleGeometry(5, 48),
+      new MeshBasicMaterial({ transparent: true, opacity: 0.3, depthWrite: false }),
+    );
+    this.pocketRim = new Mesh(new RingGeometry(4.85, 5.1, 64), new MeshBasicMaterial({ transparent: true, opacity: 0.95 }));
+    for (const m of [this.pocketFill, this.pocketRim]) m.rotation.x = -Math.PI / 2;
+    this.pocket.add(this.pocketFill, this.pocketRim);
+  }
+
+  /** Objects a click can land on, limited to what playback has revealed so far. */
+  pickTargets(): Object3D[] {
+    const out: Object3D[] = [];
+    for (const item of this.items) {
+      if (!item.started) continue;
+      out.push(item.hit);
+      if (item.lane) out.push(item.lane.pick);
+      if (item.line) out.push(item.line);
+    }
+    return out;
+  }
+
+  /** Mark one event's pressure pocket: a 5 m radius around the player on the ball. */
+  select(index: number | null): void {
+    const item = index === null ? null : this.items[index];
+    this.pocket.visible = !!item;
+    if (!item) return;
+    const e = item.event;
+    const color = POCKET[e.pressure ? pressureLevel(e.pressure) : 'none'];
+    (this.pocketFill.material as MeshBasicMaterial).color.setHex(color);
+    (this.pocketFill.material as MeshBasicMaterial).opacity = e.pressure ? 0.3 : 0.06;
+    (this.pocketRim.material as MeshBasicMaterial).color.setHex(color);
+    this.pocket.position.copy(toWorld(e.from[0], e.from[1], 0.1));
   }
 
   load(seq: Sequence): void {
     this.group.clear();
     this.items = [];
     this.labels = [];
-    this.group.add(this.ball, this.goalFlash);
+    this.group.add(this.ball, this.goalFlash, this.pocket);
+    this.pocket.visible = false;
 
     // Ball paths go through the tracking-JSON route, the same one tracker output would take
     const clip = sequenceToTracking(seq);
@@ -96,7 +137,13 @@ export class EventLayer {
       const item: Item = {
         event, start: event.t, duration: eventDuration(seq, i),
         curve: null, lane: laneById.get(passId(seq, i)) ?? null, line: null, marker: this.playerMarker(event, a), ring: null, label: null,
+        hit: new Mesh(new SphereGeometry(2.4, 10, 8), HIT_MATERIAL), started: false,
       };
+      item.hit.position.copy(a);
+      item.hit.userData.eventIndex = i;
+      item.hit.userData.snap = a.clone();
+      if (item.lane) item.lane.pick.userData.eventIndex = i;
+      this.group.add(item.hit);
       this.group.add(item.marker);
 
       if (event.to) {
@@ -116,6 +163,7 @@ export class EventLayer {
             new LineDashedMaterial({ color: TEAM_COLOR[event.team], dashSize: 1.3, gapSize: 0.9 }),
           );
           line.computeLineDistances();
+          line.userData.eventIndex = i;
           item.line = line;
           this.group.add(line);
         }
@@ -171,6 +219,7 @@ export class EventLayer {
     this.items.forEach((item, i) => {
       const k = Math.max(0, Math.min(1, (t - item.start) / item.duration));
       const started = t >= item.start;
+      item.started = started;
       if (started) active = i;
       item.marker.visible = started;
       item.lane?.setReveal(k);

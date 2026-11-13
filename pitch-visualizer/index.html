@@ -22,26 +22,37 @@
   </header>
 
   <main class="stage">
-    <div id="scene" aria-label="3D pitch. Drag to orbit, pinch or scroll to zoom."></div>
-    <div id="labels" aria-hidden="true"></div>
-    <div class="now" id="now" aria-live="polite"></div>
-    <div class="layers" role="group" aria-label="Layers">
-      <button class="chip" id="threat" aria-label="Threat surface"><i data-lucide="flame"></i><span id="threat-label">Threat: Kenya</span></button>
-      <button class="chip" id="toggle-labels" aria-pressed="true"><i data-lucide="tag"></i><span>Values</span></button>
-      <button class="chip" id="toggle-grid" aria-pressed="true"><i data-lucide="grid-3x3"></i><span>Zones</span></button>
+    <div class="view" id="view">
+      <div id="scene" aria-label="3D pitch. Drag to orbit, pinch or scroll to zoom, click a player or ball path to inspect it."></div>
+      <div id="labels" aria-hidden="true"></div>
+      <div class="now" id="now" aria-live="polite"></div>
+      <div class="layers" role="group" aria-label="Layers">
+        <button class="chip" id="threat" aria-label="Threat surface"><i data-lucide="flame"></i><span id="threat-label">Threat: Kenya</span></button>
+        <button class="chip" id="toggle-labels" aria-pressed="true"><i data-lucide="tag"></i><span>Values</span></button>
+        <button class="chip" id="toggle-grid" aria-pressed="true"><i data-lucide="grid-3x3"></i><span>Zones</span></button>
+      </div>
+      <p class="hint"><i data-lucide="mouse-pointer-click"></i>Click a player or ball path to inspect · drag to orbit</p>
+      <section class="card" id="card" hidden aria-live="polite"></section>
     </div>
-    <p class="hint"><i data-lucide="move-3d"></i>Drag to orbit · pinch or scroll to zoom</p>
+    <div class="timeline" role="group" aria-label="Playback">
+      <button class="icon-btn primary" id="play" aria-label="Play"><i data-lucide="play"></i></button>
+      <button class="icon-btn" id="step-back" aria-label="Back one frame"><i data-lucide="step-back"></i></button>
+      <button class="icon-btn" id="step-fwd" aria-label="Forward one frame"><i data-lucide="step-forward"></i></button>
+      <div class="track">
+        <div class="ticks" id="ticks" aria-hidden="true"></div>
+        <input id="scrub" type="range" min="0" max="100" step="1" value="0" aria-label="Clip frame">
+      </div>
+      <div class="readout">
+        <output id="clock" for="scrub">64:17</output>
+        <span id="frame">frame 0</span>
+      </div>
+      <button class="icon-btn" id="restart" aria-label="Restart sequence"><i data-lucide="rotate-ccw"></i></button>
+      <button class="chip" id="speed" aria-label="Playback speed">1×</button>
+    </div>
   </main>
 
   <aside class="panel">
     <nav class="seqs" id="seqs" aria-label="Sequences"></nav>
-    <div class="transport">
-      <button class="icon-btn primary" id="play" aria-label="Play"><i data-lucide="play"></i></button>
-      <button class="icon-btn" id="restart" aria-label="Restart sequence"><i data-lucide="rotate-ccw"></i></button>
-      <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Sequence position">
-      <output id="clock" for="scrub">64:17</output>
-      <button class="chip" id="speed" aria-label="Playback speed">1×</button>
-    </div>
     <div class="totals" id="totals"></div>
     <ol class="events" id="events"></ol>
     <div class="legend">

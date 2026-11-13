@@ -11,6 +11,7 @@ It replays tagged match sequences as ball-path arcs over an expected-threat surf
 ## Structure
 
 - `src/core/SceneManager.ts` renderer (antialiased), perspective camera, ambient and directional light, resize handling, damped OrbitControls, render loop
+- `src/core/Picker.ts` raycast picking on click or tap (drags are ignored); opens the inspect card with coordinates, zone, threat and the 5 m pressure pocket
 - `src/pitch/` FIFA dimensions (105 x 68 m, 1 unit = 1 m) and the pitch slab with markings, goals and the 12 x 8 zone grid
 - `src/viz/ThreatSurface.ts` custom `ShaderMaterial`: positional xT plus a dynamic `vec3[32]` uniform of intensity points (x m, y m, weight), blended cyan to magenta to amber in the fragment shader
 - `src/viz/PassingLanes.ts` `buildPassingLanes(json, options)`: tracking JSON in, volumetric lanes out (`CatmullRomCurve3` and `TubeGeometry`, glowing waypoint sprites, translucent direction arrows that rescale with camera distance)
@@ -28,6 +29,11 @@ players are recorded by shirt number only. Event names follow Opta conventions.
 The source reel is third-party broadcast footage. Rights are not cleared, so this build is
 for internal demonstration only and the video is not stored in the repository.
 The threat surface is a generic approximation and xG uses distance and angle only.
+Pressure (opponents within 5 m, nearest opponent) is an eyeball estimate from the frame and is
+tagged on 11 of the 28 events; defenders are not tracked.
+
+The timeline scrubs in source-clip frames (30 fps). Space plays or pauses, arrow keys step one
+frame, Shift with an arrow steps ten.
 
 To load another match, replace `SEQUENCES` in `src/data/match.ts`.
 Coordinates are metres: x from the left goal line, y from the near touchline.

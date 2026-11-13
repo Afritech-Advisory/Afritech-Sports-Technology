@@ -29,6 +29,8 @@ export interface LaneOptions {
 export interface Lane {
   pass: TrackingPass;
   curve: CatmullRomCurve3;
+  /** The lane's outer shell, for raycasting. Only the revealed part is hit. */
+  pick: Mesh;
   /** Draw the lane from its start up to fraction k (0-1). */
   setReveal(k: number): void;
 }
@@ -127,7 +129,7 @@ export function buildPassingLanes(input: TrackingClip | string, options: LaneOpt
     });
 
     return {
-      pass, curve,
+      pass, curve, pick: shell,
       setReveal(k: number) {
         const on = k > 0;
         core.visible = shell.visible = on;
