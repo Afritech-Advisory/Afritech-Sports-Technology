@@ -1,8 +1,8 @@
 import {
-  AdditiveBlending, BufferGeometry, CatmullRomCurve3, CircleGeometry, Curve, DoubleSide, Group, Line,
-  LineDashedMaterial, Mesh, MeshBasicMaterial, QuadraticBezierCurve3, RingGeometry,
-  SphereGeometry, TubeGeometry, Vector3,
+  BufferGeometry, CatmullRomCurve3, CircleGeometry, Curve, DoubleSide, Group, Line,
+  LineDashedMaterial, Mesh, MeshBasicMaterial, RingGeometry, SphereGeometry, Vector3, type Camera,
 } from 'three';
+import { buildPassingLanes, type Lane, type PassingLanes, type TrackingClip } from './PassingLanes';
 import {
   EVENT_META, deltaXT, eventDuration, shotXG, type MatchEvent, type Sequence, type Team,
 } from '../data/match';
@@ -10,7 +10,7 @@ import { toWorld } from '../pitch/dimensions';
 
 export const TEAM_COLOR: Record<Team, number> = { KEN: 0x9cc2ff, CIV: 0xffe9c4 };
 const KIT: Record<Team, number> = { KEN: 0xe5343f, CIV: 0xf6f3ec };
-const SEGMENTS = 56, RADIAL = 6;
+const SEGMENTS = 56;
 
 export interface EventLabel {
   anchor: Vector3;
@@ -25,11 +25,40 @@ interface Item {
   start: number;
   duration: number;
   curve: Curve<Vector3> | null;
-  tubes: Mesh[];
+  lane: Lane | null;
   line: Line | null;
   marker: Group;
   ring: Mesh | null;
   label: EventLabel | null;
+}
+
+const passId = (seq: Sequence, i: number) => `${seq.id}-${i}`;
+
+/**
+ * Tagged ball-path events as a tracking clip, in metres.
+ * These waypoints come from the hand-tagged log, not from an automated tracker.
+ */
+export function sequenceToTracking(seq: Sequence): TrackingClip {
+  return {
+    units: 'metres',
+    passes: seq.events.flatMap((e, i) => {
+      const aerial = EVENT_META[e.type].aerial;
+      if (!e.to || aerial <= 0) return [];
+      const dist = Math.hypot(e.to[0] - e.from[0], e.to[1] - e.from[1]);
+      const apex = Math.max(2.5, dist * aerial);
+      const shot = e.type === 'shot';
+      return [{
+        id: passId(seq, i), team: e.team, kind: shot ? 'shot' as const : 'pass' as const,
+        complete: e.outcome !== 'incomplete',
+        // Five samples along a parabolic flight between the tagged start and end
+        points: [0, 0.25, 0.5, 0.75, 1].map((u) => [
+          e.from[0] + (e.to![0] - e.from[0]) * u,
+          e.from[1] + (e.to![1] - e.from[1]) * u,
+          0.6 + (shot && u === 1 ? 0.5 : 0) + apex * 4 * u * (1 - u),
+        ]),
+      }];
+    }),
+  };
 }
 
 /** Draws one sequence: ball paths as arcs, carries as dashed runs, duels as rings. */
@@ -39,6 +68,7 @@ export class EventLayer {
   labels: EventLabel[] = [];
   private items: Item[] = [];
   private goalFlash: Mesh;
+  private lanes: PassingLanes | null = null;
 
   constructor() {
     this.ball = new Mesh(new SphereGeometry(0.75, 20, 14), new MeshBasicMaterial({ color: 0xffffff }));
@@ -54,37 +84,26 @@ export class EventLayer {
     this.labels = [];
     this.group.add(this.ball, this.goalFlash);
 
+    // Ball paths go through the tracking-JSON route, the same one tracker output would take
+    const clip = sequenceToTracking(seq);
+    this.lanes = buildPassingLanes(clip, { colors: TEAM_COLOR });
+    this.group.add(this.lanes.group);
+    const laneById = new Map(this.lanes.lanes.map((l) => [l.pass.id, l]));
+
     seq.events.forEach((event, i) => {
       const meta = EVENT_META[event.type];
       const a = toWorld(event.from[0], event.from[1], 0.3);
       const item: Item = {
         event, start: event.t, duration: eventDuration(seq, i),
-        curve: null, tubes: [], line: null, marker: this.playerMarker(event, a), ring: null, label: null,
+        curve: null, lane: laneById.get(passId(seq, i)) ?? null, line: null, marker: this.playerMarker(event, a), ring: null, label: null,
       };
       this.group.add(item.marker);
 
       if (event.to) {
-        const shot = event.type === 'shot';
-        const b = toWorld(event.to[0], event.to[1], shot ? 1.1 : 0.3);
+        const b = toWorld(event.to[0], event.to[1], 0.3);
         const dist = a.distanceTo(b);
-        if (meta.aerial > 0) {
-          const mid = a.clone().lerp(b, 0.5);
-          mid.y = Math.max(2.5, dist * meta.aerial * 2);
-          item.curve = new QuadraticBezierCurve3(a, mid, b);
-          const color = TEAM_COLOR[event.team];
-          const faded = event.outcome === 'incomplete';
-          const core = new Mesh(
-            new TubeGeometry(item.curve, SEGMENTS, shot ? 0.34 : 0.22, RADIAL),
-            new MeshBasicMaterial({ color, transparent: true, opacity: faded ? 0.45 : 1 }),
-          );
-          const glow = new Mesh(
-            new TubeGeometry(item.curve, SEGMENTS, shot ? 1.0 : 0.7, RADIAL),
-            new MeshBasicMaterial({
-              color, transparent: true, opacity: faded ? 0.07 : 0.2, blending: AdditiveBlending, depthWrite: false,
-            }),
-          );
-          item.tubes = [core, glow];
-          this.group.add(core, glow);
+        if (item.lane) {
+          item.curve = item.lane.curve;
         } else {
           // Ground run: a gentle S so overlapping carries stay readable
           const n = new Vector3(-(b.z - a.z), 0, b.x - a.x).normalize().multiplyScalar(Math.min(1.6, dist * 0.06));
@@ -144,7 +163,7 @@ export class EventLayer {
    * Reveal the sequence up to match-clock time `t`.
    * Returns the index of the event in progress.
    */
-  update(t: number, elapsed: number): number {
+  update(t: number, elapsed: number, camera: Camera): number {
     let active = 0;
     let ballAt: Vector3 | null = null;
     let flash = 0;
@@ -154,10 +173,7 @@ export class EventLayer {
       const started = t >= item.start;
       if (started) active = i;
       item.marker.visible = started;
-      for (const tube of item.tubes) {
-        tube.visible = k > 0;
-        tube.geometry.setDrawRange(0, Math.floor(k * SEGMENTS) * RADIAL * 6);
-      }
+      item.lane?.setReveal(k);
       if (item.line) {
         item.line.visible = k > 0;
         item.line.geometry.setDrawRange(0, Math.max(2, Math.ceil(k * (SEGMENTS + 1))));
@@ -178,6 +194,7 @@ export class EventLayer {
       }
     });
 
+    this.lanes?.update(camera, elapsed);
     this.ball.visible = ballAt !== null;
     if (ballAt) this.ball.position.copy(ballAt).setY(Math.max(0.75, (ballAt as Vector3).y));
     const mat = this.goalFlash.material as MeshBasicMaterial;

@@ -232,7 +232,7 @@ sm.onFrame((dt, elapsed) => {
     state.t += dt * state.speed;
     if (state.t >= seq().end) { state.t = seq().end; setPlaying(false); }
   }
-  const active = layer.update(state.t, elapsed);
+  const active = layer.update(state.t, elapsed, sm.camera);
   threat.setPoints(contextPoints());
   if (!still) threat.setTime(elapsed);
   if (active !== state.active) showActive(active);
