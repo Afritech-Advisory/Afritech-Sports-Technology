@@ -1,6 +1,20 @@
-import { xG, xT } from './models';
+import { setAttacks, xG, xT } from './models';
 
-export type Team = 'KEN' | 'CIV';
+/** Team code as used in the dataset's "teams" and on every event, for example "KEN". */
+export type Team = string;
+export type Side = 'left' | 'right';
+export interface TeamInfo {
+  code: Team;
+  /** Short name used in labels ("Kenya"); label is the full header name ("Kenya U23"). */
+  name: string;
+  label?: string;
+  /** Hex colours: ball-path lanes, player disc, disc rim, and the accent used in the interface. */
+  lane: string; kit: string; trim: string; accent: string;
+  /** Optional ring round the team dot in lists, for a second kit colour. */
+  ring?: string;
+  /** Goal attacked unless a sequence says otherwise: 'left' is x = 0. */
+  attacks: Side;
+}
 export type EventType =
   | 'throw_in' | 'pass' | 'cross' | 'carry' | 'take_on' | 'shot'
   | 'clearance' | 'recovery' | 'tackle' | 'claim' | 'gk_kick';
@@ -27,6 +41,10 @@ export interface Sequence {
   id: string;
   label: string;
   title: string;
+  /** 1 or 2. Only needed for first-half added time, so 45+2 is not shown as 47. Default 2. */
+  half?: 1 | 2;
+  /** Goal each team attacks in this sequence, where it differs from the team default. */
+  attacks?: Record<Team, Side>;
   end: number;
   score: string;
   /** Seconds to add to the match clock to get the time in the source clip. */
@@ -43,6 +61,10 @@ interface Dataset {
   };
   /** src: clip file next to the published page, loaded over http(s); the device picker is the fallback. */
   clip: { fps: number; frames: number; src?: string };
+  /** Home team first. Exactly two. */
+  teams: [TeamInfo, TeamInfo];
+  /** Id of the sequence shown when the page opens. Default: the last one with a goal. */
+  open?: string;
   sequences: Sequence[];
 }
 
@@ -55,6 +77,36 @@ const DATA: Dataset = JSON.parse(document.getElementById('tracking-data')!.textC
 export const MATCH = DATA.match;
 export const CLIP = DATA.clip;
 export const SEQUENCES = DATA.sequences;
+export const TEAMS = DATA.teams;
+if (!Array.isArray(TEAMS) || TEAMS.length !== 2) throw new Error('The dataset needs a "teams" list with the home and away team.');
+for (const s of SEQUENCES) for (const e of s.events) {
+  if (!TEAMS.some((t) => t.code === e.team)) throw new Error(`Event at ${e.t} s uses team "${e.team}", which is not in "teams".`);
+}
+
+/** 0 for the home team, 1 for the away team. Drives the t0 / t1 colour classes. */
+export const teamIndex = (code: Team): 0 | 1 => (TEAMS[1].code === code ? 1 : 0);
+export const teamInfo = (code: Team): TeamInfo => TEAMS[teamIndex(code)];
+export const teamClass = (code: Team) => `t${teamIndex(code)}`;
+export const hexNumber = (css: string) => parseInt(css.replace('#', ''), 16);
+
+/** Which goal each team attacks in a sequence. */
+export function attackSides(seq: Sequence): Record<Team, Side> {
+  const out: Record<Team, Side> = {};
+  for (const t of TEAMS) out[t.code] = seq.attacks?.[t.code] ?? t.attacks;
+  return out;
+}
+/** Point the threat and xG models at the right goals for this sequence. */
+export function useSequenceDirections(seq: Sequence): void {
+  setAttacks(attackSides(seq));
+}
+/** Sequence the page opens on. */
+export function openingSequence(): number {
+  const named = SEQUENCES.findIndex((s) => s.id === DATA.open);
+  if (named >= 0) return named;
+  for (let i = SEQUENCES.length - 1; i >= 0; i--) if (SEQUENCES[i].events.some((e) => e.outcome === 'goal')) return i;
+  return 0;
+}
+useSequenceDirections(SEQUENCES[0]);
 
 /** Opta-compatible naming for the event log. Carries are derived, as in Opta feeds. */
 export const EVENT_META: Record<EventType, { label: string; opta: string; aerial: number }> = {
@@ -71,10 +123,12 @@ export const EVENT_META: Record<EventType, { label: string; opta: string; aerial
   gk_kick: { label: 'Keeper kick', opta: 'Pass (1), long ball', aerial: 0.3 },
 };
 
-export const clock = (t: number) =>
-  t >= 90 * 60
-    ? `90+${Math.floor(t / 60) - 90}:${String(t % 60).padStart(2, '0')}`
+export const clock = (t: number, half: 1 | 2 = 2) => {
+  const base = half === 1 ? 45 : 90;
+  return t >= base * 60
+    ? `${base}+${Math.floor(t / 60) - base}:${String(t % 60).padStart(2, '0')}`
     : `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
+};
 
 /** Threat added by moving the ball, credited only when the action succeeds. */
 export function deltaXT(e: MatchEvent): number | null {

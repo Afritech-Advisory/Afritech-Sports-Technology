@@ -3,3 +3,4 @@ dist
 dist-single
 *.mp4
 !standalone/clip.mp4
+!standalone/*/clip.mp4
