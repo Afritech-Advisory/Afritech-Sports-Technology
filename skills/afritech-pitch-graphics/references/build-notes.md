@@ -51,3 +51,10 @@ Put it beside the page (`standalone/clip.mp4`, with a `!standalone/clip.mp4` git
 set `"clip": {..., "src": "clip.mp4"}` in the dataset, and publish the folder on GitHub Pages. The
 page loads it over http(s); on failure it falls back to the device picker. Test with a server that
 answers range requests (Python's http.server does not, so seeking fails there).
+
+iPhone (Andrew, 14 Nov 2026: "why is it asking for the video to be uploaded"): Safari on an iPhone in
+Low Power Mode or on mobile data fetches nothing from a `<video>` until it is asked to play, so
+`loadedmetadata` never fired and the pane sat on its upload button. The page now hides the upload
+button while the published clip is loading, asks the video to play at once (muted, then pauses) and
+asks again on each touch until it loads. Show the upload button only after a real load error.
+Not tested on a real iPhone from the sandbox; ask Andrew to confirm on his phone.
