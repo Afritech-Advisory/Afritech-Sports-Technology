@@ -1,4 +1,13 @@
-# Kenya U23 vs Ivory Coast U23 AFCON U23 Qualifiers 3D Soccer Pitch Graphics Analysis
+# 3D Soccer Pitch Graphics Analysis
+
+Matches in this build (one dataset each in `matches/`):
+
+- `kenya-u23-v-ivory-coast-u23`: Kenya U23 vs Ivory Coast U23, AFCON U23 Qualifiers. Published at the site root.
+- `south-africa-v-kenya`: South Africa vs Kenya, AFCON 2027 Qualifiers, 13 Nov 2026. Published at
+  https://afritech-advisory.github.io/Afritech-Sports-Technology/south-africa-v-kenya/ with its clip
+  (`standalone/south-africa-v-kenya/clip.mp4`, native 1280×720, CRF 28: 21.6 MB from a 29.1 MB source).
+  10 sequences and 39 events, pressure on 18. The footage has no scoreboard or match clock, so times are
+  clip times (`"timebase": "clip"`) and the score is a count of the four goals shown.
 
 Interactive 3D pitch map built with Vite, TypeScript, Three.js and Lucide icons.
 It replays tagged match sequences as ball-path arcs over an expected-threat surface.
@@ -6,7 +15,13 @@ It replays tagged match sequences as ball-path arcs over an expected-threat surf
     npm install
     npm run dev            # local dev server
     npm run build          # type-check and build to dist/
-    npm run build:single   # one standalone file, copied to standalone/index.html
+    npm run build:single   # one standalone file per match in matches/
+    npm run build:single -- <match>   # only that match
+    MATCH=<match> npm run dev         # dev server on another match
+
+The first match (Kenya U23) builds to `standalone/index.html`; every other match builds to
+`standalone/<match>/index.html`, so each has its own address on GitHub Pages and the first one
+never moves.
 
 ## Standalone file
 
@@ -34,11 +49,13 @@ the timeline turns the voice off. The voice varies by device.
 - `src/viz/PassingLanes.ts` `buildPassingLanes(json, options)`: tracking JSON in, volumetric lanes out (`CatmullRomCurve3` and `TubeGeometry`, glowing waypoint sprites, translucent direction arrows that rescale with camera distance)
 - `src/data/coordinates.ts` maps tracker coordinates (metres, normalised, or image pixels with a homography) to pitch metres
 - `src/viz/EventLayer.ts` carries, duels, the ball and playback
-- `index.html` page markup, CDN links and the embedded JSON dataset
-- `src/data/match.ts` types and helpers for the dataset; `src/data/models.ts` the xT and xG estimates
+- `index.html` page markup and CDN links; nothing in it is specific to one match
+- `matches/<match>.json` the dataset for each match: teams, colours, attack direction, sequences. The build puts it in the page's `tracking-data` block
+- `scripts/build-single.mjs` builds each match and writes the published copy and the preview copy
+- `src/data/match.ts` types and helpers for the dataset, including the two teams; `src/data/models.ts` the xT and xG estimates
 - `src/main.ts` interface wiring and playback
 
-## Data in this build
+## Data in the Kenya U23 build
 
 Kenya U23 v Ivory Coast U23, second half, 64' to 90+6': five sequences and 28 events,
 hand-tagged from a broadcast highlights reel. Positions are accurate to roughly 5 m and
@@ -53,8 +70,24 @@ tagged on 11 of the 28 events; defenders are not tracked.
 The timeline scrubs in source-clip frames (30 fps). Space plays or pauses, arrow keys step one
 frame, Shift with an arrow steps ten.
 
-To load another match, replace the JSON in the `tracking-data` block of `index.html`.
+To add another match, add `matches/<match>.json` and build. Nothing in `src/` names a team.
 Coordinates are metres: x from the left goal line, y from the near touchline.
+
+Team names, codes and colours come from the dataset's `teams` list (home team first):
+
+    "teams": [
+      { "code": "KEN", "name": "Kenya", "label": "Kenya U23", "lane": "#9cc2ff", "kit": "#e5343f",
+        "trim": "#111318", "accent": "#e5343f", "attacks": "left" },
+      { "code": "CIV", "name": "Ivory Coast", "label": "Ivory Coast U23", "lane": "#ffe9c4", "kit": "#f6f3ec",
+        "trim": "#ff8a2a", "accent": "#ff8a2a", "attacks": "right" }
+    ]
+
+`lane` colours the ball paths and legend, `kit` and `trim` the player marks, `accent` the header
+underline and timeline ticks, optional `ring` a second colour round the team dot. `attacks` is the goal
+the team attacks (`left` is x = 0). Teams change ends at half-time, so a sequence can carry its own
+`"attacks": { "KEN": "right", "CIV": "left" }` and `"half": 1` (so first-half added time reads 45+2).
+The header score counts the tagged goals; the threat toggle, legend, goal labels and cards all read
+from `teams`. `"open": "<sequence id>"` picks the sequence shown first.
 
 ## Tracking JSON
 

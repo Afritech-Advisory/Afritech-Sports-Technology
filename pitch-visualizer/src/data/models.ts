@@ -1,9 +1,18 @@
 import { PITCH } from '../pitch/dimensions';
 import type { Team } from './match';
 
-/** Second half: Kenya attack the left goal (x = 0), Ivory Coast the right (x = 105). */
+/**
+ * Which goal each team attacks: 'left' is x = 0, 'right' is x = 105.
+ * Comes from the dataset (team default, overridden per sequence because teams change ends at
+ * half-time) and is set by setAttacks() whenever a sequence is loaded.
+ */
+const attacks = new Map<Team, 'left' | 'right'>();
+export function setAttacks(directions: Record<Team, 'left' | 'right'>): void {
+  attacks.clear();
+  for (const [team, side] of Object.entries(directions)) attacks.set(team, side);
+}
 export function goalX(team: Team): number {
-  return team === 'KEN' ? 0 : PITCH.length;
+  return attacks.get(team) === 'left' ? 0 : PITCH.length;
 }
 
 /**

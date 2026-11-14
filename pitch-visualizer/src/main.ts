@@ -11,7 +11,8 @@ import { PITCH, toWorld } from './pitch/dimensions';
 import { ThreatSurface } from './viz/ThreatSurface';
 import { EventLayer, type EventLabel } from './viz/EventLayer';
 import {
-  CLIP, EVENT_META, MATCH, SEQUENCES, clock, deltaXT, eventDuration, pressureLevel, shotXG, zoneName,
+  CLIP, CLIP_TIME, EVENT_META, MATCH, SEQUENCES, TEAMS, attackSides, clock as matchClock, deltaXT, eventDuration,
+  openingSequence, optaName, pressureLevel, shotResult, shotXG, teamClass, teamInfo, useSequenceDirections, zoneName,
   type Team,
 } from './data/match';
 import { xT } from './data/models';
@@ -20,8 +21,22 @@ import './style.css';
 const ICONS = {
   Flame, Goal, Grid3x3, Info, LayoutGrid, MousePointerClick, Pause, Play, RotateCcw, StepBack, StepForward, Tag, Upload, Video, Volume2, VolumeX, X,
 };
-const TEAM_NAME: Record<Team, string> = { KEN: 'Kenya', CIV: 'Ivory Coast' };
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+const teamName = (code: Team) => teamInfo(code).name;
+
+// ---- Match identity: names and colours come from the dataset ------------------
+document.title = MATCH.title;
+$('eyebrow').textContent = `${MATCH.competition} · 3D soccer pitch graphics analysis`;
+TEAMS.forEach((t, i) => {
+  $(`team-${i}`).textContent = t.label ?? t.name;
+  $(`legend-${i}`).textContent = `${t.name} ball path`;
+  const root = document.documentElement.style;
+  root.setProperty(`--t${i}-accent`, t.accent);
+  root.setProperty(`--t${i}-lane`, t.lane);
+  root.setProperty(`--t${i}-kit`, t.kit);
+  // A ring round the dot: the dataset's "ring" colour, else the accent where it differs from the shirt
+  root.setProperty(`--t${i}-ring`, t.ring ?? (t.accent.toLowerCase() === t.kit.toLowerCase() ? 'transparent' : t.accent));
+});
 const signed = (v: number) => `${Math.abs(v) < 0.0005 ? '' : v > 0 ? '+' : '−'}${Math.abs(v).toFixed(3)}`;
 
 // ---- Scene ----------------------------------------------------------------
@@ -42,18 +57,24 @@ for (const [dir] of axes) sm.scene.add(new ArrowHelper(dir, origin, 9, 0xece8dc,
 const labelRoot = $('labels');
 interface Note { el: HTMLElement; at: Vector3 }
 const notes: Note[] = [];
-function note(text: string, at: Vector3, cls = 'note'): void {
+function note(text: string, at: Vector3, cls = 'note'): HTMLElement {
   const el = document.createElement('span');
   el.className = cls;
   el.textContent = text;
   labelRoot.appendChild(el);
   notes.push({ el, at });
+  return el;
 }
 for (const [dir, name] of axes) note(name, origin.clone().addScaledVector(dir, 11.5));
 note('105 m', new Vector3(0, 0, PITCH.width / 2 + PITCH.apron + 2.5));
 note('68 m', new Vector3(PITCH.length / 2 + PITCH.apron + 3, 0, 19));
-note('Ivory Coast goal', toWorld(-7, 34, 5), 'note goal-note');
-note('Kenya goal', toWorld(112, 34, 5), 'note goal-note');
+// Each goal is named for the team defending it, which changes with the half
+const leftGoal = note('', toWorld(-7, 34, 5), 'note goal-note');
+const rightGoal = note('', toWorld(112, 34, 5), 'note goal-note');
+function nameGoals(): void {
+  const sides = attackSides(seq());
+  for (const t of TEAMS) (sides[t.code] === 'left' ? rightGoal : leftGoal).textContent = `${t.name} goal`;
+}
 
 const valuePool: HTMLElement[] = [];
 function valueEl(i: number): HTMLElement {
@@ -72,9 +93,10 @@ type ThreatMode = Team | 'off';
 const state = {
   seq: 0, t: 0, playing: false, speed: 1, active: -1,
   selected: null as { index: number; at: Vector3 } | null,
-  threat: 'KEN' as ThreatMode, threatAuto: true, labels: true,
+  threat: TEAMS[0].code as ThreatMode, threatAuto: true, labels: true,
 };
 const seq = () => SEQUENCES[state.seq];
+const clock = (t: number) => matchClock(t, seq().half);
 const seqStart = () => seq().events[0].t - 0.4;
 const frameCount = () => Math.round((seq().end - seqStart()) * CLIP.fps);
 const clipFrame = () => Math.round((state.t + seq().videoOffset) * CLIP.fps);
@@ -84,7 +106,7 @@ function setThreat(mode: ThreatMode): void {
   state.threat = mode;
   threat.mesh.visible = mode !== 'off';
   if (mode !== 'off') threat.setTeam(mode);
-  $('threat-label').textContent = mode === 'off' ? 'Threat: off' : `Threat: ${TEAM_NAME[mode]}`;
+  $('threat-label').textContent = mode === 'off' ? 'Threat: off' : `Threat: ${teamName(mode)}`;
 }
 
 function icons(): void {
@@ -102,24 +124,30 @@ function setPlaying(on: boolean): void {
 function loadSequence(i: number, atEnd: boolean): void {
   state.seq = i;
   state.active = -1;
+  useSequenceDirections(seq());
+  nameGoals();
   select(null);
   narrator.load(`${SEQUENCES[i].label} ${SEQUENCES[i].title}.`, SEQUENCES[i].notes);
   layer.load(seq());
   scrub.max = String(frameCount());
   const span = seq().end - seqStart();
   $('ticks').innerHTML = seq().events.map((e) =>
-    `<i class="${e.team.toLowerCase()}${e.outcome === 'goal' ? ' goal' : ''}" style="left:${(((e.t - seqStart()) / span) * 100).toFixed(2)}%"></i>`).join('');
+    `<i class="${teamClass(e.team)}${e.outcome === 'goal' ? ' goal' : ''}" style="left:${(((e.t - seqStart()) / span) * 100).toFixed(2)}%"></i>`).join('');
   state.t = atEnd ? seq().end : seqStart();
   if (state.threatAuto) setThreat(attackingTeam());
 
-  document.querySelectorAll<HTMLElement>('#seqs button').forEach((b, j) =>
-    b.setAttribute('aria-current', String(j === i)));
+  const strip = $('seqs');
+  strip.querySelectorAll<HTMLElement>('button').forEach((b, j) => {
+    b.setAttribute('aria-current', String(j === i));
+    // Keep the current sequence in view when there are more buttons than fit
+    if (j === i) strip.scrollLeft = Math.max(0, b.offsetLeft - strip.offsetLeft - (strip.clientWidth - b.offsetWidth) / 2);
+  });
 
   const team = attackingTeam();
   const added = seq().events.reduce((s, e) => s + (e.team === team ? deltaXT(e) ?? 0 : 0), 0);
   const xg = seq().events.reduce((s, e) => s + (shotXG(e) ?? 0), 0);
   $('totals').innerHTML = `
-    <div><dt>Threat added, ${TEAM_NAME[team]}</dt><dd>${signed(added)} xT</dd></div>
+    <div><dt>Threat added, ${teamName(team)}</dt><dd>${signed(added)} xT</dd></div>
     <div><dt>Shot quality</dt><dd>${xg > 0 ? xg.toFixed(2) + ' xG' : 'No shot'}</dd></div>
     <div><dt>Tagged events</dt><dd>${seq().events.length}</dd></div>`;
 
@@ -129,8 +157,9 @@ function loadSequence(i: number, atEnd: boolean): void {
     const dxt = deltaXT(e), g = shotXG(e);
     const val = g !== null ? `xG ${g.toFixed(2)}` : dxt !== null ? signed(dxt) : '';
     const who = e.player ? ` <em>No. ${e.player}</em>` : '';
-    const tail = e.outcome === 'goal' ? ' <b>Goal</b>' : e.outcome === 'incomplete' ? ' <em>incomplete</em>' : '';
-    return `<li><button data-i="${j}" class="${e.team.toLowerCase()}">
+    const tail = e.outcome === 'goal' ? ' <b>Goal</b>' : e.type === 'shot' ? ` <em>${shotResult(e).toLowerCase()}</em>`
+      : e.outcome === 'incomplete' ? ' <em>incomplete</em>' : '';
+    return `<li><button data-i="${j}" class="${teamClass(e.team)}">
       <span class="ev-clock">${clock(e.t)}</span><span class="dot"></span>
       <span class="ev-what">${EVENT_META[e.type].label}${who}${tail}</span>
       <span class="ev-val">${val}</span></button></li>`;
@@ -146,18 +175,19 @@ function showActive(i: number): void {
   });
   $('now').innerHTML = `
     <p class="now-head"><span class="ev-clock">${clock(e.t)}</span>
-      <span class="${e.team.toLowerCase()}"><span class="dot"></span>${TEAM_NAME[e.team]}</span></p>
-    <p class="now-what">${EVENT_META[e.type].label}${e.player ? `, No. ${e.player}` : ''}${e.outcome === 'goal' ? ' · Goal' : ''}</p>
+      <span class="${teamClass(e.team)}"><span class="dot"></span>${teamName(e.team)}</span></p>
+    <p class="now-what">${EVENT_META[e.type].label}${e.player ? `, No. ${e.player}` : ''}${e.type === 'shot' ? ` · ${shotResult(e)}` : ''}</p>
     ${e.note ? `<p class="now-note">${e.note}</p>` : ''}
-    <p class="now-opta">${EVENT_META[e.type].opta}</p>`;
+    <p class="now-opta">${optaName(e)}</p>`;
 }
 
 function updateScore(): void {
-  let ken = 0, civ = 0;
+  const goals = [0, 0];
   for (const s of SEQUENCES) for (const e of s.events) {
-    if (e.outcome === 'goal' && e.t + 1.4 <= state.t) e.team === 'KEN' ? ken++ : civ++;
+    if (e.outcome === 'goal' && e.t + 1.4 <= state.t) goals[e.team === TEAMS[0].code ? 0 : 1]++;
   }
-  $('score').textContent = `${ken}–${civ}`;
+  const text = `${goals[0]}–${goals[1]}`;
+  if ($('score').textContent !== text) $('score').textContent = text;
 }
 
 const p = { x: 0, y: 0, visible: false };
@@ -349,7 +379,7 @@ function select(hit: { index: number; at: Vector3 } | null): void {
     rows.push(['Distance', `${m1(Math.hypot(e.to[0] - e.from[0], e.to[1] - e.from[1]))} m`]);
   }
   const g = shotXG(e), d = deltaXT(e);
-  if (g !== null) rows.push(['Shot quality', `${g.toFixed(2)} xG`]);
+  if (g !== null) rows.push(['Shot quality', `${g.toFixed(2)} xG${e.xg !== undefined ? ' (fixed value)' : ''}`]);
   else if (e.to) {
     const a = xT(e.from[0], e.from[1], e.team), b = xT(e.to[0], e.to[1], e.team);
     rows.push(['Threat', `${a.toFixed(3)} → ${b.toFixed(3)}${d !== null ? ` (${signed(d)})` : ', not credited'}`]);
@@ -361,14 +391,14 @@ function select(hit: { index: number; at: Vector3 } | null): void {
   const level = pr ? pressureLevel(pr) : null;
   card.innerHTML = `
     <header><span class="ev-clock">${clock(e.t)}</span>
-      <span class="${e.team.toLowerCase()}"><span class="dot"></span>${TEAM_NAME[e.team]}</span>
+      <span class="${teamClass(e.team)}"><span class="dot"></span>${teamName(e.team)}</span>
       <button class="card-close" id="card-close" aria-label="Close"><i data-lucide="x"></i></button></header>
-    <h2>${EVENT_META[e.type].label}${e.player ? `, No. ${e.player}` : ''}${e.outcome === 'goal' ? ' · Goal' : ''}</h2>
+    <h2>${EVENT_META[e.type].label}${e.player ? `, No. ${e.player}` : ''}${e.type === 'shot' ? ` · ${shotResult(e)}` : ''}</h2>
     <dl>${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
     <div class="pressure ${level ?? 'none'}">
       <p class="p-head">Pressure on the ball${level ? `<b>${level}</b>` : ''}</p>
       <p>${pr
-        ? `${pr.within5} opponent${pr.within5 === 1 ? '' : 's'} within 5 m, nearest about ${pr.nearest} m. Read from the broadcast frame.`
+        ? `${pr.within5} opponent${pr.within5 === 1 ? '' : 's'} within 5 m, nearest about ${pr.nearest} m. Read from the frame by eye.`
         : 'The surrounding players are out of shot at this moment. The ring marks the 5 m zone around the ball.'}</p>
     </div>`;
   icons();
@@ -395,7 +425,8 @@ $('speed').addEventListener('click', () => {
 });
 $('threat').addEventListener('click', () => {
   state.threatAuto = false;
-  setThreat(state.threat === 'KEN' ? 'CIV' : state.threat === 'CIV' ? 'off' : 'KEN');
+  // Home team, away team, off
+  setThreat(state.threat === TEAMS[0].code ? TEAMS[1].code : state.threat === TEAMS[1].code ? 'off' : TEAMS[0].code);
 });
 $('toggle-labels').addEventListener('click', (ev) => {
   state.labels = !state.labels;
@@ -413,7 +444,8 @@ document.querySelectorAll<HTMLElement>('[data-view]').forEach((b) =>
 sm.controls.addEventListener('start', () => document.querySelector('.hint')?.classList.add('gone'));
 
 $('source').innerHTML = `
-  <div><dt>Match</dt><dd>${MATCH.competition}. ${MATCH.home} ${MATCH.result} ${MATCH.away}.</dd></div>
+  <div><dt>Match</dt><dd>${MATCH.competition}${MATCH.played ? `, ${MATCH.played}` : ''}. ${MATCH.resultNote ?? `${MATCH.home} ${MATCH.result} ${MATCH.away}.`}</dd></div>${CLIP_TIME ? `
+  <div><dt>Timing</dt><dd>The footage has no match clock or scoreboard, so every time on this page is minutes and seconds into the clip, not the match minute.</dd></div>` : ''}
   <div><dt>Footage</dt><dd>${MATCH.footage.kind}, ${MATCH.window}. ${MATCH.footage.rights}</dd></div>
   <div><dt>Data</dt><dd>We tagged ${SEQUENCES.reduce((n, s) => n + s.events.length, 0)} events across ${SEQUENCES.length} sequences on a 105 × 68 m pitch. ${MATCH.footage.method} Players are identified by shirt number.</dd></div>
   <div><dt>Threat and xG</dt><dd>The threat surface shows how likely possession in each area is to lead to a goal, rising toward the penalty box, and lifts where the selected team built threat in the sequence on screen. Shot quality (xG) comes from shot distance and goal angle.</dd></div>
@@ -463,7 +495,7 @@ sm.onFrame((dt, elapsed) => {
 
   const f = String(Math.round((state.t - seqStart()) * CLIP.fps));
   if (scrub.value !== f) scrub.value = f;
-  const label = clock(Math.floor(Math.max(state.t, seq().events[0].t)));
+  const label = `${CLIP_TIME ? 'clip ' : ''}${clock(Math.max(state.t, seq().events[0].t))}`;
   if ($('clock').textContent !== label) $('clock').textContent = label;
   const frame = `frame ${clipFrame().toLocaleString('en')}`;
   if ($('frame').textContent !== frame) $('frame').textContent = frame;
@@ -474,14 +506,14 @@ sm.onFrame((dt, elapsed) => {
   for (const n of notes) place(n.el, n.at, true);
   layer.labels.forEach((l: EventLabel, i) => {
     const el = valueEl(i);
-    el.className = `value ${l.kind} ${l.event.team.toLowerCase()}`;
+    el.className = `value ${l.kind} ${teamClass(l.event.team)}`;
     if (el.textContent !== l.text) el.textContent = l.text;
     place(el, l.anchor, state.labels && l.reveal > 0.55);
   });
   for (let i = layer.labels.length; i < valuePool.length; i++) valuePool[i].hidden = true;
 });
 
-// Open on the winning goal, fully drawn, so the page reads at rest.
+// Open on the sequence the dataset names (the winning goal), fully drawn, so the page reads at rest.
 icons();
-loadSequence(3, true);
+loadSequence(openingSequence(), true);
 sm.start();

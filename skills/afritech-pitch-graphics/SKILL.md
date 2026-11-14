@@ -32,7 +32,9 @@ Work from stills, in the scratchpad, never inside the upload directory.
     ffmpeg -ss START -t LENGTH -i clip.mp4 -vf "fps=1,scale=640:-1,drawtext=text='%{eif\:t+START\:d}s':x=5:y=28:fontsize=22:fontcolor=yellow:box=1:boxcolor=black,tile=3x3" seq_%02d.jpg
 
 From the overview, list the wide-angle passages (ignore close-ups, replays, crowd shots) and read the
-scoreboard clock. Establish which goal each team attacks and which touchline is nearest the camera.
+scoreboard clock. If there is no scoreboard (South Africa v Kenya, Nov 2026, was a clean high-camera
+feed), do not take the score or minutes from anywhere else: use clip time (see data-format.md), count
+the goals the pictures show, and find the change of ends from which goal each keeper defends. Establish which goal each team attacks and which touchline is nearest the camera.
 
 ## 3. Tag the sequences
 
@@ -55,11 +57,15 @@ Rules that keep the data honest:
 
 ## 4. Build
 
-Replace the JSON in the `tracking-data` block of `pitch-visualizer/index.html`, update the title and
-team names, then:
+Add `pitch-visualizer/matches/<match>.json` (copy the Kenya U23 file and replace its contents). Title,
+team names, codes, colours and attack direction all come from that file; do not edit `src/` or
+`index.html` for a new match. Then:
 
     npm install
-    npm run build:single     # type-checks, builds, writes standalone/index.html
+    npm run build:single -- <match>   # type-checks, builds, writes standalone/<match>/index.html
+
+The Kenya U23 match keeps the site root (`standalone/index.html`). Every other match gets its own
+folder and address, with its clip beside it as `standalone/<match>/clip.mp4`.
 
 What the page contains, in the order it was built:
 1. Scene: `SceneManager` (antialiased renderer, perspective camera, ambient and directional light,
@@ -92,7 +98,8 @@ audio files (for example a Kenyan neural voice from a cloud speech service, with
 - Click test: a tube and a player mark open the card; an orbit drag does not; empty pitch closes it.
 - Timeline: frame step and scrub land on the expected frame; with the clip loaded, the clip's
   scoreboard matches the timeline clock.
-- Publish the built `dist-single/artifact.html` as the Artifact and send `standalone/index.html` as a file.
+- Publish the built `dist-single/<match>/artifact.html` as the Artifact (a new Artifact for a new match)
+  and send the standalone `index.html` as a file.
 - Clip by URL: serve `standalone/` with a server that answers range requests (Python's http.server
   does not), confirm "Match clip loaded" and that video time equals timeline frame / 30 after play and
   pause. Then remove the clip and confirm the picker fallback message.
@@ -103,7 +110,10 @@ audio files (for example a Kenyan neural voice from a cloud speech service, with
 
 Andrew wants a public link with no claude.ai address (13 Nov 2026). Use GitHub Pages:
 `.github/workflows/pages.yml` uploads `pitch-visualizer/standalone/` whenever it changes on `main`.
-Live address: https://afritech-advisory.github.io/Afritech-Sports-Technology/
+Live address (Kenya U23): https://afritech-advisory.github.io/Afritech-Sports-Technology/
+Other matches: the same address followed by `<match>/`. The workflow uploads the whole folder, so a
+new match needs no workflow change. Never move or rebuild-and-replace an already published page
+unless asked.
 
 - Clip: re-encode at native size (never upscale), H.264 CRF 28, AAC 64k, `+faststart`, save as
   `standalone/clip.mp4`, set `"clip": {"src": "clip.mp4"}` in the dataset. The HTML stays about 65 KB.

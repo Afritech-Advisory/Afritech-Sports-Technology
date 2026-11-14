@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Kenya U23 vs Ivory Coast U23 AFCON U23 Qualifiers 3D Soccer Pitch Graphics Analysis</title>
+<title><!--MATCH_TITLE--></title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500&display=swap">
 <!-- CDN: Tailwind CSS, Three.js and OrbitControls -->
@@ -22,8 +22,8 @@
 <div id="app">
   <header class="bar">
     <div class="match">
-      <p class="eyebrow">AFCON U23 Qualifiers · 3D soccer pitch graphics analysis</p>
-      <h1><span class="t-ken">Kenya U23</span> <span class="score" id="score">0–0</span> <span class="t-civ">Ivory Coast U23</span></h1>
+      <p class="eyebrow" id="eyebrow">3D soccer pitch graphics analysis</p>
+      <h1><span class="team-name t0" id="team-0"></span> <span class="score" id="score">0–0</span> <span class="team-name t1" id="team-1"></span></h1>
     </div>
     <div class="views" role="group" aria-label="Camera view">
       <button class="chip" data-view="broadcast" aria-pressed="true"><i data-lucide="video"></i><span>Broadcast</span></button>
@@ -38,7 +38,7 @@
       <div id="labels" aria-hidden="true"></div>
       <div class="now" id="now" aria-live="polite"></div>
       <div class="layers" role="group" aria-label="Layers">
-        <button class="chip" id="threat" aria-label="Threat surface"><i data-lucide="flame"></i><span id="threat-label">Threat: Kenya</span></button>
+        <button class="chip" id="threat" aria-label="Threat surface"><i data-lucide="flame"></i><span id="threat-label">Threat</span></button>
         <button class="chip" id="toggle-labels" aria-pressed="true"><i data-lucide="tag"></i><span>Values</span></button>
         <button class="chip" id="toggle-grid" aria-pressed="true"><i data-lucide="grid-3x3"></i><span>Zones</span></button>
       </div>
@@ -55,7 +55,7 @@
         <input id="scrub" type="range" min="0" max="100" step="1" value="0" aria-label="Clip frame">
       </div>
       <div class="readout">
-        <output id="clock" for="scrub">64:17</output>
+        <output id="clock" for="scrub">0:00</output>
         <span id="frame">frame 0</span>
       </div>
       <button class="icon-btn" id="restart" aria-label="Restart sequence"><i data-lucide="rotate-ccw"></i></button>
@@ -107,8 +107,8 @@
     </div>
 
     <div class="legend">
-      <span><i class="sw arc ken"></i>Kenya ball path</span>
-      <span><i class="sw arc civ"></i>Ivory Coast ball path</span>
+      <span><i class="sw arc t0"></i><span id="legend-0">Ball path</span></span>
+      <span><i class="sw arc t1"></i><span id="legend-1">Ball path</span></span>
       <span><i class="sw dash"></i>Carry</span>
       <span><i class="sw ring"></i>Duel or regain</span>
       <span><i class="sw wash"></i>Threat, low to high</span>
@@ -119,110 +119,9 @@
     </details>
   </aside>
 </div>
-<!-- Tracking dataset. Edit here; no rebuild needed. -->
+<!-- Tracking dataset. In the built page it can be edited here with no rebuild. Source: matches/<match>.json -->
 <script type="application/json" id="tracking-data">
-{
-  "match": {
-    "title": "Kenya U23 vs Ivory Coast U23 AFCON U23 Qualifiers 3D Soccer Pitch Graphics Analysis",
-    "competition": "AFCON U23 Qualifiers",
-    "home": "Kenya U23", "away": "Ivory Coast U23", "result": "2–1",
-    "window": "Second half, 64' to 90+6'",
-    "footage": {
-      "grade": "A",
-      "kind": "Broadcast highlights reel, 640 × 360, 6 min 35 s",
-      "rights": "Used with the permission of the rights holder.",
-      "method": "Events placed from the main broadcast camera to within about 5 m."
-    }
-  },
-  "clip": { "fps": 30, "frames": 11846, "src": "clip.mp4" },
-  "units": "metres",
-  "coordinates": "x from the left goal line (0-105), y from the near touchline (0-68). Kenya attack toward x = 0. t is match clock in seconds.",
-  "sequences": [
-    {
-      "id": "g1", "label": "64'", "title": "Kenya 1–0", "score": "1–0",
-      "end": 3870, "videoOffset": -3857,
-      "notes": [
-        "Throw-in to goal in about 10 seconds. The far-side carry covered roughly 21 m before the cross went in.",
-        "The first cross was cleared only as far as the edge of the area, and Kenya had a player placed there for the second ball.",
-        "The shot came from about 18 m with two opponents inside 5 m. By position this is a low-quality chance, so credit the strike."
-      ],
-      "events": [
-        {"t": 3857, "team": "KEN", "type": "throw_in", "from": [48,68], "to": [41,61], "outcome": "complete"},
-        {"t": 3859, "team": "KEN", "type": "carry", "from": [41,61], "to": [20,57], "outcome": "complete", "pressure": {"within5": 1, "nearest": 2}},
-        {"t": 3862, "team": "KEN", "type": "cross", "from": [20,57], "to": [7,40], "outcome": "incomplete"},
-        {"t": 3863, "team": "CIV", "type": "clearance", "from": [6,38], "to": [19,30], "outcome": "incomplete"},
-        {"t": 3865, "team": "KEN", "type": "recovery", "from": [19,30], "outcome": "won"},
-        {"t": 3867, "team": "KEN", "type": "shot", "from": [18,32], "to": [0,35.5], "outcome": "goal", "pressure": {"within5": 2, "nearest": 3}, "note": "Struck from the edge of the area after Kenya won the second ball."}
-      ]
-    },
-    {
-      "id": "k70", "label": "70'", "title": "Kenya box entry", "score": "1–0",
-      "end": 4227, "videoOffset": -4114,
-      "notes": [
-        "Same far-side channel as the opening goal: a 28 m carry, then a drive into the area.",
-        "The run ended in a challenge about 13 m from goal with no shot taken.",
-        "Support runners are not visible in the highlights frame. Check the full match tape for the cut-back option."
-      ],
-      "events": [
-        {"t": 4218, "team": "KEN", "type": "carry", "from": [50,60], "to": [24,50], "outcome": "complete", "pressure": {"within5": 1, "nearest": 2}},
-        {"t": 4223, "team": "KEN", "type": "carry", "from": [24,50], "to": [13,42], "outcome": "complete", "pressure": {"within5": 2, "nearest": 1.5}},
-        {"t": 4225, "team": "CIV", "type": "tackle", "from": [13,42], "outcome": "won", "note": "Challenge inside the area, two players go down. No shot."}
-      ]
-    },
-    {
-      "id": "g2", "label": "73'", "title": "Ivory Coast 1–1", "score": "1–1",
-      "end": 4396, "videoOffset": -4264,
-      "notes": [
-        "Conceded from a switch of play. One diagonal of about 49 m moved the ball from the far side into the near channel.",
-        "The wide carry ran about 27 m to the byline with a single defender tracking.",
-        "The cross found the far side of the area, behind the ball-side defenders. Far-post marking is the coaching point."
-      ],
-      "events": [
-        {"t": 4383, "team": "CIV", "type": "pass", "from": [48,56], "to": [74,14], "outcome": "complete", "note": "Switch from the far side into the near channel."},
-        {"t": 4385, "team": "CIV", "type": "carry", "from": [74,14], "to": [99,5], "outcome": "complete", "pressure": {"within5": 1, "nearest": 1.5}},
-        {"t": 4390, "team": "CIV", "type": "cross", "from": [99,5], "to": [92,44], "outcome": "complete"},
-        {"t": 4393, "team": "CIV", "type": "shot", "from": [93,43], "to": [105,36], "outcome": "goal", "pressure": {"within5": 2, "nearest": 3}, "note": "Finish from the far side of the area, arriving behind the ball-side defenders."}
-      ]
-    },
-    {
-      "id": "g3", "label": "83'", "title": "Kenya 2–1", "score": "2–1",
-      "end": 5015, "videoOffset": -4775,
-      "notes": [
-        "The winner came 5 seconds after a regain by the near touchline (tackle at 83:26, shot at 83:31).",
-        "Kenya lost the take-on on that side at 83:17 and won the ball back 9 seconds later, high up the pitch.",
-        "No. 17 carried about 10 m into the area with three opponents inside 5 m before finishing."
-      ],
-      "events": [
-        {"t": 4980, "team": "KEN", "type": "pass", "player": 1, "from": [96,34], "to": [72,42], "outcome": "complete", "note": "Goalkeeper distribution."},
-        {"t": 4982, "team": "KEN", "type": "carry", "from": [72,42], "to": [58,40], "outcome": "complete", "pressure": {"within5": 2, "nearest": 2}},
-        {"t": 4988, "team": "CIV", "type": "tackle", "from": [55,38], "outcome": "won"},
-        {"t": 4990, "team": "KEN", "type": "recovery", "from": [52,36], "outcome": "won"},
-        {"t": 4991, "team": "KEN", "type": "carry", "from": [52,36], "to": [40,30], "outcome": "complete", "pressure": {"within5": 2, "nearest": 3}},
-        {"t": 4995, "team": "KEN", "type": "pass", "from": [40,30], "to": [27,9], "outcome": "complete"},
-        {"t": 4997, "team": "KEN", "type": "take_on", "player": 8, "from": [27,9], "to": [23,6], "outcome": "lost", "pressure": {"within5": 1, "nearest": 1}},
-        {"t": 5001, "team": "CIV", "type": "recovery", "player": 3, "from": [31,3], "outcome": "won"},
-        {"t": 5006, "team": "KEN", "type": "tackle", "from": [36,6], "outcome": "won", "note": "High regain by the near touchline."},
-        {"t": 5007, "team": "KEN", "type": "pass", "from": [35,8], "to": [23,30], "outcome": "complete"},
-        {"t": 5009, "team": "KEN", "type": "carry", "player": 17, "from": [23,30], "to": [13,33], "outcome": "complete", "pressure": {"within5": 3, "nearest": 2}},
-        {"t": 5011, "team": "KEN", "type": "shot", "player": 17, "from": [12,33], "to": [0,32], "outcome": "goal", "pressure": {"within5": 3, "nearest": 2}, "note": "Finish from inside the area after the regain."}
-      ]
-    },
-    {
-      "id": "k96", "label": "90+6'", "title": "Kenya ball claimed", "score": "2–1",
-      "end": 5786, "videoOffset": -5448,
-      "notes": [
-        "A through ball from about 32 m out ran through to the goalkeeper, who claimed it 6 m from goal.",
-        "Possession was returned to Ivory Coast with the lead at one goal in added time.",
-        "Suggested discussion: when to play forward and when to keep the ball late in a one-goal game."
-      ],
-      "events": [
-        {"t": 5774, "team": "KEN", "type": "pass", "from": [32,40], "to": [9,36], "outcome": "incomplete"},
-        {"t": 5777, "team": "CIV", "type": "claim", "player": 1, "from": [6,35], "outcome": "won"},
-        {"t": 5782, "team": "CIV", "type": "gk_kick", "player": 1, "from": [9,33], "to": [52,26], "outcome": "incomplete"}
-      ]
-    }
-  ]
-}
+<!--MATCH_DATA-->
 </script>
 <script type="module" src="/src/main.ts"></script>
 </body>
