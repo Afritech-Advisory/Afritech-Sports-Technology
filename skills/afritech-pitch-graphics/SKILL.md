@@ -93,10 +93,35 @@ audio files (for example a Kenyan neural voice from a cloud speech service, with
 - Timeline: frame step and scrub land on the expected frame; with the clip loaded, the clip's
   scoreboard matches the timeline clock.
 - Publish the built `dist-single/artifact.html` as the Artifact and send `standalone/index.html` as a file.
+- Clip by URL: serve `standalone/` with a server that answers range requests (Python's http.server
+  does not), confirm "Match clip loaded" and that video time equals timeline frame / 30 after play and
+  pause. Then remove the clip and confirm the picker fallback message.
+- After the Pages deploy: fetch the live page and `clip.mp4` (expect 206 to a Range request), then
+  load the live URL in Chromium. If the sandbox blocks jsDelivr, route three.js to `node_modules`.
 
-## 6. Say this every time
+## 6. Publish (public link that is not a claude.ai link)
 
-- Rights status of the footage and that the video is not included.
+Andrew wants a public link with no claude.ai address (13 Nov 2026). Use GitHub Pages:
+`.github/workflows/pages.yml` uploads `pitch-visualizer/standalone/` whenever it changes on `main`.
+Live address: https://afritech-advisory.github.io/Afritech-Sports-Technology/
+
+- Clip: re-encode at native size (never upscale), H.264 CRF 28, AAC 64k, `+faststart`, save as
+  `standalone/clip.mp4`, set `"clip": {"src": "clip.mp4"}` in the dataset. The HTML stays about 65 KB.
+  The device picker is the fallback (downloaded copy, claude.ai preview). Details in build-notes.md.
+- Keep the claude.ai Artifact updated at the same URL as a private preview. Read it before
+  republishing from a new conversation so a new link is not created by mistake.
+- Andrew's one-time GitHub steps, the ones he got stuck on, are in references/publishing.md. Give
+  them step by step with the exact URL.
+- Open a PR only when Andrew asks; he merges it himself.
+
+When someone in the community suggests a fix, try it as stated first and report the measured result
+(sizes, what worked). Write replies he will paste with afritech-anti-ai-writing-os, as plain text in
+one copy-paste block, first person, no markdown, every number checked.
+
+## 7. Say this every time
+
+- Rights status of the footage (Kenya U23 clip: used with the rights holder's permission) and whether
+  the clip is published beside the page or must be loaded from the device.
 - Positions are hand-tagged estimates; players are shirt numbers only.
 - The threat surface is a generic approximation, not fitted to any competition; xG uses distance and
   angle only. Numbers are illustrative.

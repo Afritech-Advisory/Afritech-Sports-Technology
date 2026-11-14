@@ -68,8 +68,27 @@ opponents within 5 m and the nearest distance, tagged only where the frame shows
 
 Plus: "Call it Kenya U23 vs Ivory Coast U23 AFCON U23 Qualifiers 3D Soccer Pitch Graphics Analysis".
 
-Result: `standalone/index.html` (about 60 KB). The clip is a slot, not an embed, because the footage
-rights were not cleared. CDN links mean the file needs an internet connection.
+Result: `standalone/index.html` (about 60 KB). The clip was first a slot, not an embed, because the
+footage rights were not cleared at that point (later confirmed; see follow-ups). CDN links mean the file needs an internet connection.
+
+## Follow-up requests (13 Nov 2026), in order
+
+1. "I would like the public-facing information including the index HTML to be reworded. And yes I
+   have been given the video rights." Plus a post for the Claude Code Club explaining the concept,
+   tools and benefits for sports video analysis, asking how to embed the video. Result: plain,
+   client-safe wording; rights line "Used with the permission of the rights holder."
+2. "Make the coach notes audible so when you click the play button you can hear them." Result:
+   `Narrator.ts`, browser speech synthesis, subtitle over the pitch, voice toggle.
+3. "A Kenyan voice accent instead of a British one. So from now on use an African voice accent."
+   Result: the voice rule in SKILL.md section 4. Permanent preference.
+4. "Fix the URL so it doesn't show the Claude artifact link." Result: GitHub Pages workflow.
+5. A Club member's comment: "Re-encode it with ffmpeg at 720p, H.264, CRF around 28 ... If it's still
+   heavy, keep the HTML small and load the clip from its own URL in the same GitHub Pages repo, with
+   your local file picker as the fallback." Result: the source was 640x360, so 720p grew it to 57 MB;
+   native CRF 28 gave 24 MB; shipped the URL plan. Never upscale.
+6. "Give me step by step what I need to do in GitHub." Result: references/publishing.md.
+7. "Give me a reply to the comment which I can copy and paste without editing." Result: plain-text
+   first-person reply with the measured sizes and the live link, run through the anti-AI writing rules.
 
 ## Reusing the sequence for a new match
 
