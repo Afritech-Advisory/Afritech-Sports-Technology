@@ -54,7 +54,7 @@ export function sequenceToTracking(seq: Sequence): TrackingClip {
       const shot = e.type === 'shot';
       return [{
         id: passId(seq, i), team: e.team, kind: shot ? 'shot' as const : 'pass' as const,
-        complete: e.outcome !== 'incomplete',
+        complete: e.outcome !== 'incomplete' && e.outcome !== 'off_target',
         // Five samples along a parabolic flight between the tagged start and end
         points: [0, 0.25, 0.5, 0.75, 1].map((u) => [
           e.from[0] + (e.to![0] - e.from[0]) * u,

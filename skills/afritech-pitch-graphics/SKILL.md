@@ -32,7 +32,9 @@ Work from stills, in the scratchpad, never inside the upload directory.
     ffmpeg -ss START -t LENGTH -i clip.mp4 -vf "fps=1,scale=640:-1,drawtext=text='%{eif\:t+START\:d}s':x=5:y=28:fontsize=22:fontcolor=yellow:box=1:boxcolor=black,tile=3x3" seq_%02d.jpg
 
 From the overview, list the wide-angle passages (ignore close-ups, replays, crowd shots) and read the
-scoreboard clock. Establish which goal each team attacks and which touchline is nearest the camera.
+scoreboard clock. If there is no scoreboard (South Africa v Kenya, Nov 2026, was a clean high-camera
+feed), do not take the score or minutes from anywhere else: use clip time (see data-format.md), count
+the goals the pictures show, and find the change of ends from which goal each keeper defends. Establish which goal each team attacks and which touchline is nearest the camera.
 
 ## 3. Tag the sequences
 

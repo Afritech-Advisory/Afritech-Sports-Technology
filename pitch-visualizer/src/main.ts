@@ -11,8 +11,8 @@ import { PITCH, toWorld } from './pitch/dimensions';
 import { ThreatSurface } from './viz/ThreatSurface';
 import { EventLayer, type EventLabel } from './viz/EventLayer';
 import {
-  CLIP, EVENT_META, MATCH, SEQUENCES, TEAMS, attackSides, clock as matchClock, deltaXT, eventDuration, openingSequence,
-  pressureLevel, shotXG, teamClass, teamInfo, useSequenceDirections, zoneName,
+  CLIP, CLIP_TIME, EVENT_META, MATCH, SEQUENCES, TEAMS, attackSides, clock as matchClock, deltaXT, eventDuration,
+  openingSequence, optaName, pressureLevel, shotResult, shotXG, teamClass, teamInfo, useSequenceDirections, zoneName,
   type Team,
 } from './data/match';
 import { xT } from './data/models';
@@ -136,8 +136,12 @@ function loadSequence(i: number, atEnd: boolean): void {
   state.t = atEnd ? seq().end : seqStart();
   if (state.threatAuto) setThreat(attackingTeam());
 
-  document.querySelectorAll<HTMLElement>('#seqs button').forEach((b, j) =>
-    b.setAttribute('aria-current', String(j === i)));
+  const strip = $('seqs');
+  strip.querySelectorAll<HTMLElement>('button').forEach((b, j) => {
+    b.setAttribute('aria-current', String(j === i));
+    // Keep the current sequence in view when there are more buttons than fit
+    if (j === i) strip.scrollLeft = Math.max(0, b.offsetLeft - strip.offsetLeft - (strip.clientWidth - b.offsetWidth) / 2);
+  });
 
   const team = attackingTeam();
   const added = seq().events.reduce((s, e) => s + (e.team === team ? deltaXT(e) ?? 0 : 0), 0);
@@ -153,7 +157,8 @@ function loadSequence(i: number, atEnd: boolean): void {
     const dxt = deltaXT(e), g = shotXG(e);
     const val = g !== null ? `xG ${g.toFixed(2)}` : dxt !== null ? signed(dxt) : '';
     const who = e.player ? ` <em>No. ${e.player}</em>` : '';
-    const tail = e.outcome === 'goal' ? ' <b>Goal</b>' : e.outcome === 'incomplete' ? ' <em>incomplete</em>' : '';
+    const tail = e.outcome === 'goal' ? ' <b>Goal</b>' : e.type === 'shot' ? ` <em>${shotResult(e).toLowerCase()}</em>`
+      : e.outcome === 'incomplete' ? ' <em>incomplete</em>' : '';
     return `<li><button data-i="${j}" class="${teamClass(e.team)}">
       <span class="ev-clock">${clock(e.t)}</span><span class="dot"></span>
       <span class="ev-what">${EVENT_META[e.type].label}${who}${tail}</span>
@@ -171,9 +176,9 @@ function showActive(i: number): void {
   $('now').innerHTML = `
     <p class="now-head"><span class="ev-clock">${clock(e.t)}</span>
       <span class="${teamClass(e.team)}"><span class="dot"></span>${teamName(e.team)}</span></p>
-    <p class="now-what">${EVENT_META[e.type].label}${e.player ? `, No. ${e.player}` : ''}${e.outcome === 'goal' ? ' · Goal' : ''}</p>
+    <p class="now-what">${EVENT_META[e.type].label}${e.player ? `, No. ${e.player}` : ''}${e.type === 'shot' ? ` · ${shotResult(e)}` : ''}</p>
     ${e.note ? `<p class="now-note">${e.note}</p>` : ''}
-    <p class="now-opta">${EVENT_META[e.type].opta}</p>`;
+    <p class="now-opta">${optaName(e)}</p>`;
 }
 
 function updateScore(): void {
@@ -374,7 +379,7 @@ function select(hit: { index: number; at: Vector3 } | null): void {
     rows.push(['Distance', `${m1(Math.hypot(e.to[0] - e.from[0], e.to[1] - e.from[1]))} m`]);
   }
   const g = shotXG(e), d = deltaXT(e);
-  if (g !== null) rows.push(['Shot quality', `${g.toFixed(2)} xG`]);
+  if (g !== null) rows.push(['Shot quality', `${g.toFixed(2)} xG${e.xg !== undefined ? ' (fixed value)' : ''}`]);
   else if (e.to) {
     const a = xT(e.from[0], e.from[1], e.team), b = xT(e.to[0], e.to[1], e.team);
     rows.push(['Threat', `${a.toFixed(3)} → ${b.toFixed(3)}${d !== null ? ` (${signed(d)})` : ', not credited'}`]);
@@ -388,12 +393,12 @@ function select(hit: { index: number; at: Vector3 } | null): void {
     <header><span class="ev-clock">${clock(e.t)}</span>
       <span class="${teamClass(e.team)}"><span class="dot"></span>${teamName(e.team)}</span>
       <button class="card-close" id="card-close" aria-label="Close"><i data-lucide="x"></i></button></header>
-    <h2>${EVENT_META[e.type].label}${e.player ? `, No. ${e.player}` : ''}${e.outcome === 'goal' ? ' · Goal' : ''}</h2>
+    <h2>${EVENT_META[e.type].label}${e.player ? `, No. ${e.player}` : ''}${e.type === 'shot' ? ` · ${shotResult(e)}` : ''}</h2>
     <dl>${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
     <div class="pressure ${level ?? 'none'}">
       <p class="p-head">Pressure on the ball${level ? `<b>${level}</b>` : ''}</p>
       <p>${pr
-        ? `${pr.within5} opponent${pr.within5 === 1 ? '' : 's'} within 5 m, nearest about ${pr.nearest} m. Read from the broadcast frame.`
+        ? `${pr.within5} opponent${pr.within5 === 1 ? '' : 's'} within 5 m, nearest about ${pr.nearest} m. Read from the frame by eye.`
         : 'The surrounding players are out of shot at this moment. The ring marks the 5 m zone around the ball.'}</p>
     </div>`;
   icons();
@@ -439,7 +444,8 @@ document.querySelectorAll<HTMLElement>('[data-view]').forEach((b) =>
 sm.controls.addEventListener('start', () => document.querySelector('.hint')?.classList.add('gone'));
 
 $('source').innerHTML = `
-  <div><dt>Match</dt><dd>${MATCH.competition}. ${MATCH.home} ${MATCH.result} ${MATCH.away}.</dd></div>
+  <div><dt>Match</dt><dd>${MATCH.competition}${MATCH.played ? `, ${MATCH.played}` : ''}. ${MATCH.resultNote ?? `${MATCH.home} ${MATCH.result} ${MATCH.away}.`}</dd></div>${CLIP_TIME ? `
+  <div><dt>Timing</dt><dd>The footage has no match clock or scoreboard, so every time on this page is minutes and seconds into the clip, not the match minute.</dd></div>` : ''}
   <div><dt>Footage</dt><dd>${MATCH.footage.kind}, ${MATCH.window}. ${MATCH.footage.rights}</dd></div>
   <div><dt>Data</dt><dd>We tagged ${SEQUENCES.reduce((n, s) => n + s.events.length, 0)} events across ${SEQUENCES.length} sequences on a 105 × 68 m pitch. ${MATCH.footage.method} Players are identified by shirt number.</dd></div>
   <div><dt>Threat and xG</dt><dd>The threat surface shows how likely possession in each area is to lead to a goal, rising toward the penalty box, and lifts where the selected team built threat in the sequence on screen. Shot quality (xG) comes from shot distance and goal angle.</dd></div>
@@ -489,7 +495,7 @@ sm.onFrame((dt, elapsed) => {
 
   const f = String(Math.round((state.t - seqStart()) * CLIP.fps));
   if (scrub.value !== f) scrub.value = f;
-  const label = clock(Math.floor(Math.max(state.t, seq().events[0].t)));
+  const label = `${CLIP_TIME ? 'clip ' : ''}${clock(Math.max(state.t, seq().events[0].t))}`;
   if ($('clock').textContent !== label) $('clock').textContent = label;
   const frame = `frame ${clipFrame().toLocaleString('en')}`;
   if ($('frame').textContent !== frame) $('frame').textContent = frame;

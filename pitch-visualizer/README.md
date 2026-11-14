@@ -3,6 +3,11 @@
 Matches in this build (one dataset each in `matches/`):
 
 - `kenya-u23-v-ivory-coast-u23`: Kenya U23 vs Ivory Coast U23, AFCON U23 Qualifiers. Published at the site root.
+- `south-africa-v-kenya`: South Africa vs Kenya, AFCON 2027 Qualifiers, 13 Nov 2026. Published at
+  https://afritech-advisory.github.io/Afritech-Sports-Technology/south-africa-v-kenya/ with its clip
+  (`standalone/south-africa-v-kenya/clip.mp4`, native 1280×720, CRF 28: 21.6 MB from a 29.1 MB source).
+  10 sequences and 39 events, pressure on 18. The footage has no scoreboard or match clock, so times are
+  clip times (`"timebase": "clip"`) and the score is a count of the four goals shown.
 
 Interactive 3D pitch map built with Vite, TypeScript, Three.js and Lucide icons.
 It replays tagged match sequences as ball-path arcs over an expected-threat surface.

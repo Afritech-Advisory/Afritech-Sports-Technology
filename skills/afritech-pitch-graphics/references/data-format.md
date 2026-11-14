@@ -40,7 +40,13 @@ One file per match, `pitch-visualizer/matches/<match>.json`. The build embeds it
 - `open`: id of the sequence shown first. Default: the last sequence with a goal.
 - The header score counts tagged goals up to the playhead, home first. If the clip does not show
   every goal, say so; do not add events that were not seen.
-- `outcome`: `complete`, `incomplete`, `goal`, `won`, `lost`.
+- `outcome`: `complete`, `incomplete`, `goal`, `won`, `lost`; for shots `goal`, `saved` or `off_target`
+  (shown as Goal (16), Attempt saved (15), Miss (13)).
+- `xg` on a shot: a fixed value where distance and angle do not apply (0.76 for a penalty).
+- No scoreboard or clock in the footage (a clean camera feed): set `"timebase": "clip"` in `match`, use
+  seconds into the clip for every `t` and `end` (decimals allowed), and `videoOffset: 0`. The page then
+  labels times as clip times. Count only the goals the pictures show and say so in `match.resultNote`,
+  which replaces the plain result line. `match.played` adds the date and place.
 
 | type | Shown as | Opta name | Drawn as |
 |---|---|---|---|

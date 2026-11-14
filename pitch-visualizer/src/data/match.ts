@@ -28,8 +28,11 @@ export interface MatchEvent {
   player?: number;
   from: [number, number];
   to?: [number, number];
-  outcome: 'complete' | 'incomplete' | 'goal' | 'won' | 'lost';
+  /** Shots: 'goal', 'saved' or 'off_target'. */
+  outcome: 'complete' | 'incomplete' | 'goal' | 'saved' | 'off_target' | 'won' | 'lost';
   note?: string;
+  /** Fixed shot quality where distance and angle do not apply, for example 0.76 for a penalty. */
+  xg?: number;
   /**
    * Opponents around the player on the ball as the action starts,
    * estimated by eye from the frame. Absent where the frame does not show it.
@@ -57,6 +60,10 @@ export interface Sequence {
 interface Dataset {
   match: {
     title: string; competition: string; home: string; away: string; result: string; window: string;
+    /** Optional date and place, and a sentence to use in place of the plain result line. */
+    played?: string; resultNote?: string;
+    /** 'clip' when the footage shows no match clock: t is then seconds into the clip. Default 'match'. */
+    timebase?: 'match' | 'clip';
     footage: { grade: string; kind: string; rights: string; method: string };
   };
   /** src: clip file next to the published page, loaded over http(s); the device picker is the fallback. */
@@ -123,7 +130,8 @@ export const EVENT_META: Record<EventType, { label: string; opta: string; aerial
   gk_kick: { label: 'Keeper kick', opta: 'Pass (1), long ball', aerial: 0.3 },
 };
 
-export const clock = (t: number, half: 1 | 2 = 2) => {
+export const clock = (time: number, half: 1 | 2 = 2) => {
+  const t = Math.floor(time);
   const base = half === 1 ? 45 : 90;
   return t >= base * 60
     ? `${base}+${Math.floor(t / 60) - base}:${String(t % 60).padStart(2, '0')}`
@@ -138,8 +146,22 @@ export function deltaXT(e: MatchEvent): number | null {
 }
 
 export function shotXG(e: MatchEvent): number | null {
-  return e.type === 'shot' ? xG(e.from[0], e.from[1], e.team) : null;
+  if (e.type !== 'shot') return null;
+  return e.xg ?? xG(e.from[0], e.from[1], e.team);
 }
+
+/** Opta-style name for an event; shots are named by how they ended. */
+export function optaName(e: MatchEvent): string {
+  if (e.type !== 'shot') return EVENT_META[e.type].opta;
+  return e.outcome === 'goal' ? 'Goal (16)' : e.outcome === 'saved' ? 'Attempt saved (15)' : 'Miss (13)';
+}
+/** Short word shown after a shot. */
+export function shotResult(e: MatchEvent): string {
+  if (e.type !== 'shot') return '';
+  return e.outcome === 'goal' ? 'Goal' : e.outcome === 'saved' ? 'Saved' : 'Off target';
+}
+/** True when times are seconds into the clip because the footage has no match clock. */
+export const CLIP_TIME = DATA.match.timebase === 'clip';
 
 export function eventDuration(seq: Sequence, i: number): number {
   const next = i + 1 < seq.events.length ? seq.events[i + 1].t : seq.end;

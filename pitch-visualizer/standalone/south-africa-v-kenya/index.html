@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>South Africa vs Kenya AFCON 2027 Qualifiers 3D Soccer Pitch Graphics Analysis</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500&display=swap">
+<!-- CDN: Tailwind CSS, Three.js and OrbitControls -->
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>if (window.tailwind) tailwind.config = { corePlugins: { preflight: false } };</script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/controls/OrbitControls.js"
+  }
+}
+</script>
+  <script type="module" crossorigin>import{AdditiveBlending as e,AmbientLight as t,ArrowHelper as n,BoxGeometry as r,BufferGeometry as i,CanvasTexture as a,CatmullRomCurve3 as o,CircleGeometry as s,ConeGeometry as c,DirectionalLight as l,DoubleSide as u,Float32BufferAttribute as d,Group as f,Line as ee,LineBasicMaterial as p,LineDashedMaterial as te,LineSegments as m,Mesh as h,MeshBasicMaterial as g,MeshStandardMaterial as ne,PerspectiveCamera as re,PlaneGeometry as ie,Raycaster as ae,RingGeometry as _,Scene as oe,ShaderMaterial as se,SphereGeometry as ce,Sprite as le,SpriteMaterial as ue,Timer as de,TubeGeometry as fe,Vector2 as pe,Vector3 as v,WebGLRenderer as me}from"three";import{OrbitControls as he}from"three/addons/controls/OrbitControls.js";(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();var ge={xmlns:`http://www.w3.org/2000/svg`,width:24,height:24,viewBox:`0 0 24 24`,fill:`none`,stroke:`currentColor`,"stroke-width":2,"stroke-linecap":`round`,"stroke-linejoin":`round`},_e=([e,t,n])=>{let r=document.createElementNS(`http://www.w3.org/2000/svg`,e);return Object.keys(t).forEach(e=>{r.setAttribute(e,String(t[e]))}),n?.length&&n.forEach(e=>{let t=_e(e);r.appendChild(t)}),r},ve=(e,t={})=>_e([`svg`,{...ge,...t},e]),ye=(...e)=>e.filter((e,t,n)=>!!e&&e.trim()!==``&&n.indexOf(e)===t).join(` `).trim(),be=e=>{for(let t in e)if(t.startsWith(`aria-`)||t===`role`||t===`title`)return!0;return!1},xe=e=>{let t=``,n=!1;for(let r of e)r===`-`||r===`_`||r<=` `?n=t.length>0:(t.length===0?t+=r.toLowerCase():t+=n?r.toUpperCase():r,n=!1);return t},Se=e=>{let t=xe(e);return t.charAt(0).toUpperCase()+t.slice(1)},Ce=e=>Array.from(e.attributes).reduce((e,t)=>(e[t.name]=t.value,e),{}),we=e=>typeof e==`string`?e:!e||!e.class?``:e.class&&typeof e.class==`string`?e.class.split(` `):e.class&&Array.isArray(e.class)?e.class:``,Te=(e,{nameAttr:t,icons:n,attrs:r})=>{let i=e.getAttribute(t);if(i==null)return;let a=n[Se(i)];if(!a)return console.warn(`${e.outerHTML} icon name was not found in the provided icons object.`);let o=Ce(e),s=be(o)?{}:{"aria-hidden":`true`},c={...ge,"data-lucide":i,...s,...r,...o},l=we(o),u=we(r),d=ye(`lucide`,`lucide-${i}`,...l,...u);d&&Object.assign(c,{class:d});let f=ve(a,c);return e.parentNode?.replaceChild(f,e)},Ee=[[`path`,{d:`M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4`}]],De=[[`path`,{d:`M12 13V2l8 4-8 4`}],[`path`,{d:`M20.561 10.222a9 9 0 1 1-12.55-5.29`}],[`path`,{d:`M8.002 9.997a5 5 0 1 0 8.9 2.02`}]],Oe=[[`rect`,{width:`18`,height:`18`,x:`3`,y:`3`,rx:`2`}],[`path`,{d:`M3 9h18`}],[`path`,{d:`M3 15h18`}],[`path`,{d:`M9 3v18`}],[`path`,{d:`M15 3v18`}]],ke=[[`circle`,{cx:`12`,cy:`12`,r:`10`}],[`path`,{d:`M12 16v-4`}],[`path`,{d:`M12 8h.01`}]],Ae=[[`rect`,{width:`7`,height:`7`,x:`3`,y:`3`,rx:`1`}],[`rect`,{width:`7`,height:`7`,x:`14`,y:`3`,rx:`1`}],[`rect`,{width:`7`,height:`7`,x:`14`,y:`14`,rx:`1`}],[`rect`,{width:`7`,height:`7`,x:`3`,y:`14`,rx:`1`}]],je=[[`path`,{d:`M14 4.1 12 6`}],[`path`,{d:`m5.1 8-2.9-.8`}],[`path`,{d:`m6 12-1.9 2`}],[`path`,{d:`M7.2 2.2 8 5.1`}],[`path`,{d:`M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z`}]],Me=[[`rect`,{x:`14`,y:`3`,width:`5`,height:`18`,rx:`1`}],[`rect`,{x:`5`,y:`3`,width:`5`,height:`18`,rx:`1`}]],Ne=[[`path`,{d:`M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z`}]],Pe=[[`path`,{d:`M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8`}],[`path`,{d:`M3 3v5h5`}]],Fe=[[`path`,{d:`M10.029 4.285A2 2 0 0 0 7 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z`}],[`path`,{d:`M3 4v16`}]],Ie=[[`path`,{d:`M13.971 4.285A2 2 0 0 1 17 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z`}],[`path`,{d:`M21 20V4`}]],Le=[[`path`,{d:`M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z`}],[`circle`,{cx:`7.5`,cy:`7.5`,r:`.5`,fill:`currentColor`}]],Re=[[`path`,{d:`M12 3v12`}],[`path`,{d:`m17 8-5-5-5 5`}],[`path`,{d:`M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4`}]],ze=[[`path`,{d:`m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5`}],[`rect`,{x:`2`,y:`6`,width:`14`,height:`12`,rx:`2`}]],Be=[[`path`,{d:`M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z`}],[`path`,{d:`M16 9a5 5 0 0 1 0 6`}],[`path`,{d:`M19.364 18.364a9 9 0 0 0 0-12.728`}]],Ve=[[`path`,{d:`M11 4.702a.7.7 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.7.7 0 0 0 11 19.298z`}],[`path`,{d:`m16.5 14.5 5-5`}],[`path`,{d:`m16.5 9.5 5 5`}]],He=[[`path`,{d:`M18 6 6 18`}],[`path`,{d:`m6 6 12 12`}]],Ue=({icons:e={},nameAttr:t=`data-lucide`,attrs:n={},root:r=document,inTemplates:i}={})=>{if(!Object.values(e).length)throw Error(`Please provide an icons object.
+If you want to use all the icons you can import it like:
+ \`import { createIcons, icons } from 'lucide';
+lucide.createIcons({icons});\``);if(r===void 0)throw Error("`createIcons()` only works in a browser environment.");if(Array.from(r.querySelectorAll(`[${t}]`)).forEach(r=>Te(r,{nameAttr:t,icons:e,attrs:n})),i&&Array.from(r.querySelectorAll(`template`)).forEach(r=>Ue({icons:e,nameAttr:t,attrs:n,root:r.content,inTemplates:i})),t===`data-lucide`){let t=r.querySelectorAll(`[icon-name]`);t.length>0&&(console.warn(`[Lucide] Some icons were found with the now deprecated icon-name attribute. These will still be replaced for backwards compatibility, but will no longer be supported in v1.0 and you should switch to data-lucide`),Array.from(t).forEach(t=>Te(t,{nameAttr:`icon-name`,icons:e,attrs:n})))}},We={broadcast:new v(-.12,.62,.78),tactical:new v(0,1,.02),goal:new v(.92,.3,.26)},Ge=class{container;scene=new oe;camera;renderer;controls;timer=new de;callbacks=[];flight=null;view=`broadcast`;userMoved=!1;constructor(e){this.container=e,this.renderer=new me({antialias:!0,alpha:!0}),this.renderer.setPixelRatio(Math.min(window.devicePixelRatio,2)),this.renderer.setClearColor(0,0),e.appendChild(this.renderer.domElement),this.camera=new re(38,1,.5,1200),this.scene.add(new t(13620966,1.15));let n=new l(16777215,1.7);n.position.set(-60,120,80),this.scene.add(n),this.controls=new he(this.camera,this.renderer.domElement),this.controls.enableDamping=!0,this.controls.dampingFactor=.07,this.controls.rotateSpeed=.6,this.controls.zoomSpeed=.8,this.controls.maxPolarAngle=Math.PI/2-.06,this.controls.minDistance=25,this.controls.maxDistance=420,this.controls.target.set(0,0,0),this.controls.addEventListener(`start`,()=>{this.userMoved=!0,this.flight=null}),this.resize(),this.camera.position.copy(this.viewPosition(this.view)),window.addEventListener(`resize`,()=>this.resize()),new ResizeObserver(()=>this.resize()).observe(e)}fitDistance(){let e=this.camera.fov*Math.PI/180,t=2*Math.atan(Math.tan(e/2)*this.camera.aspect),n=74/Math.tan(t/2),r=52/Math.tan(e/2);return Math.min(Math.max(n,r),400)}viewPosition(e){return We[e].clone().normalize().multiplyScalar(this.fitDistance())}setView(e){this.view=e,this.userMoved=!1,this.controls.target.set(0,0,0),this.flight={from:this.camera.position.clone(),to:this.viewPosition(e),t:0}}resize(){let e=this.container.clientWidth||1,t=this.container.clientHeight||1;this.camera.aspect=e/t,this.camera.updateProjectionMatrix(),this.renderer.setSize(e,t),!this.userMoved&&!this.flight&&this.camera.position.copy(this.viewPosition(this.view))}onFrame(e){this.callbacks.push(e)}project(e,t){let n=e.clone().project(this.camera);t.visible=n.z>-1&&n.z<1,t.x=(n.x*.5+.5)*this.container.clientWidth,t.y=(-n.y*.5+.5)*this.container.clientHeight}start(){this.renderer.setAnimationLoop(e=>{this.timer.update(e);let t=Math.min(this.timer.getDelta(),.1);if(this.flight){this.flight.t=Math.min(1,this.flight.t+t/.9);let e=1-(1-this.flight.t)**3;this.camera.position.lerpVectors(this.flight.from,this.flight.to,e),this.flight.t>=1&&(this.flight=null)}this.controls.update();for(let e of this.callbacks)e(t,this.timer.getElapsed());this.renderer.render(this.scene,this.camera)})}},Ke=class{sm;targets;onPick;ray=new ae;ndc=new pe;down=null;constructor(e,t,n){this.sm=e,this.targets=t,this.onPick=n,this.ray.params.Line={threshold:1.6};let r=e.renderer.domElement;r.addEventListener(`pointerdown`,e=>{this.down={x:e.clientX,y:e.clientY}}),r.addEventListener(`pointerup`,e=>{let t=this.down;this.down=null,!t||Math.hypot(e.clientX-t.x,e.clientY-t.y)>6||this.onPick(this.cast(e))}),r.addEventListener(`pointermove`,e=>{e.pointerType!==`mouse`||e.buttons||(r.style.cursor=this.cast(e)?`pointer`:`grab`)})}cast(e){let t=this.sm.renderer.domElement.getBoundingClientRect();return this.ndc.set((e.clientX-t.left)/t.width*2-1,-((e.clientY-t.top)/t.height)*2+1),this.ray.setFromCamera(this.ndc,this.sm.camera),this.ray.intersectObjects(this.targets(),!1)[0]??null}},qe=[`KE`,`TZ`,`UG`,`NG`,`GH`,`ZA`],Je={KE:`Kenyan`,TZ:`Tanzanian`,UG:`Ugandan`,NG:`Nigerian`,GH:`Ghanaian`,ZA:`South African`,GB:`British`,US:`American`,AU:`Australian`,IN:`Indian`,IE:`Irish`,CA:`Canadian`},Ye=class{onLine;supported=typeof window<`u`&&`speechSynthesis`in window;enabled=!0;lines=[];index=0;speaking=!1;token=0;constructor(e){this.onLine=e}load(e,t){this.stop(),this.lines=[e,...t],this.index=0}play(e){this.supported&&this.enabled&&((e||this.index>=this.lines.length)&&(this.index=0),this.speaking||this.next(++this.token))}stop(){this.token++,this.supported&&(this.speaking||speechSynthesis.pending)&&speechSynthesis.cancel(),this.speaking=!1,this.onLine(null,``)}setEnabled(e){this.enabled=e,e||this.stop()}voice(){let e=speechSynthesis.getVoices(),t=e=>{let t=/^en[-_]([a-z]{2})/i.exec(e.lang);return t?t[1].toUpperCase():``},n=e=>+!/natural|online|neural/i.test(e.name);for(let r of qe){let i=e.filter(e=>t(e)===r).sort((e,t)=>n(e)-n(t));if(i.length)return i[0]}return e.find(e=>/^en/i.test(e.lang))}describeVoice(){if(!this.supported)return null;let e=this.voice();if(!e)return null;let t=/^en[-_]([a-z]{2})/i.exec(e.lang),n=t?t[1].toUpperCase():``,r=e.name.replace(/^(Microsoft|Google|Apple)\s+/i,``).replace(/\s*\(.*\)\s*$/,``).replace(/\s+Online.*$/i,``);return{label:`${Je[n]?`${Je[n]} English`:`English`}${/english/i.test(r)?``:` (${r})`}`,african:qe.includes(n)}}next(e){if(e!==this.token||this.index>=this.lines.length){e===this.token&&(this.speaking=!1,this.onLine(null,``));return}let t=this.index,n=new SpeechSynthesisUtterance(this.lines[t]),r=this.voice();r?(n.voice=r,n.lang=r.lang):n.lang=`en-KE`,n.rate=.98,n.onend=()=>{e===this.token&&(this.index=t+1,setTimeout(()=>this.next(e),450))},n.onerror=t=>{e===this.token&&t.error!==`canceled`&&t.error!==`interrupted`&&(this.speaking=!1,this.onLine(null,``))},this.speaking=!0,this.onLine(t===0?null:t-1,this.lines[t]);try{speechSynthesis.speak(n)}catch{this.speaking=!1,this.onLine(null,``)}}},y={length:105,width:68,penaltyAreaDepth:16.5,penaltyAreaWidth:40.32,goalAreaDepth:5.5,goalAreaWidth:18.32,penaltySpot:11,circleRadius:9.15,cornerRadius:1,goalWidth:7.32,goalHeight:2.44,goalDepth:2,line:.22,apron:4,slab:2.4};function b(e,t,n=0){return new v(e-y.length/2,n,y.width/2-t)}var Xe=15526108,Ze=.03,Qe=class{group=new f;zoneGrid;lineMat=new g({color:Xe,transparent:!0,opacity:.92,side:u});constructor(){let e=y.length,t=y.width,n=y.apron,i=new h(new r(e+n*2,y.slab,t+n*2),[1777188,1777188,2764342,1316378,1777188,1777188].map(e=>new ne({color:e,roughness:.95,metalness:0})));i.position.y=-y.slab/2,this.group.add(i),this.rect(-e/2,-t/2,e/2,t/2),this.segment(0,-t/2,0,t/2),this.ring(0,0,y.circleRadius),this.spot(0,0);for(let n of[-1,1]){let r=n*e/2;this.rect(r,-y.penaltyAreaWidth/2,r-n*y.penaltyAreaDepth,y.penaltyAreaWidth/2),this.rect(r,-y.goalAreaWidth/2,r-n*y.goalAreaDepth,y.goalAreaWidth/2);let i=r-n*y.penaltySpot;this.spot(i,0);let a=Math.acos((y.penaltyAreaDepth-y.penaltySpot)/y.circleRadius);this.ring(i,0,y.circleRadius,n===1?Math.PI-a:-a,a*2);for(let e of[-1,1]){let i=n===-1?e===-1?-Math.PI/2:0:e===-1?Math.PI:Math.PI/2;this.ring(r,e*t/2,y.cornerRadius,i,Math.PI/2)}this.group.add(this.goal(r,n))}this.zoneGrid=this.buildZoneGrid(),this.group.add(this.zoneGrid)}segment(e,t,n,r){let i=Math.hypot(n-e,r-t)+y.line,a=new h(new ie(i,y.line),this.lineMat);a.rotation.x=-Math.PI/2,a.rotation.z=-Math.atan2(r-t,n-e),a.position.set((e+n)/2,Ze,(t+r)/2),this.group.add(a)}rect(e,t,n,r){this.segment(e,t,n,t),this.segment(n,t,n,r),this.segment(n,r,e,r),this.segment(e,r,e,t)}ring(e,t,n,r=0,i=Math.PI*2){let a=new h(new _(n-y.line/2,n+y.line/2,96,1,r,i),this.lineMat);a.rotation.x=-Math.PI/2,a.position.set(e,Ze,t),this.group.add(a)}spot(e,t){let n=new h(new s(.32,20),this.lineMat);n.rotation.x=-Math.PI/2,n.position.set(e,Ze,t),this.group.add(n)}goal(e,t){let n=y.goalWidth/2,r=y.goalHeight,a=t*y.goalDepth,o=[],s=(...e)=>o.push(...e);s(e,0,-n,e,r,-n,e,r,-n,e,r,n,e,r,n,e,0,n);for(let t=0;t<=8;t++){let i=-n+t/8*2*n;s(e,r,i,e+a,r*.72,i,e+a,r*.72,i,e+a,0,i)}for(let t=0;t<=3;t++){let i=t/3*r*.72;s(e+a,i,-n,e+a,i,n);for(let o of[-n,n])s(e,t/3*r,o,e+a,i,o)}let c=new i;return c.setAttribute(`position`,new d(o,3)),new m(c,new p({color:Xe,transparent:!0,opacity:.8}))}buildZoneGrid(){let e=y.length,t=y.width,n=[];for(let r=1;r<12;r++){let i=-e/2+r*e/12;n.push(i,.02,-t/2,i,.02,t/2)}for(let r=1;r<8;r++){let i=-t/2+r*t/8;n.push(-e/2,.02,i,e/2,.02,i)}let r=new i;return r.setAttribute(`position`,new d(n,3)),new m(r,new p({color:Xe,transparent:!0,opacity:.13}))}},$e=new Map;function et(e){$e.clear();for(let[t,n]of Object.entries(e))$e.set(t,n)}function tt(e){return $e.get(e)===`left`?0:y.length}function x(e,t,n){let r=Math.abs(tt(n)-e),i=t-y.width/2,a=Math.hypot(r,i),o=a<.01?1:r/a;return .005+.3*Math.exp(-a/14)*(.4+.6*o**1.5)}function nt(e,t,n){let r=Math.abs(tt(n)-e),i=t-y.width/2,a=Math.hypot(r,i),o=y.goalWidth/2,s=Math.atan2(y.goalWidth*r,r*r+i*i-o*o),c=s<0?s+Math.PI:s;return 1/(1+Math.exp(-(-3.1+3*c-.05*a)))}var rt=`
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`,it=`
+  precision highp float;
+
+  uniform vec3 uPoints[MAX_POINTS]; // x (m), y (m), intensity 0-1
+  uniform int uCount;
+  uniform float uGoalX;
+  uniform float uSigma;
+  uniform float uTime;
+  uniform float uOpacity;
+  uniform vec2 uPitch;
+  varying vec2 vUv;
+
+  float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float noise(vec2 p) {
+    vec2 i = floor(p), f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1, 0)), u.x),
+               mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), u.x), u.y);
+  }
+  float fbm(vec2 p) {
+    return noise(p) * 0.68 + noise(p * 2.3 + 11.0) * 0.32;
+  }
+
+  float baseThreat(vec2 p) {
+    float dx = abs(uGoalX - p.x);
+    float dy = p.y - uPitch.y * 0.5;
+    float d = length(vec2(dx, dy));
+    float central = d < 0.01 ? 1.0 : dx / d;
+    return 0.005 + 0.3 * exp(-d / 14.0) * (0.4 + 0.6 * pow(central, 1.5));
+  }
+
+  // Cool cyan in the defensive third, through magenta, to amber in the attacking box.
+  vec3 ramp(float t) {
+    vec3 cyan = vec3(0.16, 0.80, 0.90);
+    vec3 teal = vec3(0.36, 0.86, 0.78);
+    vec3 magenta = vec3(0.94, 0.24, 0.62);
+    vec3 amber = vec3(1.00, 0.78, 0.30);
+    vec3 c = mix(cyan, teal, smoothstep(0.0, 0.30, t));
+    c = mix(c, magenta, smoothstep(0.30, 0.62, t));
+    return mix(c, amber, smoothstep(0.66, 0.96, t));
+  }
+
+  void main() {
+    vec2 p = vUv * uPitch; // pitch metres; v = 1 is the far touchline
+
+    float heat = sqrt(baseThreat(p) / 0.3);
+
+    float context = 0.0;
+    float inv = 1.0 / (2.0 * uSigma * uSigma);
+    for (int i = 0; i < MAX_POINTS; i++) {
+      if (i >= uCount) break;
+      vec2 d = p - uPoints[i].xy;
+      context += uPoints[i].z * exp(-dot(d, d) * inv);
+    }
+    heat += context * 0.5;
+
+    // Slow drifting wash so the edges read as paint, not as a hard contour
+    float wash = fbm(p / 9.0 + vec2(uTime * 0.02, -uTime * 0.013)) - 0.5;
+    heat = clamp(heat + wash * 0.14, 0.0, 1.0);
+
+    float grain = 0.86 + 0.28 * noise(p / 2.5);
+    float alpha = mix(0.2, 0.9, smoothstep(0.12, 0.8, heat)) * grain;
+
+    // Feather the last metre so the wash does not cut hard at the touchlines
+    vec2 edge = min(p, uPitch - p);
+    alpha *= smoothstep(0.0, 1.2, min(edge.x, edge.y));
+
+    gl_FragColor = vec4(pow(ramp(heat), vec3(2.2)), alpha * uOpacity);
+    #include <colorspace_fragment>
+  }
+`,at=class{mesh;points=new Float32Array(96);material;constructor(){this.material=new se({defines:{MAX_POINTS:32},uniforms:{uPoints:{value:this.points},uCount:{value:0},uGoalX:{value:0},uSigma:{value:7},uTime:{value:0},uOpacity:{value:.95},uPitch:{value:[y.length,y.width]}},vertexShader:rt,fragmentShader:it,transparent:!0,depthWrite:!1}),this.mesh=new h(new ie(y.length,y.width),this.material),this.mesh.rotation.x=-Math.PI/2,this.mesh.position.y=.012}setTeam(e){this.material.uniforms.uGoalX.value=tt(e)}setPoints(e){let t=Math.min(32,Math.floor(e.length/3));for(let n=0;n<t*3;n++)this.points[n]=e[n];this.material.uniforms.uCount.value=t}setTime(e){this.material.uniforms.uTime.value=e}},ot={length:105,width:68};function st(e,[t,n]){let r=e[6]*t+e[7]*n+e[8];return[(e[0]*t+e[1]*n+e[2])/r,(e[3]*t+e[4]*n+e[5])/r]}function ct(e,t){let n=t.pitch??ot;switch(t.units){case`metres`:return[e[0],e[1]];case`normalised`:{let r=t.origin===`far-left`?1-e[1]:e[1];return[e[0]*n.length,r*n.width]}case`pixels`:if(!t.homography||t.homography.length!==9)throw Error(`Pixel coordinates need a 9-number 'homography'.`);return st(t.homography,e)}}var lt=64,ut=8,dt=new v(0,1,0),ft=new v,pt=null;function mt(){if(pt)return pt;let e=document.createElement(`canvas`);e.width=e.height=64;let t=e.getContext(`2d`),n=t.createRadialGradient(32,32,0,32,32,32);return n.addColorStop(0,`rgba(255,255,255,1)`),n.addColorStop(.22,`rgba(255,255,255,0.85)`),n.addColorStop(.5,`rgba(255,255,255,0.22)`),n.addColorStop(1,`rgba(255,255,255,0)`),t.fillStyle=n,t.fillRect(0,0,64,64),pt=new a(e)}function ht(t,n){let r=typeof t==`string`?JSON.parse(t):t;if(!r||!Array.isArray(r.passes))throw Error(`Tracking JSON needs a 'passes' array.`);let i=n.hover??.6,a=new f,s=[];return{group:a,lanes:r.passes.map((t,l)=>{if(!Array.isArray(t.points)||t.points.length<2)throw Error(`Pass '${t.id??l}' needs at least two points.`);let u=t.points.map(e=>{let[t,n]=ct([e[0],e[1]],r);return b(t,n,Math.max(i,e[2]??0))}),d=new o(u,!1,`centripetal`),f=n.colors[t.team]??16777215,ee=t.kind===`shot`,p=t.complete===!1,te=new h(new fe(d,lt,ee?.34:.24,ut),new g({color:f,transparent:!0,opacity:p?.45:1})),m=new h(new fe(d,lt,ee?1.15:.85,ut),new g({color:f,transparent:!0,opacity:p?.07:.2,blending:e,depthWrite:!1}));a.add(te,m);let ne=u.map((t,n)=>{let r=new le(new ue({map:mt(),color:f,transparent:!0,opacity:p?.5:.95,blending:e,depthWrite:!1}));return r.position.copy(t),a.add(r),s.push({obj:r,base:.028,pulse:l*1.7+n}),{sprite:r,at:n/(u.length-1)}}),re=d.getLength(),ie=Math.max(1,Math.min(3,Math.round(re/16))),ae=Array.from({length:ie},(e,t)=>{let n=(t+1)/(ie+1),r=new h(new c(.5,1.5,14),new g({color:f,transparent:!0,opacity:p?.28:.58,depthWrite:!1}));return r.position.copy(d.getPointAt(n)).y+=1.3,r.quaternion.setFromUnitVectors(dt,d.getTangentAt(n).normalize()),a.add(r),s.push({obj:r,base:.015,pulse:-1}),{cone:r,at:n}});return{pass:t,curve:d,pick:m,setReveal(e){let t=e>0;te.visible=m.visible=t;let n=Math.floor(e*lt)*ut*6;te.geometry.setDrawRange(0,n),m.geometry.setDrawRange(0,n);for(let n of ne)n.sprite.visible=t&&e>=n.at-.001;for(let t of ae)t.cone.visible=e>=t.at+.04}}}),update(e,t){for(let n of s){if(!n.obj.visible)continue;let r=e.position.distanceTo(n.obj.getWorldPosition(ft)),i=n.pulse<0?1:1+.12*Math.sin(t*2.4+n.pulse);n.obj.scale.setScalar(Math.max(.9,Math.min(5,r*n.base))*i)}}}}var S=JSON.parse(document.getElementById(`tracking-data`).textContent),C=S.match,w=S.clip,T=S.sequences,E=S.teams;if(!Array.isArray(E)||E.length!==2)throw Error(`The dataset needs a "teams" list with the home and away team.`);for(let e of T)for(let t of e.events)if(!E.some(e=>e.code===t.team))throw Error(`Event at ${t.t} s uses team "${t.team}", which is not in "teams".`);var gt=e=>+(E[1].code===e),_t=e=>E[gt(e)],D=e=>`t${gt(e)}`,vt=e=>parseInt(e.replace(`#`,``),16);function yt(e){let t={};for(let n of E)t[n.code]=e.attacks?.[n.code]??n.attacks;return t}function bt(e){et(yt(e))}function xt(){let e=T.findIndex(e=>e.id===S.open);if(e>=0)return e;for(let e=T.length-1;e>=0;e--)if(T[e].events.some(e=>e.outcome===`goal`))return e;return 0}bt(T[0]);var O={throw_in:{label:`Throw-in`,opta:`Pass (1), throw-in`,aerial:.3},pass:{label:`Pass`,opta:`Pass (1)`,aerial:.24},cross:{label:`Cross`,opta:`Pass (1), cross`,aerial:.32},carry:{label:`Carry`,opta:`Carry (derived)`,aerial:0},take_on:{label:`Take-on`,opta:`Take On (3)`,aerial:0},shot:{label:`Shot`,opta:`Goal (16)`,aerial:.16},clearance:{label:`Clearance`,opta:`Clearance (12)`,aerial:.3},recovery:{label:`Recovery`,opta:`Ball recovery (49)`,aerial:0},tackle:{label:`Tackle`,opta:`Tackle (7)`,aerial:0},claim:{label:`Keeper claim`,opta:`Claim (11)`,aerial:0},gk_kick:{label:`Keeper kick`,opta:`Pass (1), long ball`,aerial:.3}},St=(e,t=2)=>{let n=Math.floor(e),r=t===1?45:90;return n>=r*60?`${r}+${Math.floor(n/60)-r}:${String(n%60).padStart(2,`0`)}`:`${Math.floor(n/60)}:${String(n%60).padStart(2,`0`)}`};function k(e){return!e.to||e.type===`shot`||e.type===`clearance`||e.outcome!==`complete`?null:x(e.to[0],e.to[1],e.team)-x(e.from[0],e.from[1],e.team)}function A(e){return e.type===`shot`?e.xg??nt(e.from[0],e.from[1],e.team):null}function Ct(e){return e.type===`shot`?e.outcome===`goal`?`Goal (16)`:e.outcome===`saved`?`Attempt saved (15)`:`Miss (13)`:O[e.type].opta}function wt(e){return e.type===`shot`?e.outcome===`goal`?`Goal`:e.outcome===`saved`?`Saved`:`Off target`:``}var Tt=S.match.timebase===`clip`;function Et(e,t){let n=t+1<e.events.length?e.events[t+1].t:e.end,r=e.events[t];return Math.max(.8,Math.min(n-r.t,r.type===`shot`?1.4:6))}function Dt(e){return e.within5>=2||e.nearest<=1.5?`high`:e.within5===1?`medium`:`low`}function Ot(e,t){let n=Math.max(0,Math.min(11,Math.floor(e/105*12))),r=Math.max(0,Math.min(7,Math.floor(t/68*8)));return`${`ABCDEFGHIJKL`[n]}${r+1}`}var kt=Object.fromEntries(E.map(e=>[e.code,vt(e.lane)])),At=56,jt={high:16727423,medium:16760906,low:6282443,none:15526108},Mt=new g({visible:!1}),Nt=(e,t)=>`${e.id}-${t}`;function Pt(e){return{units:`metres`,passes:e.events.flatMap((t,n)=>{let r=O[t.type].aerial;if(!t.to||r<=0)return[];let i=Math.hypot(t.to[0]-t.from[0],t.to[1]-t.from[1]),a=Math.max(2.5,i*r),o=t.type===`shot`;return[{id:Nt(e,n),team:t.team,kind:o?`shot`:`pass`,complete:t.outcome!==`incomplete`&&t.outcome!==`off_target`,points:[0,.25,.5,.75,1].map(e=>[t.from[0]+(t.to[0]-t.from[0])*e,t.from[1]+(t.to[1]-t.from[1])*e,.6+(o&&e===1?.5:0)+a*4*e*(1-e)])}]})}}var Ft=class{group=new f;ball;labels=[];items=[];goalFlash;lanes=null;pocket=new f;pocketFill;pocketRim;constructor(){this.ball=new h(new ce(.75,20,14),new g({color:16777215})),this.goalFlash=new h(new _(1.2,1.9,40),new g({color:16765024,transparent:!0,opacity:0,side:u,depthWrite:!1})),this.pocketFill=new h(new s(5,48),new g({transparent:!0,opacity:.3,depthWrite:!1})),this.pocketRim=new h(new _(4.85,5.1,64),new g({transparent:!0,opacity:.95}));for(let e of[this.pocketFill,this.pocketRim])e.rotation.x=-Math.PI/2;this.pocket.add(this.pocketFill,this.pocketRim)}pickTargets(){let e=[];for(let t of this.items)t.started&&(e.push(t.hit),t.lane&&e.push(t.lane.pick),t.line&&e.push(t.line));return e}select(e){let t=e===null?null:this.items[e];if(this.pocket.visible=!!t,!t)return;let n=t.event,r=jt[n.pressure?Dt(n.pressure):`none`];this.pocketFill.material.color.setHex(r),this.pocketFill.material.opacity=n.pressure?.3:.06,this.pocketRim.material.color.setHex(r),this.pocket.position.copy(b(n.from[0],n.from[1],.1))}load(e){this.group.clear(),this.items=[],this.labels=[],this.group.add(this.ball,this.goalFlash,this.pocket),this.pocket.visible=!1;let t=Pt(e);this.lanes=ht(t,{colors:kt}),this.group.add(this.lanes.group);let n=new Map(this.lanes.lanes.map(e=>[e.pass.id,e]));e.events.forEach((t,r)=>{O[t.type];let a=b(t.from[0],t.from[1],.3),s={event:t,start:t.t,duration:Et(e,r),curve:null,lane:n.get(Nt(e,r))??null,line:null,marker:this.playerMarker(t,a),ring:null,label:null,hit:new h(new ce(2.4,10,8),Mt),started:!1};if(s.hit.position.copy(a),s.hit.userData.eventIndex=r,s.hit.userData.snap=a.clone(),s.lane&&(s.lane.pick.userData.eventIndex=r),this.group.add(s.hit),this.group.add(s.marker),t.to){let e=b(t.to[0],t.to[1],.3),n=a.distanceTo(e);if(s.lane)s.curve=s.lane.curve;else{let c=new v(-(e.z-a.z),0,e.x-a.x).normalize().multiplyScalar(Math.min(1.6,n*.06));s.curve=new o([a,a.clone().lerp(e,.33).add(c),a.clone().lerp(e,.66).sub(c),e]);let l=s.curve.getPoints(At),u=new ee(new i().setFromPoints(l),new te({color:kt[t.team],dashSize:1.3,gapSize:.9}));u.computeLineDistances(),u.userData.eventIndex=r,s.line=u,this.group.add(u)}}else{let e=new h(new _(1.5,1.85,40),new g({color:kt[t.team],transparent:!0,opacity:.9,side:u}));e.rotation.x=-Math.PI/2,e.position.copy(a).setY(.08),s.ring=e,this.group.add(e)}let c=k(t),l=A(t);s.curve&&(l!==null||c!==null&&Math.abs(c)>=.005)&&(s.label={anchor:s.curve.getPoint(l===null?.5:.3).add(new v(0,l===null?1.2:5,0)),text:l===null?`xT ${c>=0?`+`:`−`}${Math.abs(c).toFixed(3)}`:`xG ${l.toFixed(2)}${t.outcome===`goal`?` · goal`:``}`,kind:l===null?`xt`:`xg`,event:t,reveal:0},this.labels.push(s.label)),this.items.push(s)})}playerMarker(e,t){let n=new f,r=new h(new s(.95,24),new g({color:vt(_t(e.team).kit)})),i=new h(new _(.95,1.2,24),new g({color:vt(_t(e.team).trim)}));for(let e of[r,i])e.rotation.x=-Math.PI/2;return n.add(r,i),n.position.copy(t).setY(.06),n}update(e,t,n){let r=0,i=null,a=0;this.items.forEach((t,n)=>{let o=Math.max(0,Math.min(1,(e-t.start)/t.duration)),s=e>=t.start;if(t.started=s,s&&(r=n),t.marker.visible=s,t.lane?.setReveal(o),t.line&&(t.line.visible=o>0,t.line.geometry.setDrawRange(0,Math.max(2,Math.ceil(o*57)))),t.ring){t.ring.visible=s;let n=Math.max(0,1-(e-t.start)/1.2);t.ring.scale.setScalar(1+n*.9)}t.label&&(t.label.reveal=o),s&&(i=t.curve?t.curve.getPoint(o):b(t.event.from[0],t.event.from[1],.75),t.event.outcome===`goal`&&o>=1&&t.event.to&&(a=1,this.goalFlash.position.copy(b(t.event.to[0],t.event.to[1],1.2)),this.goalFlash.rotation.y=Math.PI/2))}),this.lanes?.update(n,t),this.ball.visible=i!==null,i&&this.ball.position.copy(i).setY(Math.max(.75,i.y));let o=this.goalFlash.material;return o.opacity=a*(.55+.4*Math.sin(t*5)),this.goalFlash.scale.setScalar(1+a*(.25+.2*Math.sin(t*5))),r}},It={Flame:Ee,Goal:De,Grid3x3:Oe,Info:ke,LayoutGrid:Ae,MousePointerClick:je,Pause:Me,Play:Ne,RotateCcw:Pe,StepBack:Ie,StepForward:Fe,Tag:Le,Upload:Re,Video:ze,Volume2:Be,VolumeX:Ve,X:He},j=e=>document.getElementById(e),M=e=>_t(e).name;document.title=C.title,j(`eyebrow`).textContent=`${C.competition} · 3D soccer pitch graphics analysis`,E.forEach((e,t)=>{j(`team-${t}`).textContent=e.label??e.name,j(`legend-${t}`).textContent=`${e.name} ball path`;let n=document.documentElement.style;n.setProperty(`--t${t}-accent`,e.accent),n.setProperty(`--t${t}-lane`,e.lane),n.setProperty(`--t${t}-kit`,e.kit),n.setProperty(`--t${t}-ring`,e.ring??(e.accent.toLowerCase()===e.kit.toLowerCase()?`transparent`:e.accent))});var Lt=e=>`${Math.abs(e)<5e-4?``:e>0?`+`:`−`}${Math.abs(e).toFixed(3)}`,N=new Ge(j(`scene`)),P=new Qe,F=new at,I=new Ft;N.scene.add(P.group,F.mesh,I.group);var Rt=new v(-y.length/2-y.apron,.1,y.width/2+y.apron),zt=[[new v(1,0,0),`x`],[new v(0,0,-1),`y`],[new v(0,1,0),`z`]];for(let[e]of zt)N.scene.add(new n(e,Rt,9,15526108,2,1));var Bt=j(`labels`),Vt=[];function L(e,t,n=`note`){let r=document.createElement(`span`);return r.className=n,r.textContent=e,Bt.appendChild(r),Vt.push({el:r,at:t}),r}for(let[e,t]of zt)L(t,Rt.clone().addScaledVector(e,11.5));L(`105 m`,new v(0,0,y.width/2+y.apron+2.5)),L(`68 m`,new v(y.length/2+y.apron+3,0,19));var Ht=L(``,b(-7,34,5),`note goal-note`),Ut=L(``,b(112,34,5),`note goal-note`);function Wt(){let e=yt(V());for(let t of E)(e[t.code]===`left`?Ut:Ht).textContent=`${t.name} goal`}var R=[];function Gt(e){for(;R.length<=e;){let e=document.createElement(`span`);Bt.appendChild(e),R.push(e)}return R[e]}var z=j(`scrub`),B={seq:0,t:0,playing:!1,speed:1,active:-1,selected:null,threat:E[0].code,threatAuto:!0,labels:!0},V=()=>T[B.seq],H=e=>St(e,V().half),U=()=>V().events[0].t-.4,Kt=()=>Math.round((V().end-U())*w.fps),qt=()=>Math.round((B.t+V().videoOffset)*w.fps),Jt=()=>V().events.find(e=>e.type===`shot`)?.team??V().events[0].team;function Yt(e){B.threat=e,F.mesh.visible=e!==`off`,e!==`off`&&F.setTeam(e),j(`threat-label`).textContent=e===`off`?`Threat: off`:`Threat: ${M(e)}`}function W(){Ue({icons:It,attrs:{"aria-hidden":`true`}})}function G(e){B.playing=e;let t=j(`play`);t.setAttribute(`aria-label`,e?`Pause`:`Play`),t.innerHTML=`<i data-lucide="${e?`pause`:`play`}"></i>`,W()}function Xt(e,t){B.seq=e,B.active=-1,bt(V()),Wt(),$(null),J.load(`${T[e].label} ${T[e].title}.`,T[e].notes),I.load(V()),z.max=String(Kt());let n=V().end-U();j(`ticks`).innerHTML=V().events.map(e=>`<i class="${D(e.team)}${e.outcome===`goal`?` goal`:``}" style="left:${((e.t-U())/n*100).toFixed(2)}%"></i>`).join(``),B.t=t?V().end:U(),B.threatAuto&&Yt(Jt());let r=j(`seqs`);r.querySelectorAll(`button`).forEach((t,n)=>{t.setAttribute(`aria-current`,String(n===e)),n===e&&(r.scrollLeft=Math.max(0,t.offsetLeft-r.offsetLeft-(r.clientWidth-t.offsetWidth)/2))});let i=Jt(),a=V().events.reduce((e,t)=>e+(t.team===i?k(t)??0:0),0),o=V().events.reduce((e,t)=>e+(A(t)??0),0);j(`totals`).innerHTML=`
+    <div><dt>Threat added, ${M(i)}</dt><dd>${Lt(a)} xT</dd></div>
+    <div><dt>Shot quality</dt><dd>${o>0?o.toFixed(2)+` xG`:`No shot`}</dd></div>
+    <div><dt>Tagged events</dt><dd>${V().events.length}</dd></div>`,on(),j(`events`).innerHTML=V().events.map((e,t)=>{let n=k(e),r=A(e),i=r===null?n===null?``:Lt(n):`xG ${r.toFixed(2)}`,a=e.player?` <em>No. ${e.player}</em>`:``,o=e.outcome===`goal`?` <b>Goal</b>`:e.type===`shot`?` <em>${wt(e).toLowerCase()}</em>`:e.outcome===`incomplete`?` <em>incomplete</em>`:``;return`<li><button data-i="${t}" class="${D(e.team)}">
+      <span class="ev-clock">${H(e.t)}</span><span class="dot"></span>
+      <span class="ev-what">${O[e.type].label}${a}${o}</span>
+      <span class="ev-val">${i}</span></button></li>`}).join(``)}function Zt(e){B.active=e;let t=V().events[e];document.querySelectorAll(`#events button`).forEach((t,n)=>{t.setAttribute(`aria-current`,String(n===e)),n===e&&B.playing&&t.scrollIntoView({block:`nearest`,behavior:`smooth`})}),j(`now`).innerHTML=`
+    <p class="now-head"><span class="ev-clock">${H(t.t)}</span>
+      <span class="${D(t.team)}"><span class="dot"></span>${M(t.team)}</span></p>
+    <p class="now-what">${O[t.type].label}${t.player?`, No. ${t.player}`:``}${t.type===`shot`?` · ${wt(t)}`:``}</p>
+    ${t.note?`<p class="now-note">${t.note}</p>`:``}
+    <p class="now-opta">${Ct(t)}</p>`}function Qt(){let e=[0,0];for(let t of T)for(let n of t.events)n.outcome===`goal`&&n.t+1.4<=B.t&&e[n.team===E[0].code?0:1]++;let t=`${e[0]}–${e[1]}`;j(`score`).textContent!==t&&(j(`score`).textContent=t)}var K={x:0,y:0,visible:!1};j(`seqs`).innerHTML=T.map((e,t)=>`<button data-i="${t}"><span class="seq-min">${e.label}</span><span class="seq-title">${e.title}</span></button>`).join(``),j(`seqs`).addEventListener(`click`,e=>{let t=e.target.closest(`button`);t&&(Xt(Number(t.dataset.i),!1),G(!0),J.play(!0))}),j(`events`).addEventListener(`click`,e=>{let t=e.target.closest(`button`);if(!t)return;let n=Number(t.dataset.i);G(!1),J.stop(),B.t=Math.min(V().end,V().events[n].t+Et(V(),n))}),j(`play`).addEventListener(`click`,()=>{if(B.playing){G(!1),J.stop();return}B.t>=V().end-.01&&(B.t=U());let e=B.t<=U()+.5;G(!0),J.play(e)}),j(`restart`).addEventListener(`click`,()=>{B.t=U(),G(!0),J.stop(),J.play(!0)}),z.addEventListener(`input`,()=>{G(!1),J.stop(),B.t=U()+Number(z.value)/w.fps});function q(e){G(!1),J.stop(),B.t=Math.max(U(),Math.min(V().end,B.t+e/w.fps))}j(`step-back`).addEventListener(`click`,()=>q(-1)),j(`step-fwd`).addEventListener(`click`,()=>q(1)),window.addEventListener(`keydown`,e=>{e.target.closest(`input, button, summary`)||(e.key===` `&&(e.preventDefault(),j(`play`).click()),e.key===`ArrowLeft`&&q(e.shiftKey?-10:-1),e.key===`ArrowRight`&&q(e.shiftKey?10:1),e.key===`Escape`&&$(null))});var $t=[`events`,`notes`,`clip`];for(let e of $t)j(`tab-${e}`).addEventListener(`click`,()=>{for(let t of $t)j(`tab-${t}`).setAttribute(`aria-selected`,String(t===e)),j(`pane-${t}`).hidden=t!==e});var en=j(`caption`),J=new Ye((e,t)=>{en.hidden=!t,en.textContent=t,document.querySelectorAll(`#notes li`).forEach((t,n)=>t.classList.toggle(`speaking`,n===e))}),Y=j(`voice`);function tn(e){J.setEnabled(e),Y.setAttribute(`aria-pressed`,String(e)),Y.setAttribute(`aria-label`,e?`Voice notes on`:`Voice notes off`),Y.innerHTML=`<i data-lucide="${e?`volume-2`:`volume-x`}"></i>`,W();try{localStorage.setItem(`pitch-voice`,e?`1`:`0`)}catch{}e&&B.playing&&J.play(!1)}function nn(){let e=J.describeVoice();e&&(j(`voice-help`).textContent=e.african?`Read aloud in a ${e.label} voice when you press Play.`:`Read aloud when you press Play. This device has no Kenyan or other African English voice, so it is using ${e.label}. Microsoft Edge on a computer includes Kenyan English voices.`)}if(J.supported){nn(),speechSynthesis.addEventListener?.(`voiceschanged`,nn);let e=`1`;try{e=localStorage.getItem(`pitch-voice`)??`1`}catch{}tn(e!==`0`),Y.addEventListener(`click`,()=>tn(!J.enabled))}else Y.hidden=!0,j(`voice-help`).textContent=`This browser cannot read the notes aloud.`;var rn=j(`coach-notes`),an=()=>`pitch-notes:${V().id}`;function on(){j(`notes`).innerHTML=V().notes.map(e=>`<li class="border-l-2 border-[var(--arc)] pl-3">${e}</li>`).join(``);let e=``;try{e=localStorage.getItem(an())??``}catch{}rn.value=e}rn.addEventListener(`input`,()=>{let e=!0;try{localStorage.setItem(an(),rn.value)}catch{e=!1}j(`notes-status`).textContent=e?`Saved in this browser only. Not shared with other viewers.`:`This browser is not allowing saved notes. Copy your text before closing.`});var X=j(`clip`),sn=!1,cn=e=>{j(`clip-status`).textContent=e};function ln(e,t,n){sn=!1;let r=()=>{X.removeEventListener(`error`,i),sn=!0,j(`clip-empty`).hidden=!0;let e=w.frames/w.fps;cn(Math.abs(X.duration-e)<2?`${t} loaded. It follows the timeline.`:`${t} loaded, but it runs ${Math.round(X.duration)} s and the tags were made on a ${Math.round(e)} s clip, so it will not line up.`),un()},i=()=>{X.removeEventListener(`loadedmetadata`,r),n()};X.addEventListener(`loadedmetadata`,r,{once:!0}),X.addEventListener(`error`,i,{once:!0}),X.src=e}j(`clip-file`).addEventListener(`change`,e=>{let t=e.target.files?.[0];t&&ln(URL.createObjectURL(t),t.name,()=>cn(`That file could not be played here. Try an MP4 (H.264).`))}),w.src&&location.protocol.startsWith(`http`)&&(cn(`Loading the match clip…`),ln(new URL(w.src,location.href).href,`Match clip`,()=>{X.removeAttribute(`src`),X.load(),cn(`The match clip is not online with this copy of the page. Load it from your device and it plays in step with the timeline, frame for frame.`)}));function un(){if(!sn)return;let e=Math.max(0,B.t+V().videoOffset);B.playing?(X.playbackRate=B.speed,X.paused?(X.currentTime=e,X.play().catch(()=>{})):Math.abs(X.currentTime-e)>.35&&(X.currentTime=e)):(X.paused||X.pause(),Math.abs(X.currentTime-e)>1/w.fps&&(X.currentTime=e))}var Z=j(`card`),Q=e=>e.toFixed(1);function $(e){if(B.selected=e,I.select(e?e.index:null),Z.hidden=!e,!e)return;let t=V().events[e.index],n=[[`Start`,`${Q(t.from[0])}, ${Q(t.from[1])} m · zone ${Ot(t.from[0],t.from[1])}`]];t.to&&(n.push([`End`,`${Q(t.to[0])}, ${Q(t.to[1])} m · zone ${Ot(t.to[0],t.to[1])}`]),n.push([`Distance`,`${Q(Math.hypot(t.to[0]-t.from[0],t.to[1]-t.from[1]))} m`]));let r=A(t),i=k(t);if(r!==null)n.push([`Shot quality`,`${r.toFixed(2)} xG${t.xg===void 0?``:` (fixed value)`}`]);else if(t.to){let e=x(t.from[0],t.from[1],t.team),r=x(t.to[0],t.to[1],t.team);n.push([`Threat`,`${e.toFixed(3)} → ${r.toFixed(3)}${i===null?`, not credited`:` (${Lt(i)})`}`])}else n.push([`Threat here`,`${x(t.from[0],t.from[1],t.team).toFixed(3)} xT`]);let a=e.at.x+y.length/2,o=y.width/2-e.at.z;n.push([`Clicked point`,`${Q(a)}, ${Q(o)} m${e.at.y>.9?` · ${Q(e.at.y)} m up`:``}`]),n.push([`Clip frame`,`${Math.round((t.t+V().videoOffset)*w.fps).toLocaleString(`en`)}`]);let s=t.pressure,c=s?Dt(s):null;Z.innerHTML=`
+    <header><span class="ev-clock">${H(t.t)}</span>
+      <span class="${D(t.team)}"><span class="dot"></span>${M(t.team)}</span>
+      <button class="card-close" id="card-close" aria-label="Close"><i data-lucide="x"></i></button></header>
+    <h2>${O[t.type].label}${t.player?`, No. ${t.player}`:``}${t.type===`shot`?` · ${wt(t)}`:``}</h2>
+    <dl>${n.map(([e,t])=>`<div><dt>${e}</dt><dd>${t}</dd></div>`).join(``)}</dl>
+    <div class="pressure ${c??`none`}">
+      <p class="p-head">Pressure on the ball${c?`<b>${c}</b>`:``}</p>
+      <p>${s?`${s.within5} opponent${s.within5===1?``:`s`} within 5 m, nearest about ${s.nearest} m. Read from the frame by eye.`:`The surrounding players are out of shot at this moment. The ring marks the 5 m zone around the ball.`}</p>
+    </div>`,W(),j(`card-close`).addEventListener(`click`,()=>$(null)),document.querySelectorAll(`#events button`).forEach((t,n)=>t.classList.toggle(`picked`,n===e.index))}new Ke(N,()=>I.pickTargets(),e=>{let t=e?.object.userData.eventIndex,n=e?.object.userData.snap;$(e&&t!==void 0?{index:t,at:(n??e.point).clone()}:null)});var dn=j(`view`);function fn(){if(!B.selected)return;N.project(B.selected.at,K);let e=Math.max(8,Math.min(dn.clientWidth-Z.offsetWidth-8,K.x+18)),t=Math.max(8,Math.min(dn.clientHeight-Z.offsetHeight-8,K.y-Z.offsetHeight-14));Z.style.transform=`translate(${e.toFixed(0)}px, ${t.toFixed(0)}px)`}j(`speed`).addEventListener(`click`,()=>{B.speed=B.speed===1?2:B.speed===2?.5:1,j(`speed`).textContent=`${B.speed===.5?`½`:B.speed}×`}),j(`threat`).addEventListener(`click`,()=>{B.threatAuto=!1,Yt(B.threat===E[0].code?E[1].code:B.threat===E[1].code?`off`:E[0].code)}),j(`toggle-labels`).addEventListener(`click`,e=>{B.labels=!B.labels,e.currentTarget.setAttribute(`aria-pressed`,String(B.labels))}),j(`toggle-grid`).addEventListener(`click`,e=>{P.zoneGrid.visible=!P.zoneGrid.visible,e.currentTarget.setAttribute(`aria-pressed`,String(P.zoneGrid.visible))}),document.querySelectorAll(`[data-view]`).forEach(e=>e.addEventListener(`click`,()=>{N.setView(e.dataset.view),document.querySelectorAll(`[data-view]`).forEach(t=>t.setAttribute(`aria-pressed`,String(t===e)))})),N.controls.addEventListener(`start`,()=>document.querySelector(`.hint`)?.classList.add(`gone`)),j(`source`).innerHTML=`
+  <div><dt>Match</dt><dd>${C.competition}${C.played?`, ${C.played}`:``}. ${C.resultNote??`${C.home} ${C.result} ${C.away}.`}</dd></div>${Tt?`
+  <div><dt>Timing</dt><dd>The footage has no match clock or scoreboard, so every time on this page is minutes and seconds into the clip, not the match minute.</dd></div>`:``}
+  <div><dt>Footage</dt><dd>${C.footage.kind}, ${C.window}. ${C.footage.rights}</dd></div>
+  <div><dt>Data</dt><dd>We tagged ${T.reduce((e,t)=>e+t.events.length,0)} events across ${T.length} sequences on a 105 × 68 m pitch. ${C.footage.method} Players are identified by shirt number.</dd></div>
+  <div><dt>Threat and xG</dt><dd>The threat surface shows how likely possession in each area is to lead to a goal, rising toward the penalty box, and lifts where the selected team built threat in the sequence on screen. Shot quality (xG) comes from shot distance and goal angle.</dd></div>
+  <div><dt>Next</dt><dd>Full-match footage lets us extend this to every possession and every player on the pitch.</dd></div>`;var pn=[];function mn(){return pn.length=0,B.threat===`off`||V().events.forEach((e,t)=>{if(e.team!==B.threat)return;let n=Math.max(0,Math.min(1,(B.t-e.t)/Et(V(),t)));if(n<=0)return;let r=A(e),i=k(e),a=r===null?i===null?e.outcome===`won`?.15:.05:.12+Math.max(0,i)*4:.35+r,o=e.to&&e.outcome!==`incomplete`&&e.outcome!==`lost`&&r===null?e.to:e.from;pn.push(o[0],o[1],Math.min(1,a)*n)}),pn}var hn=window.matchMedia(`(prefers-reduced-motion: reduce)`).matches;function gn(e,t,n){N.project(t,K);let r=n&&K.visible;e.hidden=!r,r&&(e.style.transform=`translate(${K.x.toFixed(1)}px, ${K.y.toFixed(1)}px) translate(-50%, -50%)`)}N.onFrame((e,t)=>{B.playing&&(B.t+=e*B.speed,B.t>=V().end&&(B.t=V().end,G(!1)));let n=I.update(B.t,t,N.camera);F.setPoints(mn()),hn||F.setTime(t),n!==B.active&&Zt(n),Qt();let r=String(Math.round((B.t-U())*w.fps));z.value!==r&&(z.value=r);let i=`${Tt?`clip `:``}${H(Math.max(B.t,V().events[0].t))}`;j(`clock`).textContent!==i&&(j(`clock`).textContent=i);let a=`frame ${qt().toLocaleString(`en`)}`;j(`frame`).textContent!==a&&(j(`frame`).textContent=a),B.selected&&B.t<V().events[B.selected.index].t&&$(null),fn(),un();for(let e of Vt)gn(e.el,e.at,!0);I.labels.forEach((e,t)=>{let n=Gt(t);n.className=`value ${e.kind} ${D(e.event.team)}`,n.textContent!==e.text&&(n.textContent=e.text),gn(n,e.anchor,B.labels&&e.reveal>.55)});for(let e=I.labels.length;e<R.length;e++)R[e].hidden=!0}),W(),Xt(xt(),!0),N.start();</script>
+  <style rel="stylesheet" crossorigin>:root{--ink:#0d0f13;--ink-2:#161920;--ink-3:#20242d;--chalk:#ece8dc;--muted:#979dab;--rule:#ece8dc21;--arc:#9cc2ff;--t0-accent:#e5343f;--t0-lane:#9cc2ff;--t0-kit:#e5343f;--t0-ring:transparent;--t1-accent:#ff8a2a;--t1-lane:#ffe9c4;--t1-kit:#f6f3ec;--t1-ring:#ff8a2a;--cream:#ffe9c4;--teal:#6edece;--pink:#ee60a0;--amber:#ffd060;--display:"Archivo", "Helvetica Neue", Arial, sans-serif;--mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;--hand:"Caveat", "Segoe Print", cursive;--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}*,:before,:after{box-sizing:border-box}[hidden]{display:none!important}html,body{height:100%}body{background:var(--ink);color:var(--chalk);font:14px/1.45 var(--display);margin:0;overflow:hidden}button,input{font:inherit;color:inherit}button{cursor:pointer}:focus-visible{outline:2px solid var(--arc);outline-offset:2px}svg.lucide{flex:none;width:16px;height:16px}#app{grid-template:"bar bar""stage panel"minmax(0,1fr)/minmax(0,1fr) 372px;height:100%;display:grid}.bar{padding-block:10px;padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));border-bottom:1px solid var(--rule);flex-wrap:wrap;grid-area:bar;justify-content:space-between;align-items:center;gap:8px 20px;display:flex}.eyebrow{color:var(--muted);font:500 10.5px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;margin:0}h1{letter-spacing:-.01em;text-wrap:balance;margin:2px 0 0;font-size:clamp(17px,2.3vw,23px);font-weight:700;font-stretch:112%}.score{font-family:var(--mono);font-variant-numeric:tabular-nums;padding:0 .35em;font-weight:500}.team-name.t0{box-shadow:inset 0 -3px 0 var(--t0-accent)}.team-name.t1{box-shadow:inset 0 -3px 0 var(--t1-accent)}.views,.layers{flex-wrap:wrap;gap:6px;display:flex}.chip{border:1px solid var(--rule);white-space:nowrap;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);background:#0d0f13b8;border-radius:999px;align-items:center;gap:6px;min-height:34px;padding:0 11px;font-size:12.5px;font-weight:500;display:inline-flex}.chip:hover{border-color:#ece8dc66}.chip[aria-pressed=true]{background:var(--chalk);color:var(--ink);border-color:var(--chalk)}.chip[aria-pressed=false]{color:var(--muted)}.stage{grid-area:stage;grid-template-rows:minmax(0,1fr) auto;min-height:0;display:grid}.view{background:radial-gradient(120% 90% at 30% 20%, #46506957, transparent 60%), radial-gradient(90% 80% at 85% 90%, #282e3c80, transparent 65%), linear-gradient(#ece8dc09 1px, transparent 1px) 0 0 / 100% 56px, linear-gradient(90deg, #ece8dc09 1px, transparent 1px) 0 0 / 56px 100%, var(--ink);min-height:0;position:relative;overflow:hidden}#scene,#labels{position:absolute;inset:0}#scene canvas{touch-action:none;display:block}#labels{pointer-events:none;overflow:hidden}#labels>span{white-space:nowrap;will-change:transform;position:absolute;top:0;left:0}.note{font:500 19px/1 var(--hand);color:#ece8dcb8}.goal-note{font-size:17px}.value{font:500 11.5px/1 var(--mono);font-variant-numeric:tabular-nums;border:1px solid var(--arc);color:var(--chalk);background:#0d0f13d1;padding:4px 6px}.value.t0{border-color:var(--t0-lane)}.value.t1{border-color:var(--t1-lane)}.value.xg{border-color:var(--amber);color:var(--amber);font-weight:500}.now{top:12px;left:max(16px, env(safe-area-inset-left,0px));border:1px solid var(--rule);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);pointer-events:none;background:#0d0f13cc;width:min(280px,100% - 32px);padding:10px 12px;position:absolute}.now p{margin:0}.now-head{color:var(--muted);align-items:center;gap:10px;font-size:12px;display:flex}.now-what{font-size:17px;font-weight:700;font-stretch:108%;margin-top:2px!important}.now-note{color:var(--chalk);opacity:.85;font-size:12.5px;margin-top:4px!important}.now-opta{font:10.5px var(--mono);color:var(--muted);letter-spacing:.03em;margin-top:6px!important}.ev-clock{font-family:var(--mono);font-variant-numeric:tabular-nums}.dot{background:var(--t0-kit);width:9px;height:9px;box-shadow:0 0 0 2px var(--t0-ring);border-radius:50%;flex:none;margin-right:6px;display:inline-block}.t1 .dot{background:var(--t1-kit);box-shadow:0 0 0 2px var(--t1-ring)}.layers{left:max(16px, env(safe-area-inset-left,0px));position:absolute;bottom:12px;right:16px}.hint{color:var(--muted);align-items:center;gap:6px;margin:0;font-size:11.5px;transition:opacity .4s;display:flex;position:absolute;top:12px;right:16px}.hint.gone{opacity:0}.panel{padding-block:14px;min-height:0;padding-left:16px;padding-right:max(16px, env(safe-area-inset-right,0px));background:var(--ink-2);border-left:1px solid var(--rule);flex-direction:column;grid-area:panel;gap:14px;display:flex;overflow-y:auto}.panel>*{flex:none}.seqs{scrollbar-width:thin;gap:6px;padding-bottom:4px;display:flex;overflow-x:auto}.seqs button{text-align:left;border:1px solid var(--rule);background:0 0;border-radius:4px;flex:none;gap:1px;padding:7px 11px;display:grid}.seqs button[aria-current=true]{background:var(--chalk);color:var(--ink);border-color:var(--chalk)}.seq-min{font:500 11px var(--mono);opacity:.7}.seq-title{white-space:nowrap;font-size:13px;font-weight:650}.icon-btn{border:1px solid var(--rule);background:0 0;border-radius:50%;flex:none;place-items:center;width:38px;height:38px;display:grid}.icon-btn:hover{border-color:#ece8dc66}.icon-btn.primary{background:var(--arc);color:var(--ink);border-color:var(--arc)}.timeline{padding-block:9px;padding-left:max(16px, env(safe-area-inset-left,0px));background:var(--ink-2);border-top:1px solid var(--rule);align-items:center;gap:8px;padding-right:16px;display:flex}.track{flex:1;align-items:center;min-width:0;height:38px;display:grid;position:relative}#scrub{width:100%;accent-color:var(--arc);margin:0;position:relative}.ticks{pointer-events:none;position:absolute;inset:0 8px}.ticks i{background:var(--t0-accent);width:2px;height:8px;margin-left:-1px;position:absolute;top:3px}.ticks i.t1{background:var(--t1-accent)}.ticks i.goal{background:var(--amber);width:3px;height:12px;top:0}.readout{justify-items:end;min-width:9.5ch;line-height:1.2;display:grid}#clock{font:500 13px var(--mono);font-variant-numeric:tabular-nums}#frame{font:10.5px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}#speed{min-width:44px;font-family:var(--mono);justify-content:center}.card{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);z-index:3;background:#0d0f13ed;border:1px solid #ece8dc57;width:min(290px,100% - 16px);padding:11px 12px 12px;position:absolute;top:0;left:0;box-shadow:0 14px 40px #00000080}.card header{color:var(--muted);align-items:center;gap:10px;font-size:12px;display:flex}.card-close{border:1px solid var(--rule);background:0 0;border-radius:50%;place-items:center;width:28px;height:28px;margin-left:auto;display:grid}.card h2{margin:4px 0 8px;font-size:16px;font-weight:700;font-stretch:108%}.card dl{margin:0;display:grid}.card dl div{border-top:1px solid var(--rule);grid-template-columns:9.5ch minmax(0,1fr);gap:8px;padding:4px 0;display:grid}.card dt{font:500 10px/1.6 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.card dd{font:12px/1.4 var(--mono);font-variant-numeric:tabular-nums;margin:0}.pressure{border-left:3px solid var(--muted);background:var(--ink-3);margin-top:9px;padding:8px 9px;font-size:12px}.pressure p{margin:0}.p-head{justify-content:space-between;font-weight:650;display:flex;margin-bottom:2px!important}.p-head b{text-transform:uppercase;font:500 10.5px/1.7 var(--mono);letter-spacing:.08em}.pressure.high{border-color:#ff3d7f}.pressure.high b{color:#ff7aa6}.pressure.medium{border-color:#ffc04a}.pressure.medium b{color:#ffc04a}.pressure.low{border-color:#5fdccb}.pressure.low b{color:#5fdccb}.caption{border-left:3px solid var(--arc);text-align:left;pointer-events:none;z-index:2;background:#0d0f13db;width:min(620px,100% - 32px);margin:0;padding:8px 12px;font-size:14px;line-height:1.4;position:absolute;bottom:60px;left:50%;transform:translate(-50%)}#voice[aria-pressed=true]{color:var(--arc);border-color:var(--arc)}#notes li.speaking{border-left-color:var(--amber);color:var(--chalk);background:var(--ink-3)}.events button.picked{box-shadow:inset 2px 0 0 var(--amber);background:var(--ink-3)}.totals{border-block:1px solid var(--rule);grid-template-columns:repeat(3,minmax(0,1fr));display:grid}.totals div{padding:9px 8px 9px 0}.totals div+div{border-left:1px solid var(--rule);padding-left:10px}.totals dt,.source dt{font:500 10px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.totals dd{font:500 15px var(--mono);font-variant-numeric:tabular-nums;margin:3px 0 0}.tab{color:var(--muted);background:0 0;border:0;border-bottom:2px solid #0000;margin-bottom:-1px;padding:8px 10px;font-size:13px;font-weight:600}.tab[aria-selected=true]{color:var(--chalk);border-bottom-color:var(--arc)}[role=tablist]{border-bottom:1px solid var(--rule);gap:4px;display:flex}#pane-notes,#pane-clip{flex-direction:column;gap:14px;display:flex}#notes{gap:10px;margin:8px 0 0;padding:0;font-size:13.5px;line-height:1.4;list-style:none;display:grid}#notes li{border-left:2px solid var(--arc);padding-left:12px}#coach-notes{resize:vertical;background:var(--ink);width:100%;color:var(--chalk);border:1px solid var(--rule);border-radius:4px;margin-top:8px;padding:10px;font-size:13.5px}#pane-clip>div:first-child{aspect-ratio:16/9;border:1px solid var(--rule);background:#000;position:relative;overflow:hidden}#clip{object-fit:contain;width:100%;height:100%;display:block}#clip-empty{text-align:center;color:var(--muted);place-items:center;padding:16px;font-size:13px;display:grid;position:absolute;inset:0}#clip-file{clip:rect(0 0 0 0);width:1px;height:1px;position:absolute;overflow:hidden}#clip-file:focus-visible+p,label[for=clip-file]:focus-within{outline:2px solid var(--arc)}#notes-status,#clip-status,#voice-help{color:var(--muted);margin:4px 0 0;font-size:12px}.kicker{font:500 10px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}.events{margin:0;padding:0;list-style:none}.events button{text-align:left;border:0;border-bottom:1px solid var(--rule);background:0 0;grid-template-columns:6.2ch auto minmax(0,1fr) auto;align-items:center;gap:4px;width:100%;padding:7px 8px;font-size:13px;display:grid}.events button:hover{background:var(--ink-3)}.events button[aria-current=true]{background:var(--ink-3);box-shadow:inset 2px 0 0 var(--arc)}.events .ev-clock{color:var(--muted);font-size:12px}.events em{color:var(--muted);font-style:normal}.events b{color:var(--amber);font-weight:650}.ev-val{font:12px var(--mono);font-variant-numeric:tabular-nums;color:var(--arc)}.legend{color:var(--muted);flex-wrap:wrap;gap:6px 14px;font-size:11.5px;display:flex}.legend span{align-items:center;gap:6px;display:inline-flex}.sw{border-top:3px solid var(--arc);width:20px;height:0;display:inline-block}.sw.t0{border-color:var(--t0-lane)}.sw.t1{border-color:var(--t1-lane)}.sw.dash{border-top:2px dashed var(--chalk)}.sw.ring{border:2px solid var(--chalk);border-radius:50%;width:11px;height:11px}.sw.wash{background:linear-gradient(90deg, var(--teal), var(--pink), var(--amber));border:0;height:9px}.source{border-top:1px solid var(--rule);padding-top:10px;font-size:12.5px}.source summary{cursor:pointer;color:var(--muted);align-items:center;gap:6px;list-style:none;display:flex}.source summary::-webkit-details-marker{display:none}.source dl{gap:9px;margin:10px 0 0;display:grid}.source dd{max-width:62ch;margin:2px 0 0}@media (width<=860px){#app{grid-template:"bar""stage"minmax(250px,46%)"panel"minmax(0,1fr)/minmax(0,1fr)}.panel{border-left:0;border-top:1px solid var(--rule);padding-left:max(16px, env(safe-area-inset-left,0px))}.views .chip span,.layers .chip:not(#threat) span{display:none}.views .chip,.layers .chip:not(#threat){justify-content:center;width:36px;padding:0}.hint,#restart,#step-back{display:none}.timeline{gap:6px}.card{width:min(250px,100% - 16px);padding:9px 10px}.card dl div{padding:2px 0}.caption{padding:6px 9px;font-size:12.5px;bottom:54px}.now{width:min(220px,60%);padding:7px 9px;top:8px}.now-what{font-size:14px}.now-note,.now-opta{display:none}.note{font-size:15px}.goal-note{font-size:13px}.value{padding:3px 4px;font-size:10.5px}}@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+/*$vite$:1*/</style>
+</head>
+<body>
+<div id="app">
+  <header class="bar">
+    <div class="match">
+      <p class="eyebrow" id="eyebrow">3D soccer pitch graphics analysis</p>
+      <h1><span class="team-name t0" id="team-0"></span> <span class="score" id="score">0–0</span> <span class="team-name t1" id="team-1"></span></h1>
+    </div>
+    <div class="views" role="group" aria-label="Camera view">
+      <button class="chip" data-view="broadcast" aria-pressed="true"><i data-lucide="video"></i><span>Broadcast</span></button>
+      <button class="chip" data-view="tactical" aria-pressed="false"><i data-lucide="layout-grid"></i><span>Tactical</span></button>
+      <button class="chip" data-view="goal" aria-pressed="false"><i data-lucide="goal"></i><span>Behind goal</span></button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="view" id="view">
+      <div id="scene" aria-label="3D pitch. Drag to orbit, pinch or scroll to zoom, click a player or ball path to inspect it."></div>
+      <div id="labels" aria-hidden="true"></div>
+      <div class="now" id="now" aria-live="polite"></div>
+      <div class="layers" role="group" aria-label="Layers">
+        <button class="chip" id="threat" aria-label="Threat surface"><i data-lucide="flame"></i><span id="threat-label">Threat</span></button>
+        <button class="chip" id="toggle-labels" aria-pressed="true"><i data-lucide="tag"></i><span>Values</span></button>
+        <button class="chip" id="toggle-grid" aria-pressed="true"><i data-lucide="grid-3x3"></i><span>Zones</span></button>
+      </div>
+      <p class="hint"><i data-lucide="mouse-pointer-click"></i>Click a player or ball path to inspect · drag to orbit</p>
+      <section class="card" id="card" hidden aria-live="polite"></section>
+      <p class="caption" id="caption" hidden></p>
+    </div>
+    <div class="timeline" role="group" aria-label="Playback">
+      <button class="icon-btn primary" id="play" aria-label="Play"><i data-lucide="play"></i></button>
+      <button class="icon-btn" id="step-back" aria-label="Back one frame"><i data-lucide="step-back"></i></button>
+      <button class="icon-btn" id="step-fwd" aria-label="Forward one frame"><i data-lucide="step-forward"></i></button>
+      <div class="track">
+        <div class="ticks" id="ticks" aria-hidden="true"></div>
+        <input id="scrub" type="range" min="0" max="100" step="1" value="0" aria-label="Clip frame">
+      </div>
+      <div class="readout">
+        <output id="clock" for="scrub">0:00</output>
+        <span id="frame">frame 0</span>
+      </div>
+      <button class="icon-btn" id="restart" aria-label="Restart sequence"><i data-lucide="rotate-ccw"></i></button>
+      <button class="chip" id="speed" aria-label="Playback speed">1×</button>
+      <button class="icon-btn" id="voice" aria-pressed="true" aria-label="Voice notes on"><i data-lucide="volume-2"></i></button>
+    </div>
+  </main>
+
+  <aside class="panel">
+    <nav class="seqs" id="seqs" aria-label="Sequences"></nav>
+    <div class="totals" id="totals"></div>
+    <div class="flex gap-1 border-b border-[var(--rule)]" role="tablist" aria-label="Sidebar">
+      <button class="tab" role="tab" id="tab-events" aria-controls="pane-events" aria-selected="true">Events</button>
+      <button class="tab" role="tab" id="tab-notes" aria-controls="pane-notes" aria-selected="false">Coaching notes</button>
+      <button class="tab" role="tab" id="tab-clip" aria-controls="pane-clip" aria-selected="false">Match clip</button>
+    </div>
+
+    <div id="pane-events" role="tabpanel" aria-labelledby="tab-events">
+      <ol class="events" id="events"></ol>
+    </div>
+
+    <div id="pane-notes" role="tabpanel" aria-labelledby="tab-notes" hidden class="flex flex-col gap-4">
+      <div>
+        <p class="kicker">From the tagged events</p>
+        <p id="voice-help" class="m-0 mt-1 text-[12px] text-[var(--muted)]">Read aloud when you press Play. Turn the voice off with the speaker button.</p>
+        <ul id="notes" class="m-0 mt-2 p-0 list-none flex flex-col gap-2.5 text-[13.5px] leading-snug"></ul>
+      </div>
+      <div>
+        <label for="coach-notes" class="kicker block">Your notes on this sequence</label>
+        <textarea id="coach-notes" rows="5" placeholder="Type coaching points here. They are saved in this browser only."
+          class="mt-2 w-full resize-y rounded border border-[var(--rule)] bg-[var(--ink)] p-2.5 text-[13.5px] leading-snug text-[var(--chalk)] placeholder:text-[var(--muted)]"></textarea>
+        <p id="notes-status" class="m-0 mt-1 text-[11.5px] text-[var(--muted)]">Saved in this browser only. Not shared with other viewers.</p>
+      </div>
+    </div>
+
+    <div id="pane-clip" role="tabpanel" aria-labelledby="tab-clip" hidden class="flex flex-col gap-3">
+      <div class="relative aspect-video w-full overflow-hidden rounded border border-[var(--rule)] bg-black">
+        <!-- Video slot. The clip loads from clip.src beside this page (see the dataset); the device picker is the fallback. -->
+        <video id="clip" class="h-full w-full object-contain" muted playsinline preload="metadata"></video>
+        <div id="clip-empty" class="absolute inset-0 grid place-items-center p-4 text-center text-[13px] text-[var(--muted)]">
+          Load the match clip to watch it alongside the 3D pitch.
+        </div>
+      </div>
+      <label class="chip w-fit cursor-pointer" for="clip-file"><i data-lucide="upload"></i><span>Load clip from this device</span></label>
+      <input id="clip-file" type="file" accept="video/*" class="sr-only">
+      <p id="clip-status" class="m-0 text-[12px] leading-snug text-[var(--muted)]">
+        Load the match clip from your device and it plays in step with the timeline, frame for frame.
+      </p>
+    </div>
+
+    <div class="legend">
+      <span><i class="sw arc t0"></i><span id="legend-0">Ball path</span></span>
+      <span><i class="sw arc t1"></i><span id="legend-1">Ball path</span></span>
+      <span><i class="sw dash"></i>Carry</span>
+      <span><i class="sw ring"></i>Duel or regain</span>
+      <span><i class="sw wash"></i>Threat, low to high</span>
+    </div>
+    <details class="source">
+      <summary><i data-lucide="info"></i>About this analysis</summary>
+      <dl id="source"></dl>
+    </details>
+  </aside>
+</div>
+<!-- Tracking dataset. In the built page it can be edited here with no rebuild. Source: matches/<match>.json -->
+<script type="application/json" id="tracking-data">
+{
+  "match": {
+    "title": "South Africa vs Kenya AFCON 2027 Qualifiers 3D Soccer Pitch Graphics Analysis",
+    "competition": "AFCON 2027 Qualifiers",
+    "home": "South Africa", "away": "Kenya", "result": "2–2",
+    "played": "13 November 2026, Johannesburg",
+    "resultNote": "Four goals are shown in the clip, two for each side: South Africa 2–2 Kenya. The footage carries no scoreboard, so the score here is a count of the goals shown.",
+    "timebase": "clip",
+    "window": "ten passages from both halves",
+    "footage": {
+      "grade": "B",
+      "kind": "Highlights reel from one high camera, 1280 × 720, 3 min 13 s, with no on-screen clock or scoreboard",
+      "rights": "Used with the permission of the rights holder.",
+      "method": "Events placed by eye from the pitch markings to within about 5 m."
+    }
+  },
+  "teams": [
+    { "code": "RSA", "name": "South Africa", "lane": "#ffd84d", "kit": "#ffcf00", "trim": "#00854a", "accent": "#ffcf00", "ring": "#00a35c", "attacks": "right" },
+    { "code": "KEN", "name": "Kenya", "lane": "#ff5a5f", "kit": "#e5343f", "trim": "#111318", "accent": "#e5343f", "attacks": "left" }
+  ],
+  "open": "g4",
+  "clip": { "fps": 30, "frames": 5799, "src": "clip.mp4" },
+  "units": "metres",
+  "coordinates": "x from the left goal line (0-105), y from the near (camera-side) touchline (0-68). t is seconds into the clip; the footage has no match clock. Before the change of ends (up to 2:21 of the clip) South Africa attack toward x = 105 and Kenya toward x = 0; after it the directions swap.",
+  "sequences": [
+    {
+      "id": "k1", "label": "Clip 0:00", "title": "Kenya shot saved", "score": "0–0",
+      "end": 14.5, "videoOffset": 0,
+      "notes": [
+        "One diagonal of about 37 m moved the ball from the centre circle to the near touchline. No. 19 then carried it about 12 m to the edge of the area.",
+        "The cross travelled about 30 m to the far side of the penalty spot, and the shot came about 2 seconds after it was struck.",
+        "The shot was taken about 12 m from goal with two defenders inside 5 m. The goalkeeper held it."
+      ],
+      "events": [
+        {"t": 0.6, "team": "KEN", "type": "pass", "from": [55,34], "to": [27,10], "outcome": "complete", "note": "Long diagonal from the centre circle to the near touchline."},
+        {"t": 4.8, "team": "KEN", "type": "carry", "player": 19, "from": [27,10], "to": [15,9], "outcome": "complete", "pressure": {"within5": 2, "nearest": 2}},
+        {"t": 10.3, "team": "KEN", "type": "cross", "player": 19, "from": [15,9], "to": [11,39], "outcome": "complete"},
+        {"t": 12.1, "team": "KEN", "type": "shot", "from": [11,39], "to": [0,32], "outcome": "saved", "pressure": {"within5": 2, "nearest": 1.5}, "note": "First-time effort on the far side of the penalty spot, saved low. The shooter's number is not legible."},
+        {"t": 13.4, "team": "RSA", "type": "claim", "from": [2,32], "outcome": "won"}
+      ]
+    },
+    {
+      "id": "r1", "label": "Clip 0:41", "title": "South Africa shot saved", "score": "0–0",
+      "end": 46, "videoOffset": 0,
+      "notes": [
+        "The chance came from the far side: a short carry, then a cross of about 30 m from outside the area.",
+        "The ball was met about 11 m from goal, roughly 1 second after the cross was struck.",
+        "One defender was within a metre at the shot. The goalkeeper saved low and held the ball, so there was no rebound."
+      ],
+      "events": [
+        {"t": 41.0, "team": "RSA", "type": "carry", "from": [64,56], "to": [70,56], "outcome": "complete"},
+        {"t": 42.5, "team": "RSA", "type": "cross", "from": [70,56], "to": [95,39], "outcome": "complete"},
+        {"t": 43.7, "team": "RSA", "type": "shot", "from": [95,39], "to": [105,35], "outcome": "saved", "pressure": {"within5": 1, "nearest": 1}, "note": "Met in the area with a defender tight. Saved low and held."},
+        {"t": 44.3, "team": "KEN", "type": "claim", "from": [103,35], "outcome": "won"}
+      ]
+    },
+    {
+      "id": "r2", "label": "Clip 0:52", "title": "South Africa shot off target", "score": "0–0",
+      "end": 59, "videoOffset": 0,
+      "notes": [
+        "A forward pass of about 21 m found the striker at the edge of the area with two defenders inside 5 m.",
+        "He carried about 7 m into the area before he was tackled. A team-mate won the loose ball within half a second.",
+        "The second effort came from about 11 m in a central position and missed the target. Shot choice with two defenders close is the talking point."
+      ],
+      "events": [
+        {"t": 52.4, "team": "RSA", "type": "pass", "from": [66,44], "to": [86,37], "outcome": "complete", "note": "The start of this pass is off frame during a camera pan. It is placed from the flight of the ball."},
+        {"t": 53.7, "team": "RSA", "type": "carry", "from": [86,37], "to": [93,38], "outcome": "complete", "pressure": {"within5": 2, "nearest": 1}},
+        {"t": 55.9, "team": "KEN", "type": "tackle", "from": [93,38], "outcome": "won"},
+        {"t": 56.3, "team": "RSA", "type": "recovery", "from": [93,36], "outcome": "won"},
+        {"t": 56.8, "team": "RSA", "type": "shot", "from": [94,36], "to": [105,39.5], "outcome": "off_target", "pressure": {"within5": 2, "nearest": 2}, "note": "Second effort after the tackle. The ball finished behind the goal."}
+      ]
+    },
+    {
+      "id": "g1", "label": "Clip 1:05", "title": "South Africa 1–0", "score": "1–0",
+      "end": 71, "videoOffset": 0,
+      "notes": [
+        "The goal started with Kenya in possession: a square pass of about 18 m infield from the far side of their own area.",
+        "The next touch went back toward Kenya's goal with a South African forward about 3 to 4 m behind, and the ball ran free for under 2 seconds.",
+        "The last touch was about 14 m out, in a challenge. The footage does not show who made it, so no scorer is named."
+      ],
+      "events": [
+        {"t": 65.0, "team": "KEN", "type": "pass", "from": [88,55], "to": [79,39], "outcome": "complete", "note": "Square pass infield from the far side of the area."},
+        {"t": 66.0, "team": "KEN", "type": "pass", "from": [79,39], "to": [90,36], "outcome": "incomplete", "pressure": {"within5": 1, "nearest": 3.5}, "note": "Played back toward his own goal with a South African forward closing from behind."},
+        {"t": 67.7, "team": "RSA", "type": "shot", "from": [91,36], "to": [105,36], "outcome": "goal", "pressure": {"within5": 1, "nearest": 1}, "note": "The last touch came in a challenge just inside the area. From this angle it is not clear whether the South African forward or the Kenyan defender touched it last. South African players collect the ball from the net."}
+      ]
+    },
+    {
+      "id": "r3", "label": "Clip 1:24", "title": "South Africa shot saved", "score": "1–0",
+      "end": 96.5, "videoOffset": 0,
+      "notes": [
+        "Built down the near side: a carry of about 10 m, then the ball was worked infield and back out to the same channel.",
+        "The final pass put the shooter in the area with about 2 seconds on the ball before the shot.",
+        "The shot came from about 16 m from the centre of goal at a tight angle. The save left a rebound, and Kenya's No. 4 reached it first."
+      ],
+      "events": [
+        {"t": 84.5, "team": "RSA", "type": "carry", "from": [72,8], "to": [82,7], "outcome": "complete"},
+        {"t": 86.6, "team": "RSA", "type": "pass", "from": [82,7], "to": [76,20], "outcome": "complete"},
+        {"t": 88.0, "team": "RSA", "type": "carry", "from": [76,20], "to": [82,26], "outcome": "complete"},
+        {"t": 90.0, "team": "RSA", "type": "pass", "from": [82,26], "to": [88,27], "outcome": "complete"},
+        {"t": 91.8, "team": "RSA", "type": "pass", "from": [88.5,27], "to": [92,19], "outcome": "complete", "pressure": {"within5": 2, "nearest": 1}, "note": "Laid off under a challenge at the edge of the area."},
+        {"t": 92.2, "team": "RSA", "type": "carry", "from": [92,19], "to": [97,20], "outcome": "complete", "pressure": {"within5": 1, "nearest": 3}},
+        {"t": 93.8, "team": "RSA", "type": "shot", "from": [97,20], "to": [105,31.5], "outcome": "saved", "pressure": {"within5": 1, "nearest": 2}, "note": "Low shot from the near side of the area, pushed away by the goalkeeper at his near post."},
+        {"t": 95.8, "team": "KEN", "type": "recovery", "player": 4, "from": [98,27], "outcome": "won"}
+      ]
+    },
+    {
+      "id": "r4", "label": "Clip 1:39", "title": "South Africa run blocked", "score": "1–0",
+      "end": 104, "videoOffset": 0,
+      "notes": [
+        "A straight run of about 13 m from the edge of the D, between Kenya's No. 3 and No. 4.",
+        "The effort came about 8 m out with the goalkeeper already off his line, and it was blocked at the forward's feet.",
+        "Both centre-backs were within 5 m as he entered the area and neither made a tackle. Worth reviewing who steps in and who covers."
+      ],
+      "events": [
+        {"t": 99.3, "team": "RSA", "type": "carry", "from": [84,37], "to": [97,34], "outcome": "complete", "pressure": {"within5": 2, "nearest": 2}, "note": "Run from the edge of the D between Kenya's No. 3 and No. 4."},
+        {"t": 102.0, "team": "RSA", "type": "shot", "from": [97,34], "to": [104,31], "outcome": "saved", "pressure": {"within5": 2, "nearest": 1.5}, "note": "The goalkeeper came off his line and blocked at the forward's feet. The ball ran wide of the near post."}
+      ]
+    },
+    {
+      "id": "g2", "label": "Clip 1:46", "title": "Kenya penalty 1–1", "score": "1–1",
+      "end": 122.5, "videoOffset": 0,
+      "notes": [
+        "The free kick was struck on the near side about 42 m from goal and carried about 36 m into the area.",
+        "The referee pointed to the spot about 4 seconds after the delivery. The contact that led to the penalty cannot be seen from this camera.",
+        "No. 14 put the penalty low to the goalkeeper's right. The goalkeeper went the right way and did not reach it."
+      ],
+      "events": [
+        {"t": 106.9, "team": "KEN", "type": "cross", "from": [37,14], "to": [10,38], "outcome": "complete", "note": "Free kick from the near side into a crowded area. The referee points to the spot about 4 seconds later; the offence is not visible from this angle."},
+        {"t": 120.3, "team": "KEN", "type": "shot", "player": 14, "from": [11,34], "to": [0,31], "outcome": "goal", "xg": 0.76, "note": "Penalty, low to the goalkeeper's right. Shot quality is the usual fixed figure for a penalty."}
+      ]
+    },
+    {
+      "id": "r5", "label": "Clip 2:13", "title": "South Africa shot saved", "score": "1–1",
+      "end": 137, "videoOffset": 0,
+      "notes": [
+        "A carry of about 10 m across the front of the area, then a shot from about 23 m.",
+        "Two defenders were inside 5 m at the shot, the nearest about 1.5 m away.",
+        "Kenya's No. 23 saved and held the ball. From this range the chance is low quality; no pass option is visible in the frame."
+      ],
+      "events": [
+        {"t": 133.0, "team": "RSA", "type": "carry", "from": [74,24], "to": [84,24], "outcome": "complete", "pressure": {"within5": 2, "nearest": 1.5}},
+        {"t": 134.3, "team": "RSA", "type": "shot", "from": [84,24], "to": [105,32], "outcome": "saved", "pressure": {"within5": 2, "nearest": 1.5}},
+        {"t": 135.0, "team": "KEN", "type": "claim", "player": 23, "from": [103,32], "outcome": "won"}
+      ]
+    },
+    {
+      "id": "g3", "label": "Clip 2:27", "title": "South Africa 2–1", "score": "2–1",
+      "attacks": { "RSA": "left", "KEN": "right" },
+      "end": 156, "videoOffset": 0,
+      "notes": [
+        "South Africa went from about 10 m inside Kenya's half to a shot in about 6 seconds.",
+        "The ball was moved to the far side of the area and back to the middle: two passes of about 23 m and 14 m, and the defence had to shift each time.",
+        "No. 10 shot from about 13 m with two defenders inside 5 m, one of them sliding in."
+      ],
+      "events": [
+        {"t": 147.5, "team": "RSA", "type": "pass", "from": [42,44], "to": [30,34], "outcome": "complete", "note": "Ball played forward into space."},
+        {"t": 148.6, "team": "RSA", "type": "carry", "from": [30,34], "to": [19,30], "outcome": "complete", "pressure": {"within5": 1, "nearest": 2}},
+        {"t": 150.8, "team": "RSA", "type": "pass", "from": [19,30], "to": [14,52], "outcome": "complete", "note": "Lifted to the far side of the area."},
+        {"t": 152.3, "team": "RSA", "type": "pass", "from": [13,52], "to": [13,38], "outcome": "complete", "note": "Squared back to the middle."},
+        {"t": 153.6, "team": "RSA", "type": "shot", "player": 10, "from": [13,37], "to": [0,31.5], "outcome": "goal", "pressure": {"within5": 2, "nearest": 1.5}, "note": "A team-mate was in front of the goalkeeper as the ball arrived, so a touch on the way through cannot be ruled out from this angle."}
+      ]
+    },
+    {
+      "id": "g4", "label": "Clip 2:53", "title": "Kenya 2–2", "score": "2–2",
+      "attacks": { "RSA": "left", "KEN": "right" },
+      "end": 183, "videoOffset": 0,
+      "notes": [
+        "No. 15 carried the ball about 28 m from near halfway to the edge of the D with a defender alongside him.",
+        "Three South African players were inside 5 m when he shot, and none had blocked the shooting lane.",
+        "The shot was from about 22 m. By position this is a low-quality chance, so credit the strike and review how the carry was allowed to run."
+      ],
+      "events": [
+        {"t": 173.0, "team": "KEN", "type": "carry", "player": 15, "from": [56,30], "to": [83,37], "outcome": "complete", "pressure": {"within5": 1, "nearest": 1.5}},
+        {"t": 180.4, "team": "KEN", "type": "shot", "player": 15, "from": [83,37], "to": [105,35], "outcome": "goal", "pressure": {"within5": 3, "nearest": 1}, "note": "Low shot from the top of the D. It ran past team-mate No. 22, who did not touch it, and beat the goalkeeper's dive."}
+      ]
+    }
+  ]
+}
+</script>
+</body>
+</html>
