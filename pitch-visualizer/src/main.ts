@@ -332,6 +332,19 @@ function useClip(src: string, name: string, onFail: () => void): void {
   video.src = src;
 }
 
+/**
+ * iPhones (Low Power Mode, mobile data) fetch nothing from a video until it is asked to play, and
+ * may refuse that until the viewer touches the page. Ask now, and again on each touch until it loads.
+ */
+function wakeClip(): void {
+  if (clipLoaded) { stopWaking(); return; }
+  if (!video.getAttribute('src')) return;
+  void video.play().then(() => { if (!state.playing) video.pause(); }).catch(() => {});
+}
+function stopWaking(): void {
+  for (const type of ['touchend', 'click', 'keydown']) document.removeEventListener(type, wakeClip, true);
+}
+
 $<HTMLInputElement>('clip-file').addEventListener('change', (ev) => {
   const file = (ev.target as HTMLInputElement).files?.[0];
   if (!file) return;
@@ -342,11 +355,19 @@ $<HTMLInputElement>('clip-file').addEventListener('change', (ev) => {
 // Published with the page (GitHub Pages): fetch the clip from its own URL next to index.html.
 // Anywhere it is missing (a downloaded copy, an embed), the device picker stays as the fallback.
 if (CLIP.src && location.protocol.startsWith('http')) {
-  clipStatus('Loading the match clip…');
+  // No upload button while the published clip is on its way: it reads as a request to upload.
+  $('clip-pick').hidden = true;
+  $('clip-empty').textContent = 'The match clip is loading. Nothing to upload.';
+  clipStatus('Loading the match clip… If it has not appeared in a few seconds, press Play.');
+  for (const type of ['touchend', 'click', 'keydown']) document.addEventListener(type, wakeClip, true);
   useClip(new URL(CLIP.src, location.href).href, 'Match clip', () => {
+    stopWaking();
     video.removeAttribute('src'); video.load();
+    $('clip-pick').hidden = false;
+    $('clip-empty').textContent = 'Load the match clip to watch it alongside the 3D pitch.';
     clipStatus('The match clip is not online with this copy of the page. Load it from your device and it plays in step with the timeline, frame for frame.');
   });
+  wakeClip();
 }
 
 /** Keep the clip on the same frame as the timeline. */
