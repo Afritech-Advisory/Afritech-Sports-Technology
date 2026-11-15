@@ -13,6 +13,12 @@ Read `references/prompts.md` for the six prompts that produced the reference bui
 interpreted. Read `references/build-notes.md` before touching the code: it lists the faults already
 found and fixed.
 
+## 0. Four Sentences first (15 Nov 2026)
+
+Before building, read the afritech-four-sentences skill and write the page's four sentences for
+its reader: who it's for, what they get, why they'd believe us, the one action. The page's first
+screen must pass the stranger test (an outsider can say who it's for and what to do next).
+
 ## 1. Gates before any work (from afritech-match-data)
 
 1. Rights. Who owns the footage? A watermarked third-party broadcast is not cleared: label the output
