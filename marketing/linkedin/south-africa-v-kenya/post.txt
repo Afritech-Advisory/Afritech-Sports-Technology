@@ -1,0 +1,18 @@
+Six seconds from Kenya's half to goal.
+
+Johannesburg, 13 November 2026. South Africa v Kenya in the AFCON 2027 Qualifiers.
+
+South Africa went from about 10 m inside Kenya's half to a shot in about 6 seconds. One pass of about 23 m took the ball to the far side of the area. One of about 14 m brought it back to the middle. No. 10 shot from about 13 m with two defenders inside 5 m, and it was 2–1.
+
+The video shows that goal twice. The match clip plays on top and the same passage runs underneath on a 3D pitch, frame for frame, with every pass drawn where it was played and the threat it added.
+
+Afritech tagged ten passages from this match that way. Each one has the clip, the ball paths, the pressure on the ball where the camera shows it, and three coaching notes. You can stop on any frame and click any pass.
+
+The positions are placed by eye from the footage, to within about 5 m, and the threat and xG values are illustrative. I'd rather analysts test them than take them on trust.
+
+Watch all ten passages here:
+https://afritech-advisory.github.io/Afritech-Sports-Technology/south-africa-v-kenya/
+
+Coaches, club staff and analysts, on that goal: which pass would you have stopped, the 23 m ball to the far side or the 14 m ball back inside?
+
+#FootballAnalysis #PerformanceAnalysis #FootballCoaching #AFCON2027 #BafanaBafana #HarambeeStars
