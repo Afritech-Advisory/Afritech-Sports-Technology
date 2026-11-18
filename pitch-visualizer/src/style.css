@@ -276,3 +276,19 @@ h1 {
   .value { font-size: 10.5px; padding: 3px 4px; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+
+/* ---- Link to the match video (pages whose dataset names one) ---- */
+.watch {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 6px;
+  font: 500 12px/1 "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--t0-accent, #ffd84d); text-decoration: none;
+}
+.watch:hover, .watch:focus-visible { text-decoration: underline; }
+.watch svg.lucide { width: 14px; height: 14px; }
+
+/* ---- ?reel=1: only the 3D view, for video capture ---- */
+.reel #app { grid-template: minmax(0, 1fr) / minmax(0, 1fr); grid-template-areas: 'stage'; }
+.reel .bar, .reel .panel, .reel .stage > :not(.view), .reel .layers, .reel .hint,
+.reel .now, .reel .card, .reel .caption { display: none !important; }
+.reel .stage { grid-template-rows: minmax(0, 1fr); }
+.reel #labels .note:not(.goal-note) { display: none; }

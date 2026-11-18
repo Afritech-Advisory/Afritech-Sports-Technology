@@ -1,6 +1,6 @@
 import {
   BufferGeometry, CatmullRomCurve3, CircleGeometry, Curve, DoubleSide, Group, Line,
-  LineDashedMaterial, Mesh, MeshBasicMaterial, RingGeometry, SphereGeometry, Vector3,
+  AdditiveBlending, LineDashedMaterial, Mesh, MeshBasicMaterial, RingGeometry, SphereGeometry, TubeGeometry, Vector3,
   type Camera, type Object3D,
 } from 'three';
 import { buildPassingLanes, type Lane, type PassingLanes, type TrackingClip } from './PassingLanes';
@@ -103,6 +103,25 @@ export class EventLayer {
       if (item.line) out.push(item.line);
     }
     return out;
+  }
+
+  private glow: Mesh | null = null;
+
+  /**
+   * Light up one event's ball path (pass lane, cross or carry) with a wide soft tube, and mark its
+   * pressure pocket. Used by the reel capture to tie each coaching note to its lane. null clears it.
+   */
+  highlight(index: number | null): void {
+    if (this.glow) { this.group.remove(this.glow); this.glow.geometry.dispose(); this.glow = null; }
+    this.select(index);
+    const item = index === null ? null : this.items[index];
+    if (!item?.curve) return;
+    this.glow = new Mesh(
+      new TubeGeometry(item.curve, 64, 1.1, 10, false),
+      new MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.32, blending: AdditiveBlending, depthWrite: false }),
+    );
+    this.glow.renderOrder = 5;
+    this.group.add(this.glow);
   }
 
   /** Mark one event's pressure pocket: a 5 m radius around the player on the ball. */

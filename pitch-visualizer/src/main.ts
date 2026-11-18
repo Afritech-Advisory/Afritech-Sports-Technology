@@ -23,6 +23,9 @@ const ICONS = {
 };
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const teamName = (code: Team) => teamInfo(code).name;
+/** ?reel=1: the bare 3D view for video capture. No header, sidebar, timeline or buttons. */
+const REEL = new URLSearchParams(location.search).has('reel');
+if (REEL) document.documentElement.classList.add('reel');
 
 // ---- Match identity: names and colours come from the dataset ------------------
 document.title = MATCH.title;
@@ -51,7 +54,8 @@ const origin = new Vector3(-PITCH.length / 2 - PITCH.apron, 0.1, PITCH.width / 2
 const axes: [Vector3, string][] = [
   [new Vector3(1, 0, 0), 'x'], [new Vector3(0, 0, -1), 'y'], [new Vector3(0, 1, 0), 'z'],
 ];
-for (const [dir] of axes) sm.scene.add(new ArrowHelper(dir, origin, 9, 0xece8dc, 2, 1));
+const arrows = axes.map(([dir]) => new ArrowHelper(dir, origin, 9, 0xece8dc, 2, 1));
+for (const a of arrows) { a.visible = !REEL; sm.scene.add(a); }
 
 // ---- Annotations drawn over the canvas -------------------------------------
 const labelRoot = $('labels');
@@ -464,6 +468,14 @@ document.querySelectorAll<HTMLElement>('[data-view]').forEach((b) =>
   }));
 sm.controls.addEventListener('start', () => document.querySelector('.hint')?.classList.add('gone'));
 
+if (MATCH.video && !REEL) {
+  const a = document.createElement('a');
+  a.className = 'watch';
+  a.href = MATCH.video;
+  a.innerHTML = '<i data-lucide="play"></i><span>Watch the video</span>';
+  document.querySelector('.bar .match')?.appendChild(a);
+}
+
 $('source').innerHTML = `
   <div><dt>Match</dt><dd>${MATCH.competition}${MATCH.played ? `, ${MATCH.played}` : ''}. ${MATCH.resultNote ?? `${MATCH.home} ${MATCH.result} ${MATCH.away}.`}</dd></div>${CLIP_TIME ? `
   <div><dt>Timing</dt><dd>The footage has no match clock or scoreboard, so every time on this page is minutes and seconds into the clip, not the match minute.</dd></div>` : ''}
@@ -538,3 +550,33 @@ sm.onFrame((dt, elapsed) => {
 icons();
 loadSequence(openingSequence(), true);
 sm.start();
+
+// ---- Reel capture hooks (?reel=1 only) ------------------------------------------
+if (REEL) {
+  sm.controls.enableDamping = false;
+  let base: Vector3 | null = null;
+  const smooth = (k: number) => { const c = Math.max(0, Math.min(1, k)); return c * c * (3 - 2 * c); };
+  Object.assign(window, {
+    reel: {
+      sequences: SEQUENCES.map((s) => s.id),
+      /** Open a sequence at its first frame, paused, with the default camera. */
+      load(i: number) {
+        loadSequence(i, false); setPlaying(false); narrator.stop(); layer.highlight(null);
+        sm.controls.target.set(0, 0, 0); base = null;
+      },
+      start: () => seqStart(),
+      end: () => seq().end,
+      /** Put the timeline at match time t (seconds, dataset timebase). */
+      set(t: number) { state.t = Math.max(seqStart(), Math.min(seq().end, t)); },
+      highlight(i: number | null) { layer.highlight(i); },
+      /** Slow push toward a pitch point: k = 0 is the opening view, k = 1 is 42% closer. */
+      camera(k: number, at: [number, number]) {
+        if (!base) base = sm.camera.position.clone();
+        const e = smooth(k);
+        sm.controls.target.set(0, 0, 0).lerp(toWorld(at[0], at[1], 0), e * 0.7);
+        sm.camera.position.copy(base).multiplyScalar(1 - 0.42 * e).add(sm.controls.target);
+      },
+      frame: () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(r)))),
+    },
+  });
+}
