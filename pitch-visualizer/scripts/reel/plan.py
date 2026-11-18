@@ -130,19 +130,27 @@ card.paste(logo, ((W - logo.width) // 2, 120), logo)
 y = 120 + logo.height + 40
 home, away = M['home'], M['away']
 date = M['played'].split(',')[0]
-for text, font, color, gap in [
-    (f"{home} v {away} · {M['competition']} · {date}", F('Archivo-SemiBold.ttf', 40), CHALK, 18),
-    ('Full 3D analysis:', F('Archivo-Regular.ttf', 34), MUTED, 8),
-    (a.url, F('IBMPlexMono-Medium.ttf', 30), hexc('#ffd84d'), 30),
+def url_lines(u, font, width):
+    """Break a long URL after a slash so no line runs off the card."""
+    lines, cur = [], ''
+    for part in re.split(r'(?<=/)', u):
+        if cur and font.getlength(cur + part) > width: lines.append(cur); cur = part
+        else: cur += part
+    return lines + [cur]
+for text, font, color, gap, url in [
+    (f"{home} v {away}", F('Archivo-Bold.ttf', 52), CHALK, 6, False),
+    (f"{M['competition']} · {date}", F('Archivo-SemiBold.ttf', 38), CHALK, 34, False),
+    ('Full 3D analysis:', F('Archivo-Regular.ttf', 34), MUTED, 8, False),
+    (a.url, F('IBMPlexMono-Medium.ttf', 34), hexc('#ffd84d'), 30, True),
 ]:
-    for ln in wrap(text, font, W - 120):
+    for ln in (url_lines(text, font, W - 120) if url else wrap(text, font, W - 120)):
         d.text(((W - font.getlength(ln)) / 2, y), ln, font=font, fill=color); y += int(font.size * 1.3)
     y += gap
-foot = F('Archivo-Regular.ttf', 24)
+foot = F('Archivo-Regular.ttf', 28)
 y = max(y + 10, 1000)
 d.line([(60, y - 18), (W - 60, y - 18)], fill=RULE, width=2)
 for ln in wrap('Positions hand-tagged by eye · threat and xG illustrative · players by shirt number only · footage used with the rights holder\'s permission.', foot, W - 120):
-    d.text(((W - foot.getlength(ln)) / 2, y), ln, font=foot, fill=MUTED); y += 32
+    d.text(((W - foot.getlength(ln)) / 2, y), ln, font=foot, fill=MUTED); y += 38
 assert y < SAFE, f'end card footer runs into the bottom 15% (y {y})'
 card.save(os.path.join(a.work, 'card.png'))
 
