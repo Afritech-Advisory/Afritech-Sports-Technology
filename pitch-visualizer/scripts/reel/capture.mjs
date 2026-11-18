@@ -9,7 +9,7 @@
 //                          moment while the voice finishes; the camera pushes slowly toward the shot
 //                          and each coaching note lights up its ball path (layer.highlight).
 // Each passage runs in its own browser, so passages capture in parallel.
-import http from 'node:http'; import { createReadStream, existsSync, statSync, mkdirSync, readFileSync } from 'node:fs'; import path from 'node:path';
+import http from 'node:http'; import { copyFileSync, createReadStream, existsSync, readdirSync, statSync, mkdirSync, readFileSync } from 'node:fs'; import path from 'node:path';
 import { createRequire } from 'node:module';
 const req = createRequire(import.meta.url);
 let chromium; try { ({ chromium } = req('playwright')); } catch { ({ chromium } = req('/opt/node-tools/node_modules/playwright')); }
@@ -51,23 +51,40 @@ async function capture(seg) {
     await page.evaluate(async (s) => {
       window.reel.set(s.t);
       window.reel.highlight(s.h ?? null);
-      window.reel.camera(s.k, s.at);
+      window.reel.camera(s.k, s.at, s.f ?? 0.7);
       await window.reel.frame();
     }, set);
     await page.screenshot({ path: file });
   };
   const nA = Math.round(seg.D * plan.fps);
-  for (let j = 0; j < nA; j++) await shot({ t: seg.start + j / plan.fps, k: 0, at: seg.shotAt }, path.join(out, 'a', String(j).padStart(5, '0') + '.png'));
-  const nB = Math.round(seg.L * plan.fps);
-  for (let j = 0; j < nB; j++) {
-    const x = j / plan.fps; // seconds into the replay
-    const v = [...seg.voice].reverse().find((n) => x >= n.at);
-    await shot({ t: seg.start + Math.min(x / 3, seg.D), k: j / (nB - 1), at: seg.shotAt, h: v ? noteEvent(seq, v.note) : null },
-      path.join(out, 'b', String(j).padStart(5, '0') + '.png'));
-    if (j % 300 === 0) console.log(seg.id, 'replay', j, '/', nB);
+  const have = (d) => (existsSync(d) ? readdirSync(d).length : 0);
+  if (have(path.join(out, 'a')) !== nA) {
+    for (let j = 0; j < nA; j++) await shot({ t: seg.start + j / plan.fps, k: 0, at: seg.shotAt }, path.join(out, 'a', String(j).padStart(5, '0') + '.png'));
+  }
+  if (seg.replay) {
+    // Voice-led replay (beats.py): one state per output frame; identical states (freeze-frames) are copied.
+    const dir = path.join(out, 'r'); mkdirSync(dir, { recursive: true });
+    let prev = null, prevFile = null;
+    for (const [j, f] of seg.replay.frames.entries()) {
+      const file = path.join(dir, String(j).padStart(5, '0') + '.png');
+      const key = `${f.T}|${f.k}|${f.at}|${f.hl.join(',')}`;
+      if (key === prev) copyFileSync(prevFile, file);
+      else await shot({ t: f.T, k: f.k, at: f.at ?? seg.shotAt, f: f.at ? 1 : 0.7, h: f.hl }, file);
+      prev = key; prevFile = file;
+      if (j % 300 === 0) console.log(seg.id, 'replay', j, '/', seg.replay.frames.length);
+    }
+  } else {
+    const nB = Math.round(seg.L * plan.fps);
+    for (let j = 0; j < nB; j++) {
+      const x = j / plan.fps; // seconds into the replay
+      const v = [...seg.voice].reverse().find((n) => x >= n.at);
+      await shot({ t: seg.start + Math.min(x / 3, seg.D), k: j / (nB - 1), at: seg.shotAt, h: v ? noteEvent(seq, v.note) : null },
+        path.join(out, 'b', String(j).padStart(5, '0') + '.png'));
+      if (j % 300 === 0) console.log(seg.id, 'replay', j, '/', nB);
+    }
   }
   await browser.close();
-  console.log(seg.id, 'done', nA, nB);
+  console.log(seg.id, 'done');
 }
 
 await Promise.all(plan.segments.filter((s) => !only.length || only.includes(s.id)).map(capture));

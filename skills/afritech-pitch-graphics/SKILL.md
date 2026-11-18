@@ -13,7 +13,9 @@ description: Build or update an Afritech 3D pitch graphics match page (pitch-vis
    clip time when it doesn't). No scorer is named unless the footage shows the last touch.
 4. Pages: `npm run build:single -- <slug>`. The Kenya U23 page (`standalone/index.html`, `standalone/clip.mp4`)
    must stay byte-identical; check `git diff` before each commit.
-5. Video: follow `pitch-visualizer/scripts/reel/README.md` (plan.py, capture.mjs, compose.py).
+5. Video: follow `pitch-visualizer/scripts/reel/README.md` (plan.py, beats.py, capture.mjs, compose.py).
+   The voiceover is the timing reference: every replay, freeze-frame and highlight lands on the action the voice
+   describes at that moment. Check one frame per caption line before sending.
 6. Caveats on every output: positions hand-tagged by eye, threat and xG illustrative, players by shirt number
    only, footage used with the rights holder's permission.
 

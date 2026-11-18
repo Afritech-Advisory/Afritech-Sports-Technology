@@ -1,0 +1,27 @@
+{
+  "_about": "One beat per caption line, in caption order. While the voice reads the line, the replay plays match time 'from' to 'to' (seconds on the broadcast clock, the dataset timebase), slowed to fit the words, then holds a freeze-frame on 'to' until the next line. 'hl' lists the event indexes whose ball paths light up. The voice sets the pace.",
+  "g1": [
+    { "from": 4020.6, "to": 4025.0, "hl": [0], "line": "first run down the near side" },
+    { "from": 4025.0, "to": 4028.4, "hl": [1], "line": "second run to the corner of the area" },
+    { "from": 4025.0, "to": 4028.3, "hl": [1], "line": "defender alongside the carrier (rewind)" },
+    { "from": 4028.3, "to": 4029.3, "hl": [2], "line": "ball played across the six-yard area" },
+    { "from": 4029.0, "to": 4029.9, "hl": [3], "line": "finish from about 4 m" },
+    { "from": 4029.4, "to": 4031.0, "hl": [3], "line": "last touch not clear" }
+  ],
+  "g2": [
+    { "from": 5137.6, "to": 5138.6, "hl": [0], "line": "ball moved into the crowd at the edge of the area" },
+    { "from": 5138.0, "to": 5140.0, "hl": [0, 1], "line": "two passes, 9 m and 10 m" },
+    { "from": 5139.6, "to": 5141.2, "hl": [1], "line": "runner inside the area, 11 m out" },
+    { "from": 5141.0, "to": 5141.4, "hl": [1], "line": "freeze: runner beyond the Kenya players" },
+    { "from": 5138.0, "to": 5142.8, "hl": [0, 1, 2], "line": "first pass to goal, about 4 s (rewind)" },
+    { "from": 5142.4, "to": 5144.0, "hl": [2], "line": "finish too small to read" }
+  ],
+  "g3": [
+    { "from": 5278.0, "to": 5278.3, "hl": [0], "line": "freeze: free kick on the far side" },
+    { "from": 5278.3, "to": 5279.6, "hl": [0], "line": "delivery about 33 m into the area" },
+    { "from": 5278.2, "to": 5278.4, "hl": [0], "line": "freeze: players in the area as it is struck (rewind)" },
+    { "from": 5278.3, "to": 5280.8, "hl": [0, 1], "line": "finished from about 6 m, 2 s after the delivery" },
+    { "from": 5280.6, "to": 5283.2, "hl": [1], "line": "South African players raise their arms" },
+    { "from": 5280.0, "to": 5281.0, "hl": [1], "line": "last touch not clear (rewind)" }
+  ]
+}

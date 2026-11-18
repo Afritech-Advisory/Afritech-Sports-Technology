@@ -39,6 +39,46 @@ def part(name, clip_from, clip_len, slow, length, frames, start_number, bands, a
          os.path.join(parts, name + '.mkv')])
     return os.path.join(parts, name + '.mkv')
 
+def part_replay(name, s):
+    """Voice-led replay (beats.py): the clip and the 3D pitch both follow the per-frame match time."""
+    R = s['replay']; L = R['L']; off = s['clipStart'] - s['start']
+    src_dir = os.path.join(work, s['id'], 'clip'); seq_dir = os.path.join(work, s['id'], 'cr')
+    for d in (src_dir, seq_dir):
+        os.makedirs(d, exist_ok=True)
+        for f in os.listdir(d): os.remove(os.path.join(d, f))
+    x0 = max(0.0, R['window'][0] + off - 0.3)
+    cfps = P['clipFps']
+    # every source frame in the window, at the source rate, scaled for the clip panel
+    run(['-ss', f'{x0:.3f}', '-t', f"{R['window'][1] - R['window'][0] + 0.6:.3f}", '-i', src,
+         '-vf', f'scale={W}:{CH}:flags=lanczos,setsar=1', '-q:v', '2', os.path.join(src_dir, '%05d.jpg')])
+    have = len(os.listdir(src_dir))
+    for j, f in enumerate(R['frames']):
+        i = min(have, max(1, round((f['T'] + off - x0) * cfps) + 1))
+        os.symlink(os.path.join(src_dir, f'{i:05d}.jpg'), os.path.join(seq_dir, f'{j:05d}.jpg'))
+    inputs = ['-framerate', str(FPS), '-i', os.path.join(seq_dir, '%05d.jpg'),
+              '-framerate', str(FPS), '-i', os.path.join(work, s['id'], 'r', '%05d.png')]
+    overlays = [(png, t0, t1, 0, BY) for png, t0, t1 in R['bands']] + [(png, t0, t1, 28, CH - 52 - 24) for png, t0, t1 in R['tags']]
+    for png, *_ in overlays: inputs += ['-i', png]
+    nv = 2 + len(overlays)
+    for v in R['voice']: inputs += ['-i', v['file']]
+    inputs += ['-ss', f"{s['clipStart']:.3f}", '-t', f'{L + 0.5:.3f}', '-i', src]
+    na = nv + len(R['voice'])
+    v = (f"color=c=0x0d0f14:s={W}x{H}:r={FPS}:d={L:.3f}[bg];[0:v]setsar=1[clip];[1:v]setsar=1[view];"
+         f"[bg][clip]overlay=0:0[a0];[a0][view]overlay=0:{VY}[b0]")
+    last = 'b0'
+    for i, (_, t0, t1, x, y) in enumerate(overlays):
+        v += f";[{last}][{2 + i}:v]overlay={x}:{y}:enable='between(t,{t0:.3f},{t1 - 0.001:.3f})'[o{i}]"; last = f'o{i}'
+    v += f";[{last}]format=yuv420p[vout]"
+    a = f"[{na}:a]asetpts=PTS-STARTPTS,atrim=duration={L:.3f},volume=0.14,afade=t=in:d=0.3,apad=whole_dur={L:.3f}[bed]"
+    labels = ['[bed]']
+    for i, vo in enumerate(R['voice']):
+        ms = int(vo['at'] * 1000)
+        a += f";[{nv + i}:a]aformat=channel_layouts=stereo,adelay={ms}|{ms},volume=1.6[v{i}]"; labels.append(f'[v{i}]')
+    a += f";{''.join(labels)}amix=inputs={len(labels)}:normalize=0:duration=first,atrim=duration={L:.3f}[aout]"
+    out_file = os.path.join(parts, name + '.mkv')
+    run([*inputs, '-filter_complex', v + ';' + a, '-map', '[vout]', '-map', '[aout]', '-t', f'{L:.3f}', *INTER, out_file])
+    return out_file
+
 files = []
 # Hook: last 2 s of the hook passage at real speed
 h = P['hook']; hs = next(s for s in P['segments'] if s['id'] == h['id'])
@@ -49,6 +89,8 @@ for k, s in enumerate(P['segments']):
     files.append(part(f'{k + 1}a_{s["id"]}', s['clipStart'], s['D'], False, s['D'],
                       os.path.join(work, s['id'], 'a', '%05d.png'), 0, [(s['realBand'], 0, s['D'] + 1)],
                       {'inputs': [], 'filter': f"[0:a]asetpts=PTS-STARTPTS,atrim=duration={{L}},afade=t=out:st={max(0, s['D'] - 0.4):.3f}:d=0.4,apad=whole_dur={{L}}[aout]"}))
+    if s.get('replay'):
+        files.append(part_replay(f'{k + 1}b_{s["id"]}', s)); continue
     bands = [(s['leadBand'], 0, s['notes'][0]['from'])] + [(n['png'], n['from'], n['to']) for n in s['notes']]
     voices = [v for v in s['voice'] if v['file']]
     mix = "[0:a]asetpts=PTS-STARTPTS,atrim=duration={L},volume=0.16,afade=t=in:d=0.3,apad=whole_dur={L}[bed]"

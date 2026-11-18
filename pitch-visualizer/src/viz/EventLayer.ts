@@ -105,23 +105,29 @@ export class EventLayer {
     return out;
   }
 
-  private glow: Mesh | null = null;
+  private glows: Mesh[] = [];
 
   /**
-   * Light up one event's ball path (pass lane, cross or carry) with a wide soft tube, and mark its
-   * pressure pocket. Used by the reel capture to tie each coaching note to its lane. null clears it.
+   * Light up ball paths (pass lane, cross or carry) with a wide soft tube, and mark the pressure pocket
+   * of the last one. Used by the reel capture to tie each spoken line to the action it describes.
+   * null or [] clears it.
    */
-  highlight(index: number | null): void {
-    if (this.glow) { this.group.remove(this.glow); this.glow.geometry.dispose(); this.glow = null; }
-    this.select(index);
-    const item = index === null ? null : this.items[index];
-    if (!item?.curve) return;
-    this.glow = new Mesh(
-      new TubeGeometry(item.curve, 64, 1.1, 10, false),
-      new MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.32, blending: AdditiveBlending, depthWrite: false }),
-    );
-    this.glow.renderOrder = 5;
-    this.group.add(this.glow);
+  highlight(indices: number | number[] | null): void {
+    for (const g of this.glows) { this.group.remove(g); g.geometry.dispose(); }
+    this.glows = [];
+    const list = indices === null ? [] : Array.isArray(indices) ? indices : [indices];
+    this.select(list.length ? list[list.length - 1] : null);
+    for (const i of list) {
+      const item = this.items[i];
+      if (!item?.curve) continue;
+      const glow = new Mesh(
+        new TubeGeometry(item.curve, 64, 1.1, 10, false),
+        new MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.34, blending: AdditiveBlending, depthWrite: false }),
+      );
+      glow.renderOrder = 5;
+      this.group.add(glow);
+      this.glows.push(glow);
+    }
   }
 
   /** Mark one event's pressure pocket: a 5 m radius around the player on the ball. */

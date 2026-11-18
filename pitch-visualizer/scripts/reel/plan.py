@@ -109,7 +109,7 @@ for k, s in enumerate(seqs):
         for j, c in enumerate(cards):
             c1 = c0 + v['len'] * len(c) / total
             end = c1 if j < len(cards) - 1 else (at + v['len'] + (gap if n < len(voice) - 1 else L - at - v['len']))
-            png = band(f"{s['id']}_n{n}_{j}", f"Replay at one-third speed · coaching note {n + 1} of {len(voice)}", c)
+            png = band(f"{s['id']}_n{n}_{j}", f"Replay · coaching note {n + 1} of {len(voice)}", c)
             seg['notes'].append({'note': n, 'from': c0, 'to': end, 'png': png})
             c0 = c1
         seg['voice'].append({'file': v['file'], 'at': at, 'len': v['len'], 'note': n})
