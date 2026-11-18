@@ -1,5 +1,29 @@
 # Social video (reel) from a match page
 
+## Version 2.1 (18 Nov 2026, /qa): the voice sets the pace
+
+Rule: the voiceover is the timing reference. Every replay, freeze-frame and highlight lands on the action the
+voice is describing at that moment.
+
+- Each caption line is voiced on its own (`<work>/vo2/<seq id>_c<n>.mp3`, caption order), so its start and length
+  are exact (leading and trailing silence trimmed).
+- `beats/<match>.json` gives one beat per caption line: the match-time span the line talks about (`from`, `to`)
+  and the ball paths to light (`hl`). Rewinds are allowed: a line can replay a moment already shown.
+- `beats.py` plays each span while its line is read, slowed to fit the words (1/12 speed up to real speed),
+  then holds a freeze-frame on `to` until the next line. A tag on the clip says SLOW MOTION, REPLAY · REAL SPEED
+  or FREEZE-FRAME. The camera pushes toward the shot only while the action moves.
+- The clip panel and the 3D pitch read the same per-frame match time, so they stay frame-matched through
+  every slow-down, freeze and rewind. `captions.srt` is rewritten to the same timing.
+
+Run after plan.py: `python3 -I scripts/reel/beats.py <work> scripts/reel/beats/<match>.json --fonts DIR`, then
+capture.mjs (renders `<work>/<id>/r/`, copying identical freeze frames) and compose.py.
+
+Check before sending: for every caption line, a frame at the moment its action lands, showing the clip, the 3D
+pitch and the caption together. The action in both panels must be the action the line describes.
+
+Fault found in v2 (fixed in 2.1): the replay ran at a flat one-third speed and held the last frame while the
+voice ran on, so most notes were read over the wrong moment (a line about the run played over the finish).
+
 ## Version 2 (18 Nov 2026): 4:5 master with voice, captions and a website page
 
 Made `standalone/kenya-v-south-africa/video/reel.mp4` (also in `marketing/linkedin/south-africa-v-kenya/v2/`):

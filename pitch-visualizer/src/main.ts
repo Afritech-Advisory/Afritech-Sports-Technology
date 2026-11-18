@@ -568,7 +568,7 @@ if (REEL) {
       end: () => seq().end,
       /** Put the timeline at match time t (seconds, dataset timebase). */
       set(t: number) { state.t = Math.max(seqStart(), Math.min(seq().end, t)); },
-      highlight(i: number | null) { layer.highlight(i); },
+      highlight(i: number | number[] | null) { layer.highlight(i); },
       /** Slow push toward a pitch point: k = 0 is the opening view, k = 1 is 42% closer. */
       camera(k: number, at: [number, number]) {
         if (!base) base = sm.camera.position.clone();
