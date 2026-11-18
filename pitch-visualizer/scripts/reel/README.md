@@ -1,5 +1,45 @@
 # Social video (reel) from a match page
 
+## Version 2 (18 Nov 2026): 4:5 master with voice, captions and a website page
+
+Made `standalone/kenya-v-south-africa/video/reel.mp4` (also in `marketing/linkedin/south-africa-v-kenya/v2/`):
+1080 x 1350, 30 fps, H.264 High, AAC 128k, +faststart, about 2 minutes. Kenya 1–2 South Africa, the three goals.
+One file for LinkedIn and the website.
+
+Layout: match clip 1080 x 608 on top, caption band 1080 x 180, 3D pitch 1080 x 562 below. LinkedIn's UI covers
+the bottom 15% (y > 1147); only the pitch sits there, never text. Opens on a 2 s hook (the last 2 s of the goal
+named with `--hook-seq`) with a line of six words or fewer. Each goal: real speed with stadium sound, then a
+one-third-speed replay (held on the last moment until the voice ends) with the three coaching notes as captions
+(two lines at most, Archivo 46 px) and in the voice, the camera pushing slowly toward the shot, and each note's
+ball path lit. End card 4 s with the logo, match line, link and caveats.
+
+1. Build the page: `npm run build:single -- <match>`. `?reel=1` hides the header, sidebar, timeline and buttons and
+   exposes `window.reel` (load, set, highlight, camera, frame). The normal page is unchanged.
+2. Voice: one file per note at `<work>/vo/<seq id>_<n>.mp3`. v2 used Microsoft's Kenyan English neural voice
+   `en-KE-AsiliaNeural`, the voice Edge uses on the analysis page, rendered with `edge-tts` (needs the host
+   `speech.platform.bing.com` allowed, and `--proxy "$HTTPS_PROXY"` with `SSL_CERT_FILE` set to the proxy CA).
+   Never a Swahili voice reading English. Without voice files, notes are timed at 15 characters a second.
+3. Fonts for the captions: TTF copies of Archivo (400/600/700) and IBM Plex Mono 500, made from the
+   `@fontsource/archivo` and `@fontsource/ibm-plex-mono` woff2 files with fontTools.
+4. Plan: `python3 -I scripts/reel/plan.py <match> <work> --fonts DIR --logo FILE --hook "TEXT" --hook-seq g2 --url URL`
+   writes `plan.json`, the caption band images, the end card and `captions.srt` (upload it with the video).
+5. Capture: `node scripts/reel/capture.mjs <match> <work>` (all passages in parallel; about 25 frames a minute
+   per passage on 4 cores, so about 45 minutes for 2 minutes of video). Run it in the background.
+6. Compose: `python3 -I scripts/reel/compose.py <work> SOURCE.mp4 out.mp4`.
+7. Poster: a frame from the hook, `ffmpeg -ss 1.0 -i out.mp4 -frames:v 1 -q:v 3 poster.jpg`.
+
+Faults found in v2:
+- The v2 brief named the wrong match. Both clips supplied were Kenya v South Africa, 17 Nov 2026, Nairobi
+  (Kenya 1–2 South Africa), while the dataset and page were the 13 Nov Johannesburg match (2–2). Check the
+  footage (scoreboard, venue, kits) against the dataset before any build; a new match gets its own dataset.
+- The 17 Nov clip is 640 x 360: shirt numbers on the ball are not legible, so no player is numbered and no
+  scorer is named. The clip carries the match clock, so this dataset uses `timebase: match` with a
+  `videoOffset` per passage (the highlights are cut, so the offset changes between goals).
+- Three goals at one-third speed with three spoken notes each run to about 2 minutes; the replays of short
+  goals are held on the last moment while the voice finishes.
+
+## Version 1
+
 Version 1 made `marketing/linkedin/south-africa-v-kenya/south-africa-v-kenya-linkedin.mp4`
 (14 Nov 2026): 1080 x 1920, 42 s. The 2–1 goal at real speed, then at one-third speed with the
 three coaching notes, then an end card. Clip on top, 3D pitch below, frame for frame.
