@@ -6,17 +6,30 @@
 # (caption order, as in plan.json). For each line, the replay plays the beat's action span (match time
 # 'from' to 'to') slowed so it fits the spoken words (between 1/12 speed and real speed), then holds a
 # freeze-frame on 'to' until the next line starts. The ball paths in 'hl' light up for that line only.
-# The camera pushes toward the shot while the action moves and holds still on freeze-frames.
+# The camera pushes in over the first 2.5 s and keeps each line's action in the middle of the 3D panel,
+# easing between actions, so annotations never fall into the bottom 15% that LinkedIn covers.
 # Writes segment['replay'] into plan.json (per-frame match time, camera, highlight; bands, voice, tags)
 # and rewrites captions.srt to the new timing.
 import argparse, json, os, subprocess
 from PIL import Image, ImageDraw, ImageFont
 
 ap = argparse.ArgumentParser(); ap.add_argument('work'); ap.add_argument('beats'); ap.add_argument('--fonts', required=True)
+ap.add_argument('--match', required=True, help='dataset slug, for the event positions the camera follows')
 a = ap.parse_args()
 P = json.load(open(os.path.join(a.work, 'plan.json')))
 B = json.load(open(a.beats))
 FPS = P['fps']
+DATA = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../matches', a.match + '.json')))
+EASE, PUSH = 0.8, 2.5  # seconds to move the camera between actions; seconds for the opening push
+
+def focus(seq_id, hl):
+    """Centre of the highlighted actions (start and end points), where the camera looks for this line."""
+    ev = next(s for s in DATA['sequences'] if s['id'] == seq_id)['events']
+    pts = [p for i in hl for p in ([ev[i]['from']] + ([ev[i]['to']] if ev[i].get('to') else []))]
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    # 7 m toward the near touchline, so the action sits in the upper half of the 3D panel, well clear of the
+    # bottom 15% of the video
+    return [(min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2 - 7]
 LEAD, GAP, TAIL = 0.35, 0.45, 0.5
 R_MIN, R_MAX, FILL = 1 / 12, 1.0, 0.85
 
@@ -59,9 +72,8 @@ for seg in P['segments']:
         plays.append((t, play, slot, r, b, c, wav, V))
         t += slot
     L = t + TAIL - GAP
-    total_play = sum(p[1] for p in plays)
     n = round(L * FPS)
-    moved = 0.0
+    foci = [focus(seg['id'], p[4]['hl']) for p in plays]
     for j in range(n):
         x = j / FPS
         k = max(i for i, p in enumerate(plays) if x >= p[0] or i == 0)
@@ -69,8 +81,12 @@ for seg in P['segments']:
         local = x - s0
         moving = 0 <= local < play
         T = b['from'] + min(max(local, 0), play) * r
-        if moving: moved += 1 / FPS
-        frames.append({'T': round(T, 4), 'k': round(min(1, moved / total_play), 4), 'hl': b['hl'], 'tag': ('real' if r >= 0.95 else 'slow') if moving else 'freeze'})
+        # the camera eases from the previous line's action to this one, then holds
+        prev = foci[k - 1] if k else foci[0]
+        u = min(1.0, max(0.0, local / EASE)); u = u * u * (3 - 2 * u)
+        at = [round(prev[0] + (foci[k][0] - prev[0]) * u, 3), round(prev[1] + (foci[k][1] - prev[1]) * u, 3)]
+        frames.append({'T': round(T, 4), 'k': round(min(1.0, x / PUSH), 4), 'at': at, 'hl': b['hl'],
+                       'tag': ('real' if r >= 0.95 else 'slow') if moving else 'freeze'})
     for k, (s0, play, slot, r, b, c, wav, V) in enumerate(plays):
         start = 0 if k == 0 else s0
         end = plays[k + 1][0] if k + 1 < len(plays) else L

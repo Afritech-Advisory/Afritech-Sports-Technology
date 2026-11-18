@@ -51,7 +51,7 @@ async function capture(seg) {
     await page.evaluate(async (s) => {
       window.reel.set(s.t);
       window.reel.highlight(s.h ?? null);
-      window.reel.camera(s.k, s.at);
+      window.reel.camera(s.k, s.at, s.f ?? 0.7);
       await window.reel.frame();
     }, set);
     await page.screenshot({ path: file });
@@ -67,9 +67,9 @@ async function capture(seg) {
     let prev = null, prevFile = null;
     for (const [j, f] of seg.replay.frames.entries()) {
       const file = path.join(dir, String(j).padStart(5, '0') + '.png');
-      const key = `${f.T}|${f.k}|${f.hl.join(',')}`;
+      const key = `${f.T}|${f.k}|${f.at}|${f.hl.join(',')}`;
       if (key === prev) copyFileSync(prevFile, file);
-      else await shot({ t: f.T, k: f.k, at: seg.shotAt, h: f.hl }, file);
+      else await shot({ t: f.T, k: f.k, at: f.at ?? seg.shotAt, f: f.at ? 1 : 0.7, h: f.hl }, file);
       prev = key; prevFile = file;
       if (j % 300 === 0) console.log(seg.id, 'replay', j, '/', seg.replay.frames.length);
     }

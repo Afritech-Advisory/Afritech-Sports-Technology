@@ -569,11 +569,14 @@ if (REEL) {
       /** Put the timeline at match time t (seconds, dataset timebase). */
       set(t: number) { state.t = Math.max(seqStart(), Math.min(seq().end, t)); },
       highlight(i: number | number[] | null) { layer.highlight(i); },
-      /** Slow push toward a pitch point: k = 0 is the opening view, k = 1 is 42% closer. */
-      camera(k: number, at: [number, number]) {
+      /**
+       * Camera for the reel: k = 0 is the opening view, k = 1 is 42% closer; the view centres on the pitch
+       * point 'at' by the share 'follow' (0.7 by default; 1 keeps 'at' in the middle of the frame).
+       */
+      camera(k: number, at: [number, number], follow = 0.7) {
         if (!base) base = sm.camera.position.clone();
         const e = smooth(k);
-        sm.controls.target.set(0, 0, 0).lerp(toWorld(at[0], at[1], 0), e * 0.7);
+        sm.controls.target.set(0, 0, 0).lerp(toWorld(at[0], at[1], 0), Math.max(e, follow > 0.7 ? 1 : 0) * follow);
         sm.camera.position.copy(base).multiplyScalar(1 - 0.42 * e).add(sm.controls.target);
       },
       frame: () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(r)))),
