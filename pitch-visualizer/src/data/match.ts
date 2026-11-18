@@ -62,6 +62,8 @@ interface Dataset {
     title: string; competition: string; home: string; away: string; result: string; window: string;
     /** Optional date and place, and a sentence to use in place of the plain result line. */
     played?: string; resultNote?: string;
+    /** Optional link to the match video page, relative to the analysis page (shown as "Watch the video"). */
+    video?: string;
     /** 'clip' when the footage shows no match clock: t is then seconds into the clip. Default 'match'. */
     timebase?: 'match' | 'clip';
     footage: { grade: string; kind: string; rights: string; method: string };

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kenya 1–2 South Africa · 3D goal video</title>
+<meta name="description" content="Kenya 1–2 South Africa, AFCON 2027 Qualifiers, 17 November 2026: the three goals at real speed and one-third speed, beside a 3D pitch, with three coaching notes for each.">
+<meta property="og:title" content="Kenya 1–2 South Africa: the three goals on a 3D pitch">
+<meta property="og:description" content="Each goal at real speed, then a slow replay with three coaching notes. For coaches, clubs and analysts.">
+<meta property="og:image" content="poster.jpg">
+<meta property="og:video" content="reel.mp4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --ink: #0d0f14; --ink-2: #151821; --rule: #2a2e38; --chalk: #ece8dd; --muted: #8b90a0;
+  --rsa: #ffd84d; --ken: #ff5a5f;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  min-height: 100vh; color: var(--chalk); font: 16px/1.5 Archivo, system-ui, sans-serif;
+  background:
+    radial-gradient(120% 70% at 20% 0%, rgba(70, 80, 105, .34), transparent 60%),
+    radial-gradient(90% 60% at 90% 100%, rgba(40, 46, 60, .5), transparent 65%),
+    var(--ink);
+  padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left));
+}
+main { max-width: 560px; margin: 0 auto; }
+.eyebrow { margin: 0 0 10px; font: 500 12px/1.4 "IBM Plex Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0 0 10px; font-size: clamp(28px, 7.4vw, 40px); line-height: 1.08; font-weight: 700; font-stretch: 108%; }
+h1 .ken { color: var(--ken); } h1 .rsa { color: var(--rsa); }
+.lede { margin: 0 0 18px; color: #cfcbc0; font-size: 17px; }
+.frame { position: relative; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: #000; aspect-ratio: 4 / 5; }
+video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sound {
+  position: absolute; right: 12px; top: 12px; display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px; padding: 0 14px; border: 1px solid rgba(236, 232, 221, .35); border-radius: 999px;
+  background: rgba(13, 15, 20, .72); color: var(--chalk); font: 500 13px/1 "IBM Plex Mono", monospace; letter-spacing: .06em;
+  cursor: pointer; backdrop-filter: blur(6px);
+}
+.sound:focus-visible, .cta:focus-visible { outline: 2px solid var(--rsa); outline-offset: 3px; }
+.sound svg { width: 18px; height: 18px; }
+.cta {
+  display: flex; align-items: center; justify-content: center; gap: 10px; margin: 18px 0 10px; min-height: 52px;
+  border-radius: 10px; background: var(--rsa); color: #14161c; font-weight: 700; font-size: 17px; text-decoration: none;
+}
+.cta:hover { filter: brightness(1.06); }
+.alt { margin: 0 0 26px; color: var(--muted); font-size: 14.5px; text-align: center; }
+.alt a { color: var(--chalk); }
+h2 { margin: 0 0 8px; font: 500 12px/1.4 "IBM Plex Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+ol { margin: 0 0 24px; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
+li { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--rule); }
+li time { font: 500 14px/1.5 "IBM Plex Mono", monospace; color: var(--muted); }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; }
+.small { font-size: 13px; line-height: 1.55; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 14px; margin: 0; }
+@media (min-width: 900px) { body { padding-top: 48px; } main { max-width: 600px; } }
+@media (prefers-reduced-motion: reduce) { video { } }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">AFCON 2027 Qualifiers · 17 November 2026 · Nairobi</p>
+  <h1><span class="ken">Kenya</span> 1–2 <span class="rsa">South Africa</span>: the three goals on a 3D pitch</h1>
+  <p class="lede">For coaches, clubs and analysts. Each goal at real speed, then a one-third-speed replay with three coaching notes, read in a Kenyan English voice.</p>
+
+  <div class="frame">
+    <video id="reel" src="reel.mp4" poster="poster.jpg" autoplay muted loop playsinline preload="metadata"
+      aria-label="Video: Kenya 1–2 South Africa. Match clip on top, 3D pitch below, with captions."></video>
+    <button class="sound" id="sound" type="button" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path id="wave" d="m22 9-6 6m0-6 6 6"/></svg>
+      <span id="sound-label">Sound off</span>
+    </button>
+  </div>
+
+  <a class="cta" href="../">Open the full 3D analysis</a>
+  <p class="alt">Want this for your own matches? <a href="mailto:Advisory@afritechsports.com">Advisory@afritechsports.com</a></p>
+
+  <h2>In the video</h2>
+  <ol>
+    <li><time>67:09</time><span><i class="dot" style="background:var(--rsa)"></i>South Africa 0–1. A carry of about 47 m down the near side, finished from about 4 m.</span></li>
+    <li><time>85:42</time><span><i class="dot" style="background:var(--rsa)"></i>South Africa 0–2. Two short passes through a crowded edge of the area.</span></li>
+    <li><time>88:00</time><span><i class="dot" style="background:var(--ken)"></i>Kenya 1–2. A far-side free kick, finished from about 6 m.</span></li>
+  </ol>
+
+  <p class="small">Afritech Advisory · 3D soccer pitch graphics analysis. Times are the broadcast match clock. Positions are hand-tagged by eye from the footage, to within about 5 m. Threat and xG values are illustrative. Players are shown by shirt number only, and no scorer is named where the footage does not show the last touch. Footage used with the permission of the rights holder.</p>
+</main>
+<script>
+(() => {
+  const v = document.getElementById('reel');
+  const btn = document.getElementById('sound');
+  const label = document.getElementById('sound-label');
+  const wave = document.getElementById('wave');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let inView = true;
+  const play = () => { if (!still || !v.muted) v.play().catch(() => {}); };
+  if (still) v.removeAttribute('autoplay');
+  // Pause when the video scrolls out of view; resume when it comes back.
+  new IntersectionObserver(([e]) => {
+    inView = e.isIntersecting && e.intersectionRatio > 0.25;
+    if (inView) play(); else v.pause();
+  }, { threshold: [0, 0.25, 0.5] }).observe(v);
+  btn.addEventListener('click', () => {
+    v.muted = !v.muted;
+    btn.setAttribute('aria-pressed', String(!v.muted));
+    label.textContent = v.muted ? 'Sound off' : 'Sound on';
+    wave.setAttribute('d', v.muted ? 'm22 9-6 6m0-6 6 6' : 'M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14');
+    if (!v.muted) { if (v.ended || v.currentTime > v.duration - 0.5) v.currentTime = 0; v.play().catch(() => {}); }
+  });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) v.pause(); else if (inView) play(); });
+})();
+</script>
+</body>
+</html>

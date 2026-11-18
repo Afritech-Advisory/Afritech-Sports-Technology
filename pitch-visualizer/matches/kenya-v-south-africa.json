@@ -1,0 +1,258 @@
+{
+  "match": {
+    "title": "Kenya vs South Africa AFCON 2027 Qualifiers 3D Soccer Pitch Graphics Analysis",
+    "competition": "AFCON 2027 Qualifiers",
+    "home": "Kenya",
+    "away": "South Africa",
+    "result": "1–2",
+    "played": "17 November 2026, Nyayo National Stadium, Nairobi",
+    "resultNote": "Three goals are shown in the clip: South Africa scored at 67:09 and 85:42 on the broadcast clock, Kenya at 88:00. The broadcast scoreboard reads Kenya 1–2 South Africa.",
+    "timebase": "match",
+    "window": "the three goals, all in the second half",
+    "video": "video/",
+    "footage": {
+      "grade": "C",
+      "kind": "Broadcast highlights from one main camera, 640 × 360, 2 min 36 s, with the match clock and score on screen",
+      "rights": "Used with the permission of the rights holder.",
+      "method": "Events placed by eye from the pitch markings to within about 5 m; at this resolution shirt numbers on the ball are not legible, so no player is numbered."
+    }
+  },
+  "teams": [
+    {
+      "code": "KEN",
+      "name": "Kenya",
+      "lane": "#ff5a5f",
+      "kit": "#e5343f",
+      "trim": "#111318",
+      "accent": "#e5343f",
+      "attacks": "left"
+    },
+    {
+      "code": "RSA",
+      "name": "South Africa",
+      "lane": "#ffd84d",
+      "kit": "#ffcf00",
+      "trim": "#00854a",
+      "accent": "#ffcf00",
+      "ring": "#00a35c",
+      "attacks": "right"
+    }
+  ],
+  "open": "g2",
+  "clip": {
+    "fps": 25,
+    "frames": 3907,
+    "src": "clip.mp4"
+  },
+  "units": "metres",
+  "coordinates": "x from the left goal line (0-105), y from the near (camera-side) touchline (0-68). t is the broadcast match clock in seconds; videoOffset adds the seconds that turn it into time in the clip. All three passages are in the second half: Kenya attack toward x = 0 and South Africa toward x = 105.",
+  "sequences": [
+    {
+      "id": "g1",
+      "label": "67:01",
+      "title": "South Africa 0–1",
+      "half": 2,
+      "videoOffset": -3964,
+      "end": 4031,
+      "score": "0–1",
+      "notes": [
+        "South Africa carried the ball about 47 m down the near side in two runs, from just inside Kenya's half to the corner of the area, in about 7 seconds.",
+        "A Kenya defender ran alongside the carrier the whole way and never got goal-side, so the ball could be played across the six-yard area.",
+        "The finish came from about 4 m in a crowded six-yard area. The footage does not show the last touch clearly, so no scorer is named."
+      ],
+      "events": [
+        {
+          "t": 4021,
+          "team": "RSA",
+          "type": "carry",
+          "from": [
+            54,
+            9
+          ],
+          "to": [
+            77,
+            9
+          ],
+          "outcome": "complete",
+          "pressure": {
+            "within5": 1,
+            "nearest": 3
+          }
+        },
+        {
+          "t": 4025,
+          "team": "RSA",
+          "type": "carry",
+          "from": [
+            77,
+            9
+          ],
+          "to": [
+            96,
+            21
+          ],
+          "outcome": "complete",
+          "pressure": {
+            "within5": 1,
+            "nearest": 2
+          }
+        },
+        {
+          "t": 4028.4,
+          "team": "RSA",
+          "type": "cross",
+          "from": [
+            96,
+            21
+          ],
+          "to": [
+            101,
+            32
+          ],
+          "outcome": "complete",
+          "pressure": {
+            "within5": 2,
+            "nearest": 1.5
+          }
+        },
+        {
+          "t": 4029.4,
+          "team": "RSA",
+          "type": "shot",
+          "from": [
+            101,
+            32
+          ],
+          "to": [
+            105,
+            34
+          ],
+          "outcome": "goal",
+          "pressure": {
+            "within5": 3,
+            "nearest": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2",
+      "label": "85:38",
+      "title": "South Africa 0–2",
+      "half": 2,
+      "videoOffset": -5042,
+      "end": 5144.3,
+      "score": "0–2",
+      "notes": [
+        "South Africa moved the ball through a crowd of Kenya players at the edge of the area: two passes of about 9 m and 10 m in under 2 seconds.",
+        "The second pass put a runner inside the area about 11 m from goal, beyond the Kenya players who had stepped toward the ball.",
+        "The goal came about 4 seconds after the first pass. The finish is too small to read at this resolution, so no scorer is named."
+      ],
+      "events": [
+        {
+          "t": 5138,
+          "team": "RSA",
+          "type": "pass",
+          "from": [
+            82,
+            40
+          ],
+          "to": [
+            88,
+            46
+          ],
+          "outcome": "complete",
+          "pressure": {
+            "within5": 3,
+            "nearest": 1.5
+          }
+        },
+        {
+          "t": 5139.6,
+          "team": "RSA",
+          "type": "pass",
+          "from": [
+            88,
+            46
+          ],
+          "to": [
+            98,
+            44
+          ],
+          "outcome": "complete",
+          "pressure": {
+            "within5": 2,
+            "nearest": 2
+          }
+        },
+        {
+          "t": 5142.4,
+          "team": "RSA",
+          "type": "shot",
+          "from": [
+            99,
+            43
+          ],
+          "to": [
+            105,
+            35
+          ],
+          "outcome": "goal",
+          "pressure": {
+            "within5": 1,
+            "nearest": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "g3",
+      "label": "87:58",
+      "title": "Kenya 1–2",
+      "half": 2,
+      "videoOffset": -5159.5,
+      "end": 5283.5,
+      "score": "1–2",
+      "notes": [
+        "Kenya's goal came from a free kick on the far side, about 40 m from goal, delivered about 33 m into the area.",
+        "More than ten players were inside the area when it was struck, and the ball was finished from about 6 m two seconds after the delivery.",
+        "Several South African players raised their arms after the finish. The footage does not show why or who made the last touch, so no scorer is named."
+      ],
+      "events": [
+        {
+          "t": 5278.3,
+          "team": "KEN",
+          "type": "cross",
+          "from": [
+            34,
+            56
+          ],
+          "to": [
+            8,
+            36
+          ],
+          "outcome": "complete",
+          "note": "Free kick from the far side."
+        },
+        {
+          "t": 5280.3,
+          "team": "KEN",
+          "type": "shot",
+          "from": [
+            6,
+            35
+          ],
+          "to": [
+            0,
+            33
+          ],
+          "outcome": "goal",
+          "pressure": {
+            "within5": 3,
+            "nearest": 1
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+18 minutes, two South Africa goals, Nairobi.
+
+Kenya v South Africa, AFCON 2027 Qualifiers, Nyayo National Stadium, 17 November 2026. For coaches and analysts who review goals from broadcast footage, here are all three goals on a 3D pitch.
+
+Each goal plays at real speed with the broadcast clip on top and the same passage underneath on a 3D pitch, frame for frame. Then it replays at one-third speed while a Kenyan English voice reads three coaching notes and the matching ball path lights up.
+
+Watch the second one closely. At 85:38 South Africa played two passes of about 9 m and 10 m through a crowd of Kenya players at the edge of the area, both inside 2 seconds. The goal came about 4 seconds after the first pass.
+
+Kenya's goal at 88:00 came from a far-side free kick, delivered about 33 m into the area with more than ten players inside it.
+
+The full analysis lets you stop on any frame, click any pass and see the pressure on the ball:
+https://afritech-advisory.github.io/Afritech-Sports-Technology/kenya-v-south-africa/
+
+Positions are tagged by eye from the broadcast, to within about 5 m, and the threat and xG values are illustrative. The footage doesn't show the last touch on any of the three goals clearly, so no scorer is named.
+
+If you coach set pieces: with more than ten players in the area at 88:00, where would you have aimed that free kick?
