@@ -1,0 +1,213 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=block" rel="stylesheet">
+<style>
+:root{--gold:#D4F53C;--maroon:#8A1538;--wine:#4d0b20;--navy:#10243f;--navy2:#1b3a63;--orange:#ec7a1c;--teal:#1fb39a;--ink:#0d1b2e;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1350px;overflow:hidden;background:var(--navy)}
+#root{position:relative;width:1080px;height:1350px;overflow:hidden;
+  background:radial-gradient(1200px 900px at 50% 30%,#a51d47 0%,#8A1538 40%,#4d0b20 80%,#2a0612 100%);font-family:'Source Sans 3',sans-serif;color:#fff}
+#pitch{position:absolute;inset:0;opacity:.10}
+#top{position:absolute;left:60px;top:44px;right:60px;height:80px;display:flex;align-items:center;gap:18px}
+#top img{width:64px;height:64px;border-radius:12px;background:#fff}
+#top .b1{font-family:'Barlow Condensed';font-weight:700;font-size:38px;letter-spacing:.5px;line-height:1}
+#top .b2{font-family:'JetBrains Mono';font-size:17px;letter-spacing:3px;color:#9fb4d0;margin-top:6px}
+#top .tag{margin-left:auto;font-family:'JetBrains Mono';font-size:18px;letter-spacing:2px;color:#fff;border:1.5px solid rgba(255,255,255,.35);padding:10px 16px;border-radius:999px}
+#stage{position:absolute;left:60px;top:150px;width:960px;height:950px;border-radius:30px;overflow:hidden;background:#f5f7fb;
+  box-shadow:0 30px 80px rgba(0,0,0,.45),0 0 0 2px rgba(255,255,255,.08)}
+#stage img{position:absolute;left:0;top:0;width:960px;will-change:transform}
+#dim{position:absolute;inset:0;background:#2a0612;opacity:0}
+#quote{position:absolute;left:110px;top:330px;width:860px;padding:70px 64px 56px;background:#fff;border-radius:30px;color:var(--wine);opacity:0;box-shadow:0 30px 80px rgba(0,0,0,.5);border-top:14px solid var(--gold)}
+#quote .qm{position:absolute;top:-10px;left:40px;font-family:'Barlow Condensed';font-weight:800;font-size:220px;line-height:1;color:var(--gold)}
+#quote .qt{font-family:'Barlow Condensed';font-weight:700;font-size:74px;line-height:1.05;margin-top:40px}
+#quote .qa{font-family:'JetBrains Mono';font-size:22px;letter-spacing:2px;color:#8A1538;margin-top:34px}
+.hl{position:absolute;border:6px solid var(--gold);border-radius:18px;box-shadow:0 0 0 9999px rgba(42,6,18,.35),0 0 30px rgba(212,245,60,.7);opacity:0}
+#chip{position:absolute;left:50%;top:1050px;transform:translateX(-50%);background:var(--gold);color:var(--wine);font-family:'Barlow Condensed';font-weight:700;
+  font-size:40px;letter-spacing:1px;padding:14px 30px;border-radius:999px;white-space:nowrap;box-shadow:0 12px 30px rgba(0,0,0,.35);opacity:0}
+#cap{position:absolute;z-index:5;left:50px;right:50px;top:1150px;height:150px;display:flex;align-items:center;justify-content:center;text-align:center;
+  font-weight:700;font-size:50px;line-height:1.15;text-shadow:0 3px 12px rgba(0,0,0,.5)}
+#cap span{display:inline-block;margin:0 .14em;transition:none}
+#cap span.on{color:var(--gold)}
+#cap span.fut{opacity:.55}
+/* scene 1 */
+#s1{position:absolute;left:60px;top:150px;width:960px;height:950px}
+.k{font-family:'JetBrains Mono';font-size:24px;letter-spacing:5px;color:#f3dca0}
+.h{font-family:'Barlow Condensed';font-weight:800;font-size:150px;line-height:.92;letter-spacing:-1px}
+.o{color:var(--gold)}
+#s1 .who{font-size:44px;font-weight:600;line-height:1.2;color:#e8eef7}
+#langs{position:absolute;left:60px;top:150px;width:960px;height:950px;display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:26px;padding:80px}
+#langs div{font-family:'Barlow Condensed';font-weight:700;font-size:72px;padding:18px 44px;border-radius:999px;background:#fff;color:var(--navy);opacity:0}
+#langs div.t{background:var(--teal);color:#fff}
+#end{position:absolute;inset:0;background:radial-gradient(1100px 900px at 50% 38%,#a51d47 0%,#8A1538 45%,#3b0818 100%);opacity:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 70px}
+#end img{width:150px;height:150px;border-radius:26px;background:#fff;margin-bottom:34px}
+#end .btn{font-family:'Barlow Condensed';font-weight:800;font-size:96px;background:var(--gold);color:var(--wine);padding:18px 64px;border-radius:24px;margin:34px 0 30px;letter-spacing:1px}
+#end .mail{font-family:'JetBrains Mono';font-size:40px;color:#fff}
+#end .sub{font-size:34px;color:#f1d9df;margin-top:28px;line-height:1.3}
+#end .fine{position:absolute;bottom:18px;font-size:22px;color:#d9aab8}
+.abs{position:absolute}
+#poster{position:absolute;left:0;top:-45px;width:1080px;height:1440px;object-fit:cover;transform-origin:50% 40%}
+#pdark{position:absolute;inset:0;background:linear-gradient(180deg,rgba(77,11,32,.75),rgba(42,6,18,.92));opacity:0}
+.lb{position:absolute;left:0;width:1080px;height:170px;background:#000;z-index:9}
+#chap{position:absolute;left:84px;top:176px;background:var(--wine);color:#fff;font-family:'Barlow Condensed';font-weight:700;font-size:44px;letter-spacing:2px;padding:10px 26px 10px 22px;border-radius:14px;opacity:0;border-left:10px solid var(--gold);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+#chap b{color:var(--gold);margin-right:14px}
+#leak{position:absolute;inset:-200px;z-index:6;mix-blend-mode:screen;opacity:0;pointer-events:none;background:radial-gradient(600px 900px at 50% 50%,rgba(255,170,60,.9),rgba(212,245,60,.35) 40%,rgba(0,0,0,0) 70%)}
+#vig{position:absolute;inset:0;z-index:7;pointer-events:none;background:radial-gradient(900px 1100px at 50% 48%,rgba(0,0,0,0) 55%,rgba(0,0,0,.5) 100%)}
+#grain{position:absolute;inset:0;z-index:8;pointer-events:none;background-image:url(cap/grain.png);opacity:.07;mix-blend-mode:overlay}
+#hlw{position:absolute;inset:0;background:radial-gradient(900px 700px at 50% 40%,#9a1d45,#4d0b20);opacity:0;display:flex;align-items:center;justify-content:center}
+#hlw img{position:static;width:900px;border-radius:22px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+#credit{position:absolute;right:76px;top:1106px;font-size:18px;letter-spacing:1px;color:rgba(255,255,255,.8);opacity:0;z-index:5}
+</style></head>
+<body><div id="root">
+<svg id="pitch" width="1080" height="1350"><g fill="none" stroke="#fff" stroke-width="3"><line x1="0" y1="675" x2="1080" y2="675"/><circle cx="540" cy="675" r="210"/><circle cx="540" cy="675" r="6" fill="#fff"/><rect x="290" y="-2" width="500" height="200"/><rect x="290" y="1152" width="500" height="200"/></g></svg>
+<div id="top"><img src="cap/logo.png"><div><div class="b1">Afritech Sports</div><div class="b2">TOURNAMENT DESK</div></div><div class="tag">U-17 WORLD CUP · QATAR 2026</div></div>
+
+<img id="poster" src="cap/poster.jpg"><div id="pgrad" style="position:absolute;left:0;right:0;bottom:0;height:420px;background:linear-gradient(180deg,rgba(42,6,18,0),rgba(42,6,18,.85))"></div><div id="pdark"></div>
+<div id="s1">
+  <div class="k abs" id="s1k" style="left:0;top:40px">FIFA U-17 WORLD CUP · QATAR 2026</div>
+  <div class="h abs" id="s1a" style="left:0;top:110px">Africa's ten</div>
+  <div class="h abs" id="s1b" style="left:0;top:245px">in Qatar.</div>
+  <div class="h abs o" id="s1c" style="left:0;top:380px">Seen first.</div>
+  <svg class="abs" id="ring" style="left:620px;top:560px" width="320" height="320" viewBox="0 0 320 320">
+    <circle cx="160" cy="160" r="130" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="34"/>
+    <circle id="arc" cx="160" cy="160" r="130" fill="none" stroke="#D4F53C" stroke-width="34" stroke-dasharray="0 817" transform="rotate(-90 160 160)"/>
+    <text id="ringt" x="160" y="172" text-anchor="middle" font-family="Barlow Condensed" font-weight="800" font-size="92" fill="#fff">0/48</text>
+    <text x="160" y="214" text-anchor="middle" font-family="JetBrains Mono" font-size="17" letter-spacing="3" fill="#9fb4d0">PLACES</text>
+  </svg>
+  <div class="who abs" id="s1w" style="left:0;top:600px;width:580px">For <b class="o">clubs, agents and federations</b> scouting Africa's young players.</div>
+  <div class="abs" id="s1cta" style="left:0;top:800px;font-family:'Barlow Condensed';font-weight:700;font-size:40px;color:#f3dca0;letter-spacing:1px">BOOK A BRIEFING ↓</div>
+</div>
+
+<div id="stage">
+  <img id="i_hero" src="cap/hero.png">
+  <img id="i_moz" src="cap/moz.jpg">
+  <img id="i_results" src="cap/results.png">
+  <img id="i_players" src="cap/players.png">
+  <img id="i_nations" src="cap/nations.png">
+  <img id="i_matches" src="cap/matches.png">
+  <img id="i_approach" src="cap/approach.png">
+  <img id="i_contact" src="cap/contact.png">
+  <div id="hlw"><img src="cap/hl_card.jpg"></div>
+  <div id="dim"></div>
+  <div class="hl" id="hl"></div>
+</div>
+<div id="langs"><div class="t">English</div><div>Français</div><div>Kiswahili</div><div>Português</div></div>
+<div id="quote"><div class="qm">&ldquo;</div><div class="qt">This desk works well for me because of the <span style="background:#D4F53C;padding:0 10px;border-radius:8px">match links.</span></div><div class="qa">A READER ON WHATSAPP · NOVEMBER 2026</div></div>
+<div id="chip"></div><div id="chap"></div><div id="credit">Images: FIFA</div>
+<div id="cap"></div>
+<div id="end">
+  <img src="cap/poster.jpg" style="position:absolute;inset:0;width:1080px;height:1350px;object-fit:cover;opacity:.14;filter:blur(6px);border-radius:0;margin:0;background:none">
+  <img src="cap/logo.png" style="position:relative">
+  <div class="k">AFRITECH SPORTS · TOURNAMENT DESK</div>
+  <div class="h" style="font-size:96px;margin-top:22px">Recruiting at the<br>U-17 World Cup?</div>
+  <div class="btn">Book a briefing</div>
+  <div class="mail">Advisory@afritechsports.com</div>
+  <div class="sub">Group stage ends 27 November.<br>Link to the desk in the post.</div>
+  <div class="fine">Independent coverage by Afritech. Not affiliated with or endorsed by FIFA.</div>
+</div>
+<div id="leak"></div><div id="vig"></div><div id="grain"></div><div class="lb" id="lbt" style="top:0"></div><div class="lb" id="lbb" style="bottom:0"></div>
+</div>
+<script>
+let TL=null;
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>{x=clamp(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const eout=x=>{x=clamp(x);return 1-Math.pow(1-x,3)};
+const lin=(t,t0,t1)=>clamp((t-t0)/(t1-t0));
+function sc(id){return TL.scenes.find(s=>s.id===id)}
+function cue(id,w,n=0){const s=sc(id);const m=s.words.filter(x=>x.w.replace(/[.,!?:]/g,'')===w);return m[n]?m[n].t0:s.start}
+// keyframed value: list of [time,value], eased between
+function kf(t,list){if(t<=list[0][0])return list[0][1];for(let i=1;i<list.length;i++){if(t<=list[i][0]){const[a,va]=list[i-1],[b,vb]=list[i];return va+(vb-va)*ease((t-a)/(b-a))}}return list[list.length-1][1]}
+let C={};
+function init(tl){TL=tl;const S=id=>sc(id);
+ C={
+  s1:S('s1'),s2:S('s2'),s5q:S('s5q'),here:cue('s1','Here'),s3:S('s3'),s4:S('s4'),s6:S('s6'),s7:S('s7'),s8:S('s8'),s9:S('s9'),
+  clubs:cue('s2','clubs'),we:cue('s3','We'),every4:cue('s4','Every'),sen:cue('s4','Senegal'),
+  n73:cue('s6','73'),each:cue('s6','Each'),what:cue('s6','what'),
+  kick:cue('s7','Every'),and7:cue('s7','And'),fifa:cue('s8',"FIFA's"),how:cue('s8','how'),
+  book:cue('s9','book'),mail:cue('s9','Advisory@afritechsports.com')};
+}
+function show(id,op,y){const e=$(id);e.style.opacity=op;e.style.transform=`translateY(${-y}px)`}
+function hl(t,on,off,x,y,w,h){const e=$('hl');const a=Math.min(eout(lin(t,on,on+.35)),1-lin(t,off-.3,off));
+  if(a>0){e.style.opacity=a;e.style.left=x+'px';e.style.top=y+'px';e.style.width=w+'px';e.style.height=h+'px';const s=1+.06*(1-eout(lin(t,on,on+.5)));e.style.transform=`scale(${s})`;return true}return false}
+function render(t){
+ const c=C;
+ // scene 1 title
+ const s1o=1-lin(t,c.s2.start-.1,c.s2.start+.5);
+ $('s1').style.opacity=s1o;
+ const rise=(id,t0)=>{const p=eout(lin(t,t0,t0+.7));$(id).style.opacity=p*s1o;$(id).style.transform=`translateY(${(1-p)*60}px)`};
+ const h=c.here;rise('s1k',h-.2);rise('s1a',h+.1);rise('s1b',h+.45);rise('s1c',h+.8);rise('s1w',h+2.0);rise('s1cta',h+3.6);
+ const rp=ease(lin(t,h+.9,h+2.8));
+ // cold open poster
+ const po=1-lin(t,c.s2.start-.1,c.s2.start+.6);$('poster').style.opacity=po;const pd=eout(lin(t,h-.5,h+.6));
+ $('poster').style.transform=`scale(${1.0+.16*lin(t,0,c.s2.start)})`;$('poster').style.filter=`blur(${5*pd}px)`;$('pdark').style.opacity=.85*pd*po;$('pgrad').style.opacity=po;
+ const lb=eout(lin(t,.25,1.5));$('lbt').style.transform=`translateY(${-175*lb}px)`;$('lbb').style.transform=`translateY(${175*lb}px)`;const n=Math.round(10*rp);
+ $('arc').setAttribute('stroke-dasharray',`${817*(10/48)*rp} 817`);$('ringt').textContent=n+'/48';
+ $('ring').style.opacity=eout(lin(t,h+.8,h+1.3))*s1o;
+ // stage visibility
+ const stIn=eout(lin(t,c.s2.start,c.s2.start+.8));const stOut=1-lin(t,c.book-.2,c.book+.4);
+ $('stage').style.opacity=Math.min(stIn,stOut);$('stage').style.transform=`translateY(${(1-stIn)*140}px) scale(${.96+.04*stIn})`;
+ // images: crossfade by scene
+ const imgs={moz:0,hero:0,results:0,players:0,nations:0,matches:0,approach:0,contact:0};
+ const xf=(a,b,t0)=>{const p=lin(t,t0-.25,t0+.25);return p};
+ let y={};
+ // hero s2+s3
+ imgs.hero=1-xf(0,0,c.s3.start);imgs.moz=Math.min(xf(0,0,c.s3.start),1-xf(0,0,c.s4.start));y.moz=kf(t,[[c.s3.start,0],[c.s3.start+1.2,0],[c.s3.end-1.2,330]]);
+ y.hero=kf(t,[[c.s2.start,0],[c.s2.end,150],[c.s3.start+.6,1250],[c.we,1250],[c.we+1.6,1850]]);
+ imgs.results=Math.min(xf(0,0,c.s4.start),1-xf(0,0,c.s6.start));
+ y.results=kf(t,[[c.s4.start,0],[c.every4,0],[c.every4+3.5,560],[c.sen-.2,560],[c.sen+.9,1130]]);
+ imgs.players=Math.min(xf(0,0,c.s6.start),1-xf(0,0,c.s7.start));
+ y.players=kf(t,[[c.s6.start,0],[c.n73-.6,250],[c.each-.2,250],[c.each+1.0,1950],[c.what-.3,1950],[c.what+.9,2700]]);
+ imgs.nations=Math.min(xf(0,0,c.s7.start),1-xf(0,0,c.kick));
+ y.nations=kf(t,[[c.s7.start,0],[c.kick,700]]);
+ imgs.matches=Math.min(xf(0,0,c.kick),1-xf(0,0,c.s8.start));
+ y.matches=kf(t,[[c.kick-.2,200],[c.kick+1.4,1100],[c.s8.start,1200]]);
+ imgs.approach=Math.min(xf(0,0,c.s8.start),1-xf(0,0,c.s9.start));
+ y.approach=kf(t,[[c.s8.start-.3,100],[c.fifa-.4,250],[c.how-.5,250],[c.how+.5,700]]);
+ imgs.contact=xf(0,0,c.s9.start);
+ y.contact=kf(t,[[c.s9.start,0],[c.s9.start+2.5,0],[c.book,120]]);
+ for(const k in imgs) show('i_'+k,imgs[k],y[k]);
+ $('i_moz').style.transform=`translateY(${-y.moz}px) scale(${1.1-.1*lin(t,c.s3.start,c.s3.end)})`;$('i_moz').style.transformOrigin='50% 0';
+ const hw=Math.min(xf(0,0,c.s8.start),1-lin(t,c.how-.6,c.how-.1));$('hlw').style.opacity=hw;$('hlw').firstChild.style.transform=`scale(${1+.07*lin(t,c.s8.start,c.how)})`;
+ $('credit').style.opacity=Math.max(po*(1-pd),imgs.moz,hw)*.9;$('credit').style.top=(po*(1-pd)>.5?'1110px':'1106px');
+ // chapters
+ const CH=[[c.s2.start,'01','THE DESK'],[c.s3.start,'02',"AFRICA'S TEN"],[c.s4.start,'03','RESULTS'],[c.s6.start,'04','THE BOARD'],[c.s7.start,'05','NATIONS & MATCH CENTRE'],[c.s8.start,'06','HOW WE RATE'],[c.s9.start,'07','NEXT STEP']];
+ const cp=$('chap');cp.style.opacity=0;for(const[a,n,l] of CH){if(t>=a+.3&&t<a+2.9){const p=eout(lin(t,a+.3,a+.8));cp.innerHTML=`<b>${n}</b>${l}`;cp.style.opacity=Math.min(p,1-lin(t,a+2.5,a+2.9));cp.style.transform=`translateX(${(1-p)*-40}px)`}}
+ // light leaks on cuts
+ const LK=[c.here,c.s2.start,c.s3.start,c.s4.start,c.s5q.start,c.s6.start,c.s7.start,c.s8.start,c.s9.start,c.book];let lk=0,lx=0;
+ for(const a of LK){const q=lin(t,a-.35,a+.55);if(q>0&&q<1){lk=Math.sin(Math.PI*q)*.45;lx=-700+1400*q}}
+ $('leak').style.opacity=lk;$('leak').style.transform=`translateX(${lx}px)`;
+ const fr=Math.floor(t*24);$('grain').style.backgroundPosition=`${(fr*137)%512}px ${(fr*311)%512}px`;
+ $("hl").style.opacity=0;
+ // highlights (window coords)
+ hl(t,c.sen+.9,c.s5q.start+.3,402,1262-y.results,156,100) ||
+ hl(t,c.n73,c.each-.2,24,610-y.players,370,90) ||
+ hl(t,c.each+1.0,c.what-.3,24,2140-y.players,912,200) ||
+ hl(t,c.what+.9,c.s7.start,24,3140-y.players,912,190) ||
+ hl(t,c.how+.5,c.s9.start,24,1225-y.approach,912,345) ||
+ hl(t,-9,-8,0,0,0,0);
+ // quote overlay
+ const qo=Math.min(eout(lin(t,c.s5q.start+.1,c.s5q.start+.7)),1-lin(t,c.s5q.end-.4,c.s5q.end));
+ $('quote').style.opacity=qo;$('quote').style.transform=`translateY(${(1-eout(lin(t,c.s5q.start+.1,c.s5q.start+.8)))*50}px)`;
+ // language overlay
+ const lo=Math.min(lin(t,c.and7-.1,c.and7+.4),1-lin(t,c.s8.start-.3,c.s8.start+.1));
+ $('dim').style.opacity=.82*Math.max(lo,qo);
+ [...$('langs').children].forEach((d,i)=>{const p=eout(lin(t,c.and7+.35+i*.45,c.and7+.85+i*.45));const q=Math.min(p,1-lin(t,c.s8.start-.3,c.s8.start+.1));d.style.opacity=q;d.style.transform=`scale(${.7+.3*p})`});
+ // chip
+ const chips=[[c.clubs,c.s2.end-.2,'For clubs · agents · federations'],
+   [c.sen+.4,c.s5q.start,'Senegal 9-0 Cuba'],[c.n73+.2,c.each-.2,'73 players · 41 African'],[c.each+1.0,c.what-.3,'A clear call for clubs, agents, federations'],[c.what+.9,c.s7.start-.1,'What moves him up or down'],
+   [c.kick+.3,c.and7-.2,'Kick-offs in Doha time = Nairobi time'],[c.fifa,c.how-.3,"Rated on FIFA's official video"],[c.how+.5,c.s9.start-.1,'Evidence you can trace'],[c.s9.start+.6,c.book-.2,'Group stage ends 27 November']];
+ const ch=$('chip');ch.style.opacity=0;
+ for(const[a,b,txt] of chips){if(t>=a-.05&&t<=b){const p=eout(lin(t,a,a+.35));const q=1-lin(t,b-.25,b);ch.textContent=txt;ch.style.opacity=Math.min(p,q);ch.style.transform=`translateX(-50%) translateY(${(1-p)*30}px) scale(${.92+.08*p})`;break}}
+ // end card
+ const eo=eout(lin(t,c.book-.1,c.book+.6));$('end').style.opacity=eo;$('end').style.transform=`scale(${1.04-.04*eo})`;
+ $('top').style.opacity=Math.min(lin(t,c.s2.start-.2,c.s2.start+.6),1-eo);
+ // captions
+ let html='';
+ for(const s of TL.scenes){for(let k=0;k<s.chunks.length;k++){const ch=s.chunks[k];const w0=s.words[ch[0]];const nx=k+1<s.chunks.length?s.words[s.chunks[k+1][0]].t0:s.words[ch[ch.length-1]].t1+.4;
+   if(t>=w0.t0-.08&&t<nx){html=ch.map(i=>{const w=s.words[i];const cls=t>=w.t0&&t<w.t1+.12?'on':(t<w.t0?'fut':'');return `<span class="${cls}">${w.w}</span>`}).join('')}}}
+ $('cap').innerHTML=html;
+ $('cap').style.top=(eo>.5?1190:1150)+'px';
+ $('cap').style.fontSize=(eo>.5?44:50)+'px';
+}
+</script></body></html>
