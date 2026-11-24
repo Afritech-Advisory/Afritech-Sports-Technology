@@ -10,6 +10,12 @@ That folder holds the FIFA U-17 World Cup Qatar 2026 desk tour (103 s), its Link
 first comment, Claude Code Club post, captions and voiceover script. Every file in this
 folder is the exact pipeline that produced it.
 
+## Delivery rule
+
+Every video goes out with **both the GIF and the end-card still** (`out/title-loop.gif` and
+`out/still-end-card.jpg`), always together and always sent next to the MP4 and the posts.
+They are what goes in the first comment and in community posts.
+
 ## Before you start: the Four Sentences
 
 Read the afritech-four-sentences skill first. The video must say, on its first screen, who
