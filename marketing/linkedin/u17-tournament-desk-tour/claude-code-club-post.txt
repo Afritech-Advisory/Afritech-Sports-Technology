@@ -1,0 +1,22 @@
+Win: a narrated video tour of my football tournament desk, built in one Claude Code session
+
+I run the Afritech Sports Tournament Desk for the FIFA U-17 World Cup in Qatar: results, players to watch and match reports for all ten African squads. I wanted a LinkedIn video that walks people through it. One prompt, one session, a finished 1080x1350 MP4 with a female Kenyan voiceover, captions and original music. The final render took three minutes.
+
+How the three stages showed up:
+
+Stage 1, something built tonight. I did not ask for a plan or a storyboard. I asked for the video. Claude opened the live page, captured every section in phone layout, wrote the script, generated the voice, animated it frame by frame and handed me the file.
+
+Stage 2, get what you actually asked for. My prompt named a role (Senior Creative Sports Director), an audience (my LinkedIn), a voice (female, Kenyan) and a source (the URL). It read the real page first and used only facts on it. It left out the radar page because the charts were still empty, instead of faking them. It cut the script from 114 to 85 seconds for the feed, burned in captions for people watching on mute, and checked test frames before the full render, which caught a highlight box that would not switch off.
+
+Stage 3, memory. My repo's CLAUDE.md points to my "Four Sentences" skill: who it is for, what they get, why they would believe us, the one action. I never repeated it in the prompt, yet the first screen says who the desk is for and the video ends on one action: book a briefing. My LinkedIn skill also made it ask me five gate questions before it wrote a single post.
+
+Tips if you try it:
+- Give the source as a link and ask it to use only facts on the page.
+- Name the platform so it picks the size and length (LinkedIn feed: 4:5 portrait, under two minutes).
+- Ask for test frames before the full render.
+- Put your brand rules in memory once instead of in every prompt.
+
+Copy this prompt:
+"You are a Senior Creative Sports Director. Make an animated audio-visual video, in a [accent/gender] voice, giving a guided tour of [URL] for my [platform]. Use only facts from the live page, capture it in phone layout, burn in captions, use original music, and show me test frames before the full render."
+
+Tools it used: Microsoft's en-KE Asilia neural voice, Playwright for the page captures and frames, ffmpeg for the edit, and a soundtrack it composed in Python.

@@ -1,0 +1,7 @@
+cap/
+vo/
+test/
+out/
+*.wav
+video_silent.mp4
+final_master.mp4
